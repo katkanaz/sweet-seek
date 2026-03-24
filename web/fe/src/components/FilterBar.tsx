@@ -33,7 +33,7 @@ function FilterBar() {
     }
 
     return (
-        <HStack>
+        <HStack >
             <VStack alignItems="flex-start">
                 <HStack spacing="1" w="full">
                     <Text>
@@ -59,21 +59,23 @@ function FilterBar() {
                         <QuestionOutlineIcon boxSize="3.5" />
                     </Tooltip>
                 </HStack>
-                <VStack>
-                    <RangeSlider
-                        aria-label={["min", "max"]}
-                        min={min}
-                        max={max}
-                        value={range}
-                        step={0.1}
-                        onChange={(val) => setRange(val as [number, number])}
-                    >
-                        <RangeSliderTrack>
-                            <RangeSliderFilledTrack />
-                        </RangeSliderTrack>
-                        <RangeSliderThumb index={0} />
-                        <RangeSliderThumb index={1} />
-                    </RangeSlider>
+                <VStack spacing="0">
+                    <Box px="2" w="full">
+                        <RangeSlider
+                            aria-label={["min", "max"]}
+                            min={min}
+                            max={max}
+                            value={range}
+                            step={0.1}
+                            onChange={(val) => setRange(val as [number, number])}
+                        >
+                            <RangeSliderTrack>
+                                <RangeSliderFilledTrack />
+                            </RangeSliderTrack>
+                            <RangeSliderThumb index={0} />
+                            <RangeSliderThumb index={1} />
+                        </RangeSlider>
+                    </Box>
                     <HStack>
                         <NumberInput
                             width="3rem"
@@ -109,7 +111,7 @@ function FilterBar() {
                     <Text>
                         Organism
                     </Text>
-                    <Tooltip label="Organism from which the protein originates from" fontSize="sm">
+                    <Tooltip label="Organism from which the protein originates" fontSize="sm">
                         <QuestionOutlineIcon boxSize="3.5" />
                     </Tooltip>
                     {organismMultiSelect.props.selected.length > 0 &&

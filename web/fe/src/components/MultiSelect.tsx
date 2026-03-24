@@ -35,6 +35,7 @@ export function useMultiSelect(options: SelectOption[] | undefined, optionInfo: 
 }
 
 function MultiSelect({ options, optionInfo, query, setQuery, selected, setSelected, width, placeholder }: MultiSelectProps) {
+    // TODO: try replace with combobox empty
     const filtered = options?.filter((item) =>
         item.value.toLowerCase().includes(query.toLowerCase())
     )
