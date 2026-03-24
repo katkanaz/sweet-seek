@@ -15,18 +15,18 @@ function Results() {
     const [query, setQuery] = useState("")
       const inputRef = useRef<HTMLInputElement>(null)
 
-      useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            // FIXME: also meta key, chakra works different?
-          if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-            e.preventDefault()
-            inputRef.current?.focus()
-          }
-        }
-
-        window.addEventListener("keydown", handleKeyDown)
-        return () => window.removeEventListener("keydown", handleKeyDown)
-      }, [])
+      // useEffect(() => {
+      //   const handleKeyDown = (e: KeyboardEvent) => {
+      //       // FIXME: also meta key, chakra works different?
+      //     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+      //       e.preventDefault()
+      //       inputRef.current?.focus()
+      //     }
+      //   }
+      //
+      //   window.addEventListener("keydown", handleKeyDown)
+      //   return () => window.removeEventListener("keydown", handleKeyDown)
+      // }, [])
 
 
     const { data: resultsList, isLoading, isError } = useQuery<ComputedStructure[], Error>({
@@ -76,26 +76,28 @@ function Results() {
 
     return (
         <MainContainer>
-            <InputGroup mt="6" mb="4">
-                <InputLeftElement>
-                    <SearchIcon color="gray.300" />
-                </InputLeftElement> 
-                <Input ref={inputRef} placeholder="Search" value={query} onChange={(e) => setQuery(e.target.value)} />
-                <InputRightElement color="gray.600" width="20" mr="2">
-                    <Box display="flex" gap="1">
-                        <Kbd>Ctrl</Kbd>
-                        <Kbd>K</Kbd>
-                    </Box>
-                </InputRightElement>
-            </InputGroup>
-            <FilterBar />
-            <VStack mt="6" divider={<Box borderBottom="solid" borderBottomColor="lightgrey" borderBottomWidth="thin" boxSize="full" w="full"></Box>}>
-                {resultsList?.length === 0 &&
-                    <Box>
-                        No results found
-                    </Box>
-                }
-                {resultsList?.map(r => <SearchResultItem result={r} />)}
+            {/* <InputGroup mt="6" mb="4"> */}
+            {/*     <InputLeftElement> */}
+            {/*         <SearchIcon color="gray.300" /> */}
+            {/*     </InputLeftElement>  */}
+            {/*     <Input ref={inputRef} placeholder="Search" value={query} onChange={(e) => setQuery(e.target.value)} /> */}
+            {/*     <InputRightElement color="gray.600" width="20" mr="2"> */}
+            {/*         <Box display="flex" gap="1"> */}
+            {/*             <Kbd>Ctrl</Kbd> */}
+            {/*             <Kbd>K</Kbd> */}
+            {/*         </Box> */}
+            {/*     </InputRightElement> */}
+            {/* </InputGroup> */}
+            <VStack pt="4" alignItems="stretch">
+                <FilterBar />
+                <VStack mt="6" divider={<Box borderBottom="solid" borderBottomColor="lightgrey" borderBottomWidth="thin" boxSize="full" w="full"></Box>}>
+                    {resultsList?.length === 0 &&
+                        <Box>
+                            No results found
+                        </Box>
+                    }
+                    {resultsList?.map(r => <SearchResultItem result={r} />)}
+                </VStack>
             </VStack>
         </MainContainer>
     )
