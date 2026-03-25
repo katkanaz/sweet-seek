@@ -193,6 +193,7 @@ if __name__ == "__main__":
     parser.add_argument("-n", "--number", help="Number of clusters", type=int, default=20)
     parser.add_argument("-m", "--method", help="Cluster method", type=str, default="centroid")
     parser.add_argument("--max_residues", help="Maximum number of residues in a surrunding. Required by structure motif search", type=int, default=10)
+    parser.add_argument("--current_run_suffix", action="store_true", help="Whether to add a sugar suffix to .current_run")
 
     args = parser.parse_args()
 

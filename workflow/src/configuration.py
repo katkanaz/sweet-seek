@@ -70,6 +70,9 @@ class Config():
     dendrograms_dir: Path
     tanglegrams_dir: Path
 
+    current_run_path: Path
+    current_run_suffix: bool
+
 
     @classmethod
     def load(cls, file_path: Union[Path, str], sugar: Union[str, None], need_data_run: bool, args: Union[argparse.Namespace, None], force_new: bool = False) -> "Config":
@@ -77,7 +80,9 @@ class Config():
         config.user_cfg = UserConfig.load_json(file_path)
         if args is not None and args.test_mode:
             assert config.user_cfg.pdb_ids_list is not None, "If run in test mode 'pdb_ids_list' config value cannot be None"
-        current_run = config.get_current_run(force_new)
+        if args is not None:
+            config.current_run_suffix = args.current_run_suffix
+        current_run = config.get_current_run(sugar, force_new)
         data_run = config.get_data_run(config.user_cfg.data_dir, config.user_cfg.data_run) if need_data_run else None
         config._update_relative_paths(sugar, current_run, data_run)
 
@@ -148,7 +153,7 @@ class Config():
 
 
 
-    def get_current_run(self, force_new: bool = False) -> str:
+    def get_current_run(self, sugar: Union[str, None], force_new: bool = False) -> str:
         """
         Get current_run date. Creates .current_run file with current date if no active
         current_run is found.
@@ -156,16 +161,17 @@ class Config():
         :param force_new: Force creation of new .current_run even if it already exists
         :return: Datetime of the active current_run
         """
-        file_path = self.user_cfg.current_run_dir / ".current_run"
 
-        if os.path.isfile(file_path) and not force_new:
-            with open(file_path, "r", encoding="utf8") as f:
+        self.current_run_path = self.user_cfg.current_run_dir / f".current_run{'.' + sugar if self.current_run_suffix and sugar else ''}" 
+
+        if os.path.isfile(self.current_run_path) and not force_new:
+            with open(self.current_run_path, "r", encoding="utf8") as f:
                 current_datetime = f.read().strip()
 
             return current_datetime
         else:
             current_datetime = datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
-            with open(file_path, "w", encoding="utf8") as f:
+            with open(self.current_run_path, "w", encoding="utf8") as f:
                 f.write(current_datetime)
 
             return current_datetime
@@ -175,14 +181,13 @@ class Config():
         """
         Delete .current_run file.
         """
-        file_path = self.user_cfg.current_run_dir / ".current_run"
         try:
-            if os.path.isfile(file_path):
-                os.remove(file_path)
-                logger.info(f"File {file_path} deleted successfully.")
+            if os.path.isfile(self.current_run_path):
+                os.remove(self.current_run_path)
+                logger.info(f"File {self.current_run_path} deleted successfully.")
             else:
-                logger.error(f"File {file_path} does not exist.")
+                logger.error(f"File {self.current_run_path} does not exist.")
         except PermissionError:
-            logger.error(f"Permission denied, unable to delete file {file_path}.")
+            logger.error(f"Permission denied, unable to delete file {self.current_run_path}.")
         except Exception as e:
-            logger.error(f"An error occurred while trying to delete file '{file_path}': {e}")
+            logger.error(f"An error occurred while trying to delete file '{self.current_run_path}': {e}")

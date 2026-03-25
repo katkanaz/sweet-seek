@@ -36,7 +36,7 @@ def main(test_mode: bool, sugar: str, config: Config, is_unix: bool, perform_ali
 
         try:
             pbar.set_description("Performing alignment")
-            run_pymol_subprocess("process_handlers.perform_alignment", ["-t" if test_mode else "", "-s", sugar, "-a" if perform_align else "", "--min_residues", str(min_residues)])
+            run_pymol_subprocess(config, "process_handlers.perform_alignment", ["-t" if test_mode else "", "-s", sugar, "-a" if perform_align else "", "--min_residues", str(min_residues)])
             pbar.update(1)
         except Exception as e:
             logger.error(f"Exception caught: {e}")
@@ -80,6 +80,7 @@ if __name__ == "__main__":
     parser.add_argument("--color_threshold", type=float, help="Color threshold for dendrogram (default: None)")
     parser.add_argument("--keep_current_run", help="Don't end the current run (won't delete .current_run file)", action="store_true")
     parser.add_argument("--store_result_path", type=Path, help="Where to write result file path")
+    parser.add_argument("--current_run_suffix", action="store_true", help="Whether to add a sugar suffix to .current_run")
 
     args = parser.parse_args()
 

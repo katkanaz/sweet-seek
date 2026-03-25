@@ -2,13 +2,19 @@ from pathlib import Path
 from logger import logger
 from subprocess import Popen, PIPE
 
-def run_pymol_subprocess(file_to_run: str, argument_list: list[str]):
+from configuration import Config
+
+def run_pymol_subprocess(config: Config, file_to_run: str, argument_list: list[str]):
     cmd = [
         "../pymol-venv/bin/python",
         "-m",
-        file_to_run]
+        file_to_run
+    ]
 
     cmd.extend(argument_list)
+
+    if config.current_run_suffix:
+        cmd.append("--current_run_suffix")
 
     cmd = " ".join(cmd)
 

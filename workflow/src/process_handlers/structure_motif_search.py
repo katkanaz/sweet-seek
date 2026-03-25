@@ -209,7 +209,7 @@ def structure_motif_search(test_mode: bool, sugar: str, perform_clustering: bool
     # service. If you are using a different service you can try skipping the
     # clustering step (no representatives will be selected).
     if perform_clustering:
-        run_pymol_subprocess("process_handlers.proximity_filtering", ["-t" if test_mode else "", "-s", sugar, "-n", str(number), "-m", method, "--max_residues", str(max_residues)])
+        run_pymol_subprocess(config, "process_handlers.proximity_filtering", ["-t" if test_mode else "", "-s", sugar, "-n", str(number), "-m", method, "--max_residues", str(max_residues)])
         representatives: List[Path] = load_representatives(config)
     else:
         representatives: List[Path] = list(config.filtered_surroundings_dir.glob("*.pdb"))
