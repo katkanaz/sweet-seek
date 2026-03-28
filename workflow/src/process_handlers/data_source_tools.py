@@ -1,3 +1,10 @@
+"""
+Script Name: data_source_tools.py
+Description: Provides class to handle remote or local data source.
+Author: Kateřina Nazarčuková
+"""
+
+
 from abc import ABC, abstractmethod
 from pathlib import Path
 import os
@@ -148,13 +155,18 @@ class RemoteDataHandler(DataSourceHandler):
     """
 
     def get_rsync_info(self) -> Tuple[str, str, str]:
-        # TODO: add docs
+        """
+        Load rsync info from the environment.
+
+        :return: User, password and host
+        """
+
         user = os.getenv("RSYNC_USER")
         assert user is not None, "RSYNC_USER is missing from environment"
         password = os.getenv("RSYNC_PASSWORD")
-        assert password is not None, "RSYNC_USER is missing from environment"
+        assert password is not None, "RSYNC_PASSWORD is missing from environment"
         host = os.getenv("RSYNC_HOST")
-        assert host is not None, "RSYNC_USER is missing from environment"
+        assert host is not None, "RSYNC_HOST is missing from environment"
 
         return user, password, host
 
@@ -205,7 +217,15 @@ class RemoteDataHandler(DataSourceHandler):
 
 
     def download_from_mirror(self, config: Config, src_dir: str, dest_path: Path, file_list_path: Path) -> None:
-        # TODO: add docs
+        """
+        Download files from PDB Mirror.
+
+        :param config: Config object
+        :param src_dir: Directory on remote to download from
+        :param dest_path: Local directory to download to
+        :param file_list_path: Files to download
+        """
+
         user, password, host = self.get_rsync_info() 
 
         src_path = f"{user}@{host}:{config.user_cfg.pdb_mirror_dir}/{src_dir}"

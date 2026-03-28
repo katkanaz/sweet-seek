@@ -1,9 +1,8 @@
 """
-Script Name: 
-Description: 
+Script Name: proximity_filtering.py
+Description: Perform proximity-based filtering of sugar surrounding residues for structure motif search.
 Author: Kateřina Nazarčuková
 """
-# TODO: fix docstring 
 
 
 from argparse import ArgumentParser
