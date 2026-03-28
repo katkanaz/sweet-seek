@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 from Bio.PDB.Chain import Chain
 from Bio.PDB.Residue import Residue
-from typing import List, Dict, Union
+from typing import List, Dict, Tuple, Union
 from rcsbapi.search import StructMotifQuery, AttributeQuery, StructMotifResidue
 from rcsbapi.data import DataQuery
 
@@ -50,7 +50,7 @@ def get_struc_name(path_to_file: Path) -> str:
     return (path_to_file.name).split("_")[1]
 
 
-def define_residues(path_to_file: Path, struc_name: str) -> List[StructMotifResidue]:
+def define_residues(path_to_file: Path, struc_name: str) -> Tuple[List[StructMotifResidue], List[Dict]]:
     """
     Define residues for struture motif search query.
 
@@ -83,6 +83,7 @@ def define_residues(path_to_file: Path, struc_name: str) -> List[StructMotifResi
         chain_id_map[ch.get_id()] = key
         key = chr(ord(key) + 1)
 
+    residue_ids = []
     residues = []
     for chain in chains:
         i = 1
@@ -91,13 +92,27 @@ def define_residues(path_to_file: Path, struc_name: str) -> List[StructMotifResi
             chain: Chain = chain
             # Excludes the sugar
             if residue.get_id()[0] == " ":
+                residue_ids.append({"res_name": residue.get_resname(), "res_id": residue.get_id()[1], "chain_id": chain.get_id()})
                 residues.append(StructMotifResidue(struct_oper_id="1", chain_id=chain_id_map[chain.get_id()], label_seq_id=i)) # type: ignore
             i += 1
 
     if len(residues) > 10:
         raise ValueError(f"More than 10 residues in the surrounding: {path_to_file.name}")
 
-    return residues
+    return residues, residue_ids
+
+
+def modify_struct_title(title: str) -> str:
+    """
+    Remove "Computed ..." prefix from the computed structure title.
+
+    :param title: Original title
+    :return: Modified title
+    """
+    prefix = "Computed structure model of "
+    if title.startswith(prefix):
+        return title.removeprefix(prefix)
+    return title
 
 
 def fetch_metadata(ids: List[str]) -> Dict[str, Dict]:
@@ -139,7 +154,7 @@ def fetch_metadata(ids: List[str]) -> Dict[str, Dict]:
 
         comp_model_data = {
             "afdb_id": entry["rcsb_comp_model_provenance"]["entry_id"],
-            "title": entry["struct"]["title"],
+            "title": modify_struct_title(entry["struct"]["title"]),
             "organism": organisms,
             "plddt": plddt[0],
             "af_version": af_version,
@@ -199,11 +214,11 @@ def run_query(path_to_file: Path, residues: List[StructMotifResidue], search_res
         motifs = nodes[0]["match_context"] 
         structures[modify_id(comp_struct["identifier"])]["motifs"] = motifs 
 
-    search_results[path_to_file.stem] = structures
+    search_results[path_to_file.stem] = {"structures": structures}
 
 
 def structure_motif_search(test_mode: bool, sugar: str, perform_clustering: bool, number: int, method: str, config: Config, max_residues: int, store_result_path: Union[Path, None]) -> None:
-    search_results: Dict[str, Dict[str, Dict]] = {}
+    search_results: Dict[str, Dict] = {}
 
     # NOTE: Clustering is required when using RCSB structure motif search
     # service. If you are using a different service you can try skipping the
@@ -221,8 +236,9 @@ def structure_motif_search(test_mode: bool, sugar: str, perform_clustering: bool
 
         try:
             logger.info(f"Performing structure motif search for {file.stem}")
-            residues = define_residues(file, struc_name)
+            residues, residue_ids = define_residues(file, struc_name)
             run_query(file, residues, search_results)
+            search_results[file.stem]["residue_ids"] = residue_ids
         except ValueError as e:
             logger.error(f"Exception caught: {e}")
 
@@ -240,7 +256,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
 
     parser.add_argument("-t", "--test_mode", action="store_true",
-                        help="Weather to run the whole process in a test mode")
+                        help="Whether to run the whole process in a test mode")
     parser.add_argument("-s", "--sugar", help="Three letter code of sugar", type=str, required=True)
     parser.add_argument("-c", "--perform_clustering", action="store_true", help="Whether to perform data clustering of filtered surroundings")
     parser.add_argument("-n", "--number", help="Number of clusters", type=int, default=20)
@@ -248,6 +264,7 @@ if __name__ == "__main__":
     parser.add_argument("--max_residues", help="Maximum number of residues in a surrunding. Required by structure motif search", type=int, default=10)
     parser.add_argument("--keep_current_run", help="Don't end the current run (won't delete .current_run file)", action="store_true")
     parser.add_argument("--store_result_path", type=Path, help="Where to write result file path")
+    parser.add_argument("--current_run_suffix", action="store_true", help="Whether to add a sugar suffix to .current_run")
 
     args = parser.parse_args()
 
