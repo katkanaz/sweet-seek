@@ -193,9 +193,8 @@ def run_query(path_to_file: Path, residues: List[StructMotifResidue], search_res
 
     query = q1 & q2
 
-    output = query(results_verbosity="verbose", return_type="assembly", return_content_type=["computational", "experimental"])
+    output = query(results_verbosity="verbose", return_type="assembly", return_content_type=["computational"])
     assert not isinstance(output, int), "query result is of type Session"
-    # FIXME: Returns different scores of structures when "experimental" is and is not there
 
 
     ids = [modify_id(comp_struct["identifier"]) for comp_struct in output] # type: ignore

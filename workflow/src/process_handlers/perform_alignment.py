@@ -147,6 +147,8 @@ def all_against_all_alignment(sugar: str, structures_folder: Path, perform_align
         writer = csv.writer(f)
         writer.writerow(["structure1", "structure2", "rmsd"])
         all_structures = os.listdir(structures_folder)
+        if len(all_structures) < 2:
+            raise Exception("Less than 2 surroundings. Cannot perform alignmnet.")
         for (structure1, structure2) in itertools.combinations(all_structures, 2):
             try:
                 cmd.delete("all")

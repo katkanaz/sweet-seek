@@ -69,7 +69,7 @@ def delete_alternative_conformations(structure: gemmi.Structure, residues_to_kee
             if res_tuple in new_values:
                 new_values.remove(res_tuple)
             else:
-                logger.warning(f"res_str {res_tuple} not in new_values") # FIXME:
+                logger.warning(f"res_str {res_tuple} not in new_values")
         elif residue["altloc_case"] == AltlocCase.SINGLE_RES:
             for atom_idx in reversed(residue["atom_altloc_del"]):
                 del structure[model_idx][chain_idx][residue_idx][atom_idx]
