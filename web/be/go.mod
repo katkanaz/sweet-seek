@@ -1,4 +1,4 @@
-module dp-be
+module sweetseek-be
 
 go 1.25.4
 

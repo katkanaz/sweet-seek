@@ -1,7 +1,7 @@
 package main
 
 import (
-	"dp-be/internal/api"
+	"sweetseek-be/internal/api"
 	"net/http"
 )
 

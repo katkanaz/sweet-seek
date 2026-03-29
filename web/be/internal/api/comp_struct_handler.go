@@ -1,8 +1,8 @@
 package api
 
 import (
-	"dp-be/internal/functools"
-	"dp-be/internal/set"
+	"sweetseek-be/internal/functools"
+	"sweetseek-be/internal/set"
 	"encoding/json"
 	"fmt"
 	"math"
