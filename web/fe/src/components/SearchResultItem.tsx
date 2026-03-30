@@ -28,6 +28,12 @@ function SearchResultItem({result}: SearchResultItemProps) {
                     <Table variant="striped" colorScheme="whiteAlpha" size="sm">
                         <Tbody>
                             <Tr>
+                                <Td width="2" fontWeight="bold" px="0">Organism</Td>
+                                <Td>
+                                    {result.organism}
+                                </Td>
+                            </Tr>
+                            <Tr>
                                 <Td width="2" fontWeight="bold" px="0">AlphaFold DB</Td>
                                 <Td>
                                     <ChakraLink href={`https://alphafold.ebi.ac.uk/entry/${result.afdb_id.split("-")[1]}`}>
@@ -47,12 +53,6 @@ function SearchResultItem({result}: SearchResultItemProps) {
                                 <Td width="2" fontWeight="bold" px="0">pLDDT (global)</Td>
                                 <Td>
                                     {result.plddt}
-                                </Td>
-                            </Tr>
-                            <Tr>
-                                <Td width="2" fontWeight="bold" px="0">Organism</Td>
-                                <Td>
-                                    {result.organism}
                                 </Td>
                             </Tr>
                         </Tbody>
