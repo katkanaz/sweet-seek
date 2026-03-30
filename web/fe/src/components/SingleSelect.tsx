@@ -1,9 +1,8 @@
 import { Combobox } from "@base-ui/react/combobox"
-import { CheckIcon, SmallCloseIcon } from "@chakra-ui/icons"
+import { CheckIcon, ChevronDownIcon, SmallCloseIcon } from "@chakra-ui/icons"
 import { Box, HStack, IconButton, Input, List, ListItem } from "@chakra-ui/react"
 import { useRef, useState } from "react"
 import { SelectOption, OptionInfo } from "./MultiSelect"
-
 
 
 interface SingleSelectProps {
@@ -11,8 +10,8 @@ interface SingleSelectProps {
     optionInfo: OptionInfo
     query: string 
     setQuery: (query: string) => void
-    selected: SelectOption[]
-    setSelected: (selected: SelectOption[]) => void
+    selected: SelectOption | null
+    setSelected: (selected: SelectOption | null) => void
     width?: string
     placeholder: string
 }
@@ -28,45 +27,94 @@ export function useSingleSelect(options: SelectOption[] | undefined, optionInfo:
 }
 
 function SingleSelect({ options, optionInfo, query, setQuery, selected, setSelected, width, placeholder }: SingleSelectProps) {
-    return <div></div>
-    const filtered = options?.filter((item) =>
-        item.value.toLowerCase().includes(query.toLowerCase())
-    )
+//     const filtered = options?.filter((item) =>
+//         item.value.toLowerCase().includes(query.toLowerCase())
+//     )
     const containerRef = useRef<HTMLDivElement | null>(null);
-    const inputRef = useRef<HTMLInputElement|null>(null);
+//     const inputRef = useRef<HTMLInputElement|null>(null);
 
     return (
         <Combobox.Root
             value={selected}
             items={options}
-            // onValueChange={}
+            onValueChange={setSelected}
         >
-            <div className={styles.Label}>
-                <label htmlFor={id}>Choose a fruit</label>
-                <Combobox.InputGroup className={styles.InputGroup}>
-                    <Combobox.Input placeholder="e.g. Apple" id={id} className={styles.Input} />
-                    <div className={styles.ActionButtons}>
-                        <Combobox.Clear className={styles.Clear} aria-label="Clear selection">
-                            <ClearIcon className={styles.ClearIcon} />
-                        </Combobox.Clear>
-                        <Combobox.Trigger className={styles.Trigger} aria-label="Open popup">
-                            <ChevronDownIcon className={styles.TriggerIcon} />
+            <Box>
+                <Combobox.InputGroup  ref={containerRef}>
+                    <Combobox.Input placeholder={placeholder}
+                        render={(props) => (
+                            <Input
+                                minW="3rem"
+                                flex="1"
+                                width={width ?? "5rem"}
+                                {...props}
+                            />
+                        )}
+                    />
+                    <Box display="flex" position="absolute" bottom="0" right="0.5rem" height="2.5rem" border="none" alignItems="center" justifyContent="center" >
+                        <Combobox.Trigger aria-label="Open popup"
+                            render={(props) => (
+                                <IconButton {...props as any} icon={<ChevronDownIcon w="1rem" h="1rem" />} />
+                            )}
+                        >
+                            
                         </Combobox.Trigger>
-                    </div>
+                    </Box>
                 </Combobox.InputGroup>
-            </div>
+            </Box>
 
             <Combobox.Portal>
-                <Combobox.Positioner className={styles.Positioner} sideOffset={4}>
-                    <Combobox.Popup className={styles.Popup}>
-                        <Combobox.Empty className={styles.Empty}>No fruits found.</Combobox.Empty>
-                        <Combobox.List className={styles.List}>
-                            {(item: Fruit) => (
-                                <Combobox.Item key={item.value} value={item} className={styles.Item}>
-                                    <Combobox.ItemIndicator className={styles.ItemIndicator}>
-                                        <CheckIcon className={styles.ItemIndicatorIcon} />
-                                    </Combobox.ItemIndicator>
-                                    <div className={styles.ItemText}>{item.label}</div>
+                <Combobox.Positioner anchor={containerRef}>
+                    <Combobox.Popup
+                        render={(props) => (
+                            <Box
+                                {...props}
+                                mt={2}
+                                borderWidth="1px"
+                                borderRadius="md"
+                                maxH="200px"
+                                width="var(--anchor-width)"
+                                overflowY="auto"
+                                bg="white"
+                            />
+
+                        )}
+                    >
+                        <Combobox.Empty>
+                            <Box fontSize="0.925rem" lineHeight="1rem" color="gray.600" p="1rem">No options found.</Box>
+                        </Combobox.Empty>
+                        <Combobox.List
+                            render={(props) => (
+                                <List
+                                    {...props}
+                                />
+                            )}
+                        >
+                            {(item: SelectOption) => (
+                                <Combobox.Item key={item.value} value={item}
+                                    render={(props, state) => (
+                                        <ListItem
+                                            {...props}
+                                            px={3}
+                                            py={2}
+                                            cursor="pointer"
+                                            bg={
+                                                state.highlighted
+                                                    ? "gray.100"
+                                                    : "transparent"
+                                            }
+                                        >
+                                            <HStack>
+                                                <Combobox.ItemIndicator style={{gridColumnStart: 1}}>
+                                                    <CheckIcon display="block" w="0.75rem" h="0.75rem"/>
+                                                </Combobox.ItemIndicator>
+                                                <Box>
+                                                    {item.value}
+                                                </Box>
+                                            </HStack>
+                                        </ListItem>
+                                    )}
+                                >
                                 </Combobox.Item>
                             )}
                         </Combobox.List>

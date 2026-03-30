@@ -5,7 +5,7 @@ import MultiSelect, { useMultiSelect } from "./MultiSelect";
 import { FilterOptions, getFilterOptions } from "../api/computed_structure";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import SingleSelect from "./SingleSelect";
+import SingleSelect, { useSingleSelect } from "./SingleSelect";
 
 
 function FilterBar() {
@@ -15,7 +15,7 @@ function FilterBar() {
     });
     const sugarMultiSelect = useMultiSelect(data?.sugars, { isLoading, isError });
     const organismMultiSelect = useMultiSelect(data?.organisms, { isLoading, isError });
-    const pdbStructMultiSelect = useMultiSelect(data?.pdb_structures, { isLoading, isError });
+    const pdbStructMultiSelect = useSingleSelect(data?.pdb_structures, { isLoading, isError });
 
     const min = data?.plddt_range.min;
     const max = data?.plddt_range.max;
@@ -130,13 +130,13 @@ function FilterBar() {
                     <Tooltip label="" fontSize="sm">
                         <QuestionOutlineIcon boxSize="3.5" />
                     </Tooltip>
-                    {pdbStructMultiSelect.props.selected.length > 0 &&
+                    {pdbStructMultiSelect.props.selected !== null &&
                         <Button variant="ghost" size="xs" ml="auto" fontStyle="italic" color="gray.400" onClick={() => pdbStructMultiSelect.clearSelected()}>
                             clear
                         </Button>
                     }
                 </HStack>
-                <SingleSelect {...pdbStructMultiSelect.props} width="7rem" placeholder="e.g. 7KHU"/>
+                <SingleSelect {...pdbStructMultiSelect.props} width="9rem" placeholder="e.g. 7KHU"/>
             </VStack>
             <Button aria-label="Filter results" leftIcon={<SearchIcon aria-label="Search icon" />} ml="auto" color="gray.600">
                 Filter
