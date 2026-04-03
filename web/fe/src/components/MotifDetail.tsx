@@ -1,5 +1,6 @@
-import { Box, Link, Table, TableContainer, Tbody, Td, Tr, VStack } from "@chakra-ui/react"
+import { Box, Link as ChakraLink, HStack, Table, TableContainer, Tbody, Td, Text, Tr, VStack } from "@chakra-ui/react"
 import { MotifResidueInfo } from "../api/computed_structure"
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 type MotifDetailProps = {
     num: number
@@ -40,9 +41,14 @@ function MotifDetail({num, sugar, rmsd, residues, structurePDB}: MotifDetailProp
                             <Tr>
                                 <Td width="2" fontWeight="bold" px="0">Original structure PDB ID:</Td>
                                 <Td>
-                                    <Link>
-                                        {structurePDB}
-                                    </Link>
+                                    <ChakraLink href={`https://www.rcsb.org/structure/${structurePDB}`}>
+                                        <HStack alignItems="center" gap="1">
+                                            <Text>
+                                                {structurePDB}
+                                            </Text>
+                                            <ExternalLinkIcon />
+                                        </HStack>
+                                    </ChakraLink>
                                 </Td>
                             </Tr>
                         </Tbody>

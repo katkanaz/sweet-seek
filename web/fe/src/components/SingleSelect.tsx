@@ -1,5 +1,5 @@
 import { Combobox } from "@base-ui/react/combobox"
-import { CheckIcon, ChevronDownIcon, SmallCloseIcon } from "@chakra-ui/icons"
+import { CheckIcon, ChevronDownIcon } from "@chakra-ui/icons"
 import { Box, HStack, IconButton, Input, List, ListItem } from "@chakra-ui/react"
 import { useRef, useState } from "react"
 import { SelectOption, OptionInfo } from "./MultiSelect"

@@ -32,6 +32,7 @@ function FilterBar() {
       return null
     }
 
+    // FIXME: the filter button does not render well across screens
     return (
         <HStack >
             <VStack alignItems="flex-start">

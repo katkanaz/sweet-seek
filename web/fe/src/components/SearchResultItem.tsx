@@ -1,10 +1,8 @@
-import { HStack, Image, Link as ChakraLink, Table, TableContainer, Tbody, Td, Tr, VStack, Box } from "@chakra-ui/react";
+import { HStack, Image, Link as ChakraLink, Table, TableContainer, Tbody, Td, Tr, VStack, Box, Text } from "@chakra-ui/react";
 import { Link as TanstackRouterLink } from '@tanstack/react-router'
 import { ComputedStructure } from "../api/computed_structure";
 import placeholder from "../assets/structure-placeholder.png"
-
-
-//TODO: img jinak - request na api/img, klice nemusi byt ve stringu, musi odpovidat json klicum, definovat v api aby kopirovalo json cely - ComputedStructure type
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 
 interface SearchResultItemProps {
@@ -29,15 +27,29 @@ function SearchResultItem({result}: SearchResultItemProps) {
                         <Tbody>
                             <Tr>
                                 <Td width="2" fontWeight="bold" px="0">Organism</Td>
+                                {/* FIXME: for link taxon id needed */}
                                 <Td>
-                                    {result.organism}
+                                    <ChakraLink>
+                                        <HStack alignItems="center" gap="1">
+                                            <Text>
+                                                {result.organism}
+                                            </Text>
+                                            <ExternalLinkIcon />
+                                        </HStack>
+                                    </ChakraLink>
                                 </Td>
                             </Tr>
                             <Tr>
                                 <Td width="2" fontWeight="bold" px="0">AlphaFold DB</Td>
                                 <Td>
+                                {/* FIXME: why is the link so "long" */}
                                     <ChakraLink href={`https://alphafold.ebi.ac.uk/entry/${result.afdb_id.split("-")[1]}`}>
-                                        {result.afdb_id}
+                                        <HStack alignItems="center" gap="1">
+                                            <Text>
+                                                {result.afdb_id}
+                                            </Text>
+                                            <ExternalLinkIcon />
+                                        </HStack>
                                     </ChakraLink>
                                 </Td>
                             </Tr>
@@ -45,7 +57,12 @@ function SearchResultItem({result}: SearchResultItemProps) {
                                 <Td width="2" fontWeight="bold" px="0">UniProtKB</Td>
                                 <Td>
                                     <ChakraLink href={`https://www.uniprot.org/uniprotkb/${result.afdb_id.split("-")[1]}`}>
-                                        {`${result.afdb_id.split("-")[1]}`}
+                                        <HStack alignItems="center" gap="1">
+                                            <Text>
+                                                {`${result.afdb_id.split("-")[1]}`}
+                                            </Text>
+                                                <ExternalLinkIcon />
+                                        </HStack>
                                     </ChakraLink>
                                 </Td>
                             </Tr>

@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Center, HStack, Link, Spinner, Table, TableContainer, Tbody, Td, Text, Tr, VStack } from "@chakra-ui/react"
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Center, HStack, Link as ChakraLink, Spinner, Table, TableContainer, Tbody, Td, Text, Tr, VStack } from "@chakra-ui/react"
 import MainContainer from "../components/MainContainer"
 import { getCompStruct, ComputedStructure, mergeRisudeInfo } from "../api/computed_structure"
 import { resultDetailRoute } from "../Router";
@@ -10,6 +10,7 @@ import { PluginUIContext } from "molstar/lib/mol-plugin-ui/context";
 import { Download, ParseCif } from "molstar/lib/mol-plugin-state/transforms/data";
 import { ModelFromTrajectory, StructureComponent, StructureFromModel, TrajectoryFromMmCif } from "molstar/lib/mol-plugin-state/transforms/model";
 import { StructureRepresentation3D } from "molstar/lib/mol-plugin-state/transforms/representation";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 
 function ResultDetail() {
@@ -102,17 +103,27 @@ function ResultDetail() {
                                     <Tr>
                                         <Td width="2" fontWeight="bold" px="0">AlphaFold DB:</Td>
                                         <Td>
-                                            <Link href={`https://alphafold.ebi.ac.uk/entry/${compStruct.afdb_id.split("-")[1]}`}>
-                                                {compStruct.afdb_id}
-                                            </Link>
+                                            <ChakraLink href={`https://alphafold.ebi.ac.uk/entry/${compStruct.afdb_id.split("-")[1]}`}>
+                                                <HStack alignItems="center" gap="1">
+                                                    <Text>
+                                                        {compStruct.afdb_id}
+                                                    </Text>
+                                                    <ExternalLinkIcon />
+                                                </HStack>
+                                            </ChakraLink>
                                         </Td>
                                     </Tr>
                                     <Tr>
                                         <Td width="2" fontWeight="bold" px="0">UniProtKB:</Td>
                                         <Td>
-                                            <Link href={`https://www.uniprot.org/uniprotkb/${compStruct.afdb_id.split("-")[1]}`}>
-                                                {`${compStruct.afdb_id.split("-")[1]}`}
-                                            </Link>
+                                            <ChakraLink href={`https://www.uniprot.org/uniprotkb/${compStruct.afdb_id.split("-")[1]}`}>
+                                                <HStack alignItems="center" gap="1">
+                                                    <Text>
+                                                        {`${compStruct.afdb_id.split("-")[1]}`}
+                                                    </Text>
+                                                    <ExternalLinkIcon />
+                                                </HStack>
+                                            </ChakraLink>
                                         </Td>
                                     </Tr>
                                     <Tr>
@@ -124,7 +135,14 @@ function ResultDetail() {
                                     <Tr>
                                         <Td width="2" fontWeight="bold" px="0">Organism:</Td>
                                         <Td>
-                                            {compStruct.organism}
+                                            <ChakraLink>
+                                                <HStack alignItems="center" gap="1">
+                                                    <Text>
+                                                        {compStruct.organism}
+                                                    </Text>
+                                                    <ExternalLinkIcon />
+                                                </HStack>
+                                            </ChakraLink>
                                         </Td>
                                     </Tr>
                                     <Tr>
