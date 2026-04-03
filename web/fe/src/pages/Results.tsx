@@ -12,23 +12,6 @@ import FilterBar from "../components/FilterBar";
 
 
 function Results() {
-    const [query, setQuery] = useState("")
-      const inputRef = useRef<HTMLInputElement>(null)
-
-      // useEffect(() => {
-      //   const handleKeyDown = (e: KeyboardEvent) => {
-      //       // FIXME: also meta key, chakra works different?
-      //     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-      //       e.preventDefault()
-      //       inputRef.current?.focus()
-      //     }
-      //   }
-      //
-      //   window.addEventListener("keydown", handleKeyDown)
-      //   return () => window.removeEventListener("keydown", handleKeyDown)
-      // }, [])
-
-
     const { data: resultsList, isLoading, isError } = useQuery<ComputedStructure[], Error>({
         queryKey: ["results"],
         queryFn: getResults
