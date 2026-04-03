@@ -23,6 +23,12 @@ Produces an executable file `sweetseek-be`.
 air
 ```
 
+### Environment variables
+
+Required environment variables:
+
+- `MOLRENDER_CMD`: command which runs the molrender tool. Example: `node path/to/molrender.js`.
+
 ## Data
 
 The server expects a `data/` directory, with a `workflow_runs/` subdirectory, where it looks for the merged workflow result JSON file.

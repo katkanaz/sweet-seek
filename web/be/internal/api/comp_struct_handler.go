@@ -1,66 +1,22 @@
 package api
 
 import (
-	"sweetseek-be/internal/functools"
-	"sweetseek-be/internal/set"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"math"
 	"net/http"
 	"os"
 	"path/filepath"
 	"slices"
 	"strings"
+	"sweetseek-be/internal/functools"
+	preview "sweetseek-be/internal/preview_image"
+	"sweetseek-be/internal/set"
+	. "sweetseek-be/internal/types"
 	"time"
 )
 
-type OptionItem struct {
-	Id int `json:"id"`
-	Value string `json:"value"`
-}
-
-type PlddtRange struct {
-	Min float32 `json:"min"`
-	Max float32 `json:"max"`
-}
-
-type FilterOptions struct {
-	Sugars []OptionItem `json:"sugars"`
-	PlddtRange PlddtRange `json:"plddt_range"`
-	Organisms []OptionItem `json:"organisms"`
-	PdbStructures []OptionItem `json:"pdb_structures"`
-}
-
-type ResidueId struct {
-	LabelAsymId string `json:"label_asym_id"`
-	StructOperId string `json:"struct_oper_id"`
-	LabelSeqId int `json:"label_seq_id"`
-}
-
-type Motif struct {
-	Surrounding string `json:"surrounding"`
-	Sugar string `json:"sugar"`
-	OriginalStructure string `json:"original_struct"`
-	ResidueIds []ResidueId `json:"residue_ids"`
-	Score float32 `json:"score"`
-	ResidueTypes []string `json:"residue_types"`
-	Transformation []float32 `json:"transformation"`
-}
-
-type ComputedStructure struct {
-	PdbId string `json:"pdb_id"`
-	AfdbId string `json:"afdb_id"`
-	Title string `json:"title"`
-	Organism []string `json:"organism"`
-	Plddt float32 `json:"plddt"`
-	AfVersion string `json:"af_version"`
-	AfRevision int `json:"af_revision"`
-	Motifs []Motif `json:"motifs"`
-}
-
-type LastUpdated struct {
-	Date string `json:"date"`
-}
 
 
 func getNewest(dir string, sufix string) (string, error) {
@@ -141,52 +97,6 @@ func getLastModifiedDate(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func ExtractOptions() error {
-	dateOnly, timeOnly := getDateTime("data/workflow_runs/", "_merged.json")
-	data := getComputedStructures()
-
-	plddtRange := PlddtRange{
-		Min: float32(math.Inf(+1)),
-		Max: float32(math.Inf(-1)),
-	}
-	sugarSet := set.NewSet[string]()
-	organismSet := set.NewSet[string]() 
-	pdbStructSet := set.NewSet[string]()
-
-	for _, structure := range data {
-		for _, organism := range structure.Organism {
-			organismSet.Add(organism)
-		}
-		if structure.Plddt < plddtRange.Min {
-			plddtRange.Min = structure.Plddt
-		}
-		if structure.Plddt > plddtRange.Max {
-			plddtRange.Max = structure.Plddt
-		}
-		for _, motif := range structure.Motifs {
-			sugarSet.Add(motif.Sugar)
-			pdbStructSet.Add(motif.OriginalStructure)
-		}
-	}
-
-	o := FilterOptions{
-		PlddtRange: plddtRange,
-		Sugars: functools.Map(sugarSet.ToList(), func(e string, i int) OptionItem {return OptionItem{Id: i, Value: e}}),
-		Organisms: functools.Map(organismSet.ToList(), func(e string, i int) OptionItem {return OptionItem{Id: i, Value: e}}),
-		PdbStructures: functools.Map(pdbStructSet.ToList(), func(e string, i int) OptionItem {return OptionItem{Id: i, Value: e}}),
-	}
-
-	options, err := json.MarshalIndent(o, "", "  ")
-	if err != nil {
-		return err
-	}
-
-	filename := fmt.Sprintf("data/workflow_runs/%sT%s_options.json", dateOnly, timeOnly)
-
-	return os.WriteFile(filename, options, 0644)
-}
-
-
 func getComputedStructures() []ComputedStructure {
 	var computedStructures []ComputedStructure
 	file, err := getNewest("data/workflow_runs/", "_merged.json")
@@ -263,4 +173,69 @@ func getCompStructDetail(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+
 func getStats(w http.ResponseWriter, r *http.Request) {}
+
+
+func extractOptions(data []ComputedStructure, outputPath string) error {
+	slog.Info("Extracting filter options")
+	plddtRange := PlddtRange{
+		Min: float32(math.Inf(+1)),
+		Max: float32(math.Inf(-1)),
+	}
+	sugarSet := set.NewSet[string]()
+	organismSet := set.NewSet[string]() 
+	pdbStructSet := set.NewSet[string]()
+
+	for _, structure := range data {
+		for _, organism := range structure.Organism {
+			organismSet.Add(organism)
+		}
+		if structure.Plddt < plddtRange.Min {
+			plddtRange.Min = structure.Plddt
+		}
+		if structure.Plddt > plddtRange.Max {
+			plddtRange.Max = structure.Plddt
+		}
+		for _, motif := range structure.Motifs {
+			sugarSet.Add(motif.Sugar)
+			pdbStructSet.Add(motif.OriginalStructure)
+		}
+	}
+
+	o := FilterOptions{
+		PlddtRange: plddtRange,
+		Sugars: functools.Map(sugarSet.ToList(), func(e string, i int) OptionItem {return OptionItem{Id: i, Value: e}}),
+		Organisms: functools.Map(organismSet.ToList(), func(e string, i int) OptionItem {return OptionItem{Id: i, Value: e}}),
+		PdbStructures: functools.Map(pdbStructSet.ToList(), func(e string, i int) OptionItem {return OptionItem{Id: i, Value: e}}),
+	}
+
+	options, err := json.MarshalIndent(o, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(outputPath, options, 0644)
+}
+
+
+func EnsureGeneratedData() error {
+	dateOnly, timeOnly := getDateTime("data/workflow_runs/", "_merged.json")
+	optionsPath := fmt.Sprintf("data/workflow_runs/%sT%s_options.json", dateOnly, timeOnly)
+
+	data := getComputedStructures()
+
+	var err error
+
+	err = extractOptions(data, optionsPath)
+	if err != nil {
+		return err
+	}
+
+	err = preview.GenerateImages(data)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
