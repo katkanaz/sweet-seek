@@ -1,7 +1,6 @@
 import { HStack, Image, Link as ChakraLink, Table, TableContainer, Tbody, Td, Tr, VStack, Box, Text } from "@chakra-ui/react";
 import { Link as TanstackRouterLink } from '@tanstack/react-router'
 import { ComputedStructure } from "../api/computed_structure";
-import placeholder from "../assets/structure-placeholder.png"
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 
@@ -15,7 +14,7 @@ function SearchResultItem({result}: SearchResultItemProps) {
         <HStack align="flex-start" w="full" spacing={4}>
             <Box boxSize="250px" flexShrink={0} alignItems="center" display="flex">
                 <ChakraLink  as={TanstackRouterLink} to={result.afdb_id}>
-                    <Image src={placeholder} borderRadius="md"/>
+                    <Image src={`api/img/preview/${result.pdb_id}.png`} borderRadius="md"/>
                 </ChakraLink>
             </Box>
             <VStack align="left-start" spacing={3} flex="1" minW={0}>
