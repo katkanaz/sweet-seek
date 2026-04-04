@@ -47,3 +47,10 @@ type ComputedStructure struct {
 type LastUpdated struct {
 	Date string `json:"date"`
 }
+
+type ResultsSearchParams struct {
+	Sugar        []int     `json:"sugar"`
+	Plddt        []float32 `json:"plddt"`
+	Organism     []int     `json:"organism"`
+	PdbStructure *int      `json:"pdbStructure"`
+}

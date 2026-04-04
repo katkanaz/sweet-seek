@@ -97,7 +97,111 @@ func getLastModifiedDate(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func getComputedStructures() []ComputedStructure {
+func isFilterEmpty(filter *resultsFilter) bool {
+	return len(filter.Sugar) == 0 && len(filter.Plddt) == 0 && len(filter.Organism) == 0 && filter.PdbStructure == nil
+}
+
+
+func constructFilter(searchParams *ResultsSearchParams) resultsFilter {
+	filterOptions := loadFilterOptions()
+
+	filteredSugars := make([]string, 0, len(filterOptions.Sugars))
+	filteredOrganism := make([]string, 0, len(filterOptions.Organisms))
+	var filteredPdbStructure *string
+
+	for _, sugar := range filterOptions.Sugars {
+		if slices.Contains(searchParams.Sugar, sugar.Id) {
+			filteredSugars = append(filteredSugars, sugar.Value)
+		}
+	}
+
+	for _, organism := range filterOptions.Organisms {
+		if slices.Contains(searchParams.Organism, organism.Id) {
+			filteredOrganism = append(filteredOrganism, organism.Value)
+		}
+	}
+
+	if searchParams.PdbStructure != nil {
+		idx := slices.IndexFunc(filterOptions.PdbStructures, func(o OptionItem) bool {return o.Id == *searchParams.PdbStructure})
+		if idx == -1 {
+			slog.Warn("Invalid PDB structure filter ID", "PdbStructure", *searchParams.PdbStructure)
+		} else {
+			pdb := filterOptions.PdbStructures[idx].Value
+			filteredPdbStructure = &pdb
+		}
+	}
+	
+	filter := resultsFilter{
+		Sugar: filteredSugars,
+		Plddt: searchParams.Plddt,
+		Organism: filteredOrganism,
+		PdbStructure: filteredPdbStructure,
+	}
+	
+	return filter
+}
+
+
+func filterComputedStructures(computedStructures []ComputedStructure, filter *resultsFilter) []ComputedStructure {
+	if filter == nil || isFilterEmpty(filter) {
+		return computedStructures
+	}
+
+	filteredComputedStrucutres := make([]ComputedStructure, 0, len(computedStructures))
+	
+
+
+	for _, computedStructure := range computedStructures {
+		if len(filter.Plddt) != 0 {
+			if computedStructure.Plddt < filter.Plddt[0] || computedStructure.Plddt > filter.Plddt[1] {
+				continue
+			}
+		}
+		if len(filter.Organism) != 0 {
+			containsOrganism := false
+			for _, organism := range computedStructure.Organism {
+				if slices.Contains(filter.Organism, organism) {
+					containsOrganism = true
+					continue
+				}
+			}
+			if !containsOrganism {
+				continue
+			}
+		}
+
+		containsSugar := false
+		containsPdb := false
+		for _, motif := range computedStructure.Motifs {
+			if filter.PdbStructure != nil {
+				if *filter.PdbStructure != motif.OriginalStructure {
+					continue
+				}
+				containsPdb = true
+			}
+			if len(filter.Sugar) != 0 {
+				if !slices.Contains(filter.Sugar, motif.Sugar) {
+					continue
+				}
+				containsSugar = true
+			}
+		}
+
+		if len(filter.Sugar) != 0 && !containsSugar {
+			continue
+		}
+		if filter.PdbStructure != nil && !containsPdb {
+			continue
+		}
+
+		filteredComputedStrucutres = append(filteredComputedStrucutres, computedStructure)
+	}
+
+	return filteredComputedStrucutres
+}
+
+
+func getComputedStructures(filter *resultsFilter) []ComputedStructure {
 	var computedStructures []ComputedStructure
 	file, err := getNewest("data/workflow_runs/", "_merged.json")
 	if err != nil {
@@ -113,11 +217,11 @@ func getComputedStructures() []ComputedStructure {
 		panic(err)
 	}
 
-	return computedStructures
+	return filterComputedStructures(computedStructures, filter)
 }
 
 
-func getFilterOptions(w http.ResponseWriter, r *http.Request) {
+func loadFilterOptions() FilterOptions {
 	var filterOptions FilterOptions
 	file, err := getNewest("data/workflow_runs/", "_options.json")
 	if err != nil {
@@ -132,6 +236,13 @@ func getFilterOptions(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(opts).Decode(&filterOptions); err != nil {
 		panic(err)
 	}
+	
+	return filterOptions
+}
+
+
+func getFilterOptions(w http.ResponseWriter, r *http.Request) {
+	filterOptions := loadFilterOptions()
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -142,8 +253,28 @@ func getFilterOptions(w http.ResponseWriter, r *http.Request) {
 }
 
 
+type resultsFilter struct {
+	Sugar        []string
+	Plddt        []float32
+	Organism     []string
+	PdbStructure *string
+}
+
 func getAllResults(w http.ResponseWriter, r *http.Request) {
-	results := getComputedStructures()
+	var requestBody ResultsSearchParams
+	if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
+		http.Error(w, "Invalid JSON in request body", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	slog.Debug("getAllResults", "search", requestBody)
+
+	filter := constructFilter(&requestBody)
+
+	slog.Debug("getAllResults", "filter", filter)
+	
+	results := getComputedStructures(&filter)
 	
 	w.Header().Set("Content-Type", "application/json")
 
@@ -155,8 +286,17 @@ func getAllResults(w http.ResponseWriter, r *http.Request) {
 
 
 func getCompStructDetail(w http.ResponseWriter, r *http.Request) {
+	var requestBody ResultsSearchParams
+	if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
+		http.Error(w, "Invalid JSON in request body", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	filter := constructFilter(&requestBody)
+
 	afid := r.PathValue("afid")
-	results := getComputedStructures()
+	results := getComputedStructures(&filter)
 	index := slices.IndexFunc(results, func(c ComputedStructure) bool {
 		return c.AfdbId == afid
 	})
@@ -223,7 +363,7 @@ func EnsureGeneratedData() error {
 	dateOnly, timeOnly := getDateTime("data/workflow_runs/", "_merged.json")
 	optionsPath := fmt.Sprintf("data/workflow_runs/%sT%s_options.json", dateOnly, timeOnly)
 
-	data := getComputedStructures()
+	data := getComputedStructures(nil)
 
 	var err error
 
