@@ -1,35 +1,72 @@
 import { QuestionOutlineIcon, SearchIcon } from "@chakra-ui/icons"
-import { Box, Button, HStack, NumberInput, NumberInputField, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Text, Tooltip, VStack } from "@chakra-ui/react"
+import { Box, Button, HStack, NumberInput, NumberInputField, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Skeleton, Text, Tooltip, VStack } from "@chakra-ui/react"
 
 import MultiSelect, { useMultiSelect } from "./MultiSelect";
 import { FilterOptions, getFilterOptions } from "../api/computed_structure";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import SingleSelect, { useSingleSelect } from "./SingleSelect";
+import { useNavigate } from "@tanstack/react-router";
+import { resultsRoute, ResultsSearch } from "../Router";
 
 
 function FilterBar() {
+    const navigate = useNavigate({ from: resultsRoute.fullPath });
+    const queryClient = useQueryClient();
+
+    const filters = resultsRoute.useSearch()
+
     const { data, isLoading, isError } = useQuery<FilterOptions, Error>({
         queryKey: ["options"],
         queryFn: getFilterOptions
     });
     const sugarMultiSelect = useMultiSelect(data?.sugars, { isLoading, isError });
     const organismMultiSelect = useMultiSelect(data?.organisms, { isLoading, isError });
-    const pdbStructMultiSelect = useSingleSelect(data?.pdb_structures, { isLoading, isError });
+    const pdbStructSingleSelect = useSingleSelect(data?.pdb_structures, { isLoading, isError });
 
     const min = data?.plddt_range.min;
     const max = data?.plddt_range.max;
     const [ range, setRange ] = useState<[number, number]|undefined>(undefined);
 
     useEffect(() => {
-        console.log(data)
       if (min !== undefined && max !== undefined && !range) {
         setRange([min, max])
       }
     }, [data, range])
 
+    useEffect(() => {
+        if (filters.organism) {
+            organismMultiSelect.props.setSelected(organismMultiSelect.props.options.filter(o => filters.organism?.includes(o.id)))
+        }
+        if (filters.sugar) {
+            sugarMultiSelect.props.setSelected(sugarMultiSelect.props.options.filter(o => filters.sugar?.includes(o.id)))
+        }
+        if (filters.pdbStructure !== undefined) {
+            pdbStructSingleSelect.props.setSelected(pdbStructSingleSelect.props.options.find(o => filters.pdbStructure === o.id) ?? null)
+        }
+        if (filters.plddt) {
+            setRange(filters.plddt);
+        }
+    }, [filters, data])
+
     if (!data || !range ) {
-      return null
+      return <Skeleton w="full" h="80px"/>
+    }
+
+    const handleFilterClick = () => {
+        console.log(pdbStructSingleSelect.props)
+        const search: ResultsSearch = {
+            sugar: sugarMultiSelect.props.selected.length === 0 ? undefined : sugarMultiSelect.props.selected.map(o => o.id),
+            organism: organismMultiSelect.props.selected.length === 0 ? undefined : organismMultiSelect.props.selected.map(o => o.id),
+            pdbStructure: pdbStructSingleSelect.props.selected?.id ?? undefined,
+            plddt: range[0] === min && range[1] === max ? undefined : range
+        }
+        console.log(search)
+        navigate({
+            search: search
+        });
+        
+        // queryClient.invalidateQueries({queryKey: ["results"]})
     }
 
     // FIXME: the filter button does not render well across screens
@@ -131,15 +168,21 @@ function FilterBar() {
                     <Tooltip label="" fontSize="sm">
                         <QuestionOutlineIcon boxSize="3.5" />
                     </Tooltip>
-                    {pdbStructMultiSelect.props.selected !== null &&
-                        <Button variant="ghost" size="xs" ml="auto" fontStyle="italic" color="gray.400" onClick={() => pdbStructMultiSelect.clearSelected()}>
+                    {pdbStructSingleSelect.props.selected !== null &&
+                        <Button variant="ghost" size="xs" ml="auto" fontStyle="italic" color="gray.400" onClick={() => pdbStructSingleSelect.clearSelected()}>
                             clear
                         </Button>
                     }
                 </HStack>
-                <SingleSelect {...pdbStructMultiSelect.props} width="9rem" placeholder="e.g. 7KHU"/>
+                <SingleSelect {...pdbStructSingleSelect.props} width="9rem" placeholder="e.g. 7KHU"/>
             </VStack>
-            <Button aria-label="Filter results" leftIcon={<SearchIcon aria-label="Search icon" />} ml="auto" color="gray.600">
+            <Button
+                aria-label="Filter results"
+                leftIcon={<SearchIcon aria-label="Search icon" />}
+                ml="auto"
+                color="gray.600"
+                onClick={handleFilterClick}
+            >
                 Filter
             </Button>
         </HStack>

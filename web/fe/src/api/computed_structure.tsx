@@ -1,4 +1,5 @@
 import { SelectOption } from "../components/MultiSelect";
+import { resultsRoute, ResultsSearch } from "../Router";
 
 export type ResidueId = {
 	label_asym_id: string,
@@ -50,15 +51,22 @@ export type FilterOptions = {
     pdb_structures: SelectOption[],
 }
 
-export const getResults = async (): Promise<ComputedStructure[]> => {
-    const res = await fetch("/api/results");
+export const getResults = async (filters: ResultsSearch): Promise<ComputedStructure[]> => {
+    const res = await fetch("/api/results", {
+        method: "POST", // TODO: try using get request
+        body: JSON.stringify(filters)
+    });
+
     if (!res.ok) throw new Error("Failed to fetch results");
     const data: ComputedStructure[] = await res.json();
     return data;
 };
 
 export const getCompStruct = async (afid: string): Promise<ComputedStructure> => {
-    const res = await fetch(`/api/results/${afid}`);
+    const res = await fetch(`/api/results/${afid}`, {
+        method: "POST",
+        body: JSON.stringify({}) // TODO: add body 
+    });
     if (!res.ok) throw new Error("Failed to fetch the computed structure");
     const data: ComputedStructure = await res.json();
     return data;

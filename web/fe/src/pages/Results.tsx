@@ -3,21 +3,37 @@ import { InputGroup, InputLeftElement, Input, InputRightElement, Box, Kbd, VStac
 import MainContainer from "../components/MainContainer"
 import SearchResultItem from "../components/SearchResultItem"
 
-import { getResults, ComputedStructure } from "../api/computed_structure";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { getResults, ComputedStructure, getFilterOptions } from "../api/computed_structure";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+// import { useEffect, useRef, useState } from "react";
 import FilterBar from "../components/FilterBar";
-
-// NOTE: "Computed model of" is added by RCSB, unchar. protein has different name in AFDB, AFDB ID: AF-O25142-F1 but RCSB AF_AFO25142F1
+import { getRouteApi, useSearch } from "@tanstack/react-router";
+import { resultsRoute } from "../Router";
+import { useEffect } from "react";
 
 
 function Results() {
+
+    const filters = resultsRoute.useSearch()
+    const {sugar, plddt, organism, pdbStructure} = filters;
+
+
     const { data: resultsList, isLoading, isError } = useQuery<ComputedStructure[], Error>({
-        queryKey: ["results"],
-        queryFn: getResults
+        queryKey: ["results", sugar, plddt, organism, pdbStructure],
+        queryFn: () => getResults(filters)
     });
 
-    if (isLoading) {
+    const queryClient = useQueryClient();
+
+    useEffect(() => { // TODO: check if this loads before filterbar starts rendering
+        queryClient.prefetchQuery({
+            queryKey: ["options"],
+            queryFn: getFilterOptions,
+            staleTime: 300000, // 5 min
+        });
+    }, []);
+
+    if (isLoading) { // TODO: only show loader in the body, always render filter bar
         return (
             <Center minH="60vh">
                 <VStack spacing={4}>
@@ -59,18 +75,6 @@ function Results() {
 
     return (
         <MainContainer>
-            {/* <InputGroup mt="6" mb="4"> */}
-            {/*     <InputLeftElement> */}
-            {/*         <SearchIcon color="gray.300" /> */}
-            {/*     </InputLeftElement>  */}
-            {/*     <Input ref={inputRef} placeholder="Search" value={query} onChange={(e) => setQuery(e.target.value)} /> */}
-            {/*     <InputRightElement color="gray.600" width="20" mr="2"> */}
-            {/*         <Box display="flex" gap="1"> */}
-            {/*             <Kbd>Ctrl</Kbd> */}
-            {/*             <Kbd>K</Kbd> */}
-            {/*         </Box> */}
-            {/*     </InputRightElement> */}
-            {/* </InputGroup> */}
             <VStack pt="4" alignItems="stretch">
                 <FilterBar />
                 <VStack mt="6" divider={<Box borderBottom="solid" borderBottomColor="lightgrey" borderBottomWidth="thin" boxSize="full" w="full"></Box>}>

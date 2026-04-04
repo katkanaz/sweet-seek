@@ -21,9 +21,24 @@ export const homeRoute = createRoute({
     component: Home,
 })
 
+export type ResultsSearch = {
+    sugar?: number[]
+    plddt?: [number, number]
+    organism?: number[]
+    pdbStructure?: number
+}
+
 export const resultsRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: "/results",
+    validateSearch: (search: Record<string, unknown>): ResultsSearch => {
+        return {
+            sugar: (search.sugar as number[]) ?? undefined,
+            plddt: (search.plddt as [number, number]) ?? undefined,
+            organism: (search.organism as number[]) ?? undefined,
+            pdbStructure: (search.pdbStructure as number) ?? undefined,
+        }
+    },
     component: Results,
 })
 
@@ -48,3 +63,10 @@ export const docsRoute = createRoute({
 const routeTree = rootRoute.addChildren([homeRoute, resultsRoute, resultDetailRoute, docsRoute, statsRoute])
 
 export const router = createRouter({ routeTree })
+
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
