@@ -1,16 +1,17 @@
 import { Box, Link as ChakraLink, HStack, Table, TableContainer, Tbody, Td, Text, Tr, VStack } from "@chakra-ui/react"
-import { MotifResidueInfo } from "../api/computed_structure"
+import { ResidueId } from "../api/computed_structure"
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 type MotifDetailProps = {
     num: number
     sugar: string
     rmsd: number
-    residues: MotifResidueInfo[]
+    residueIds: ResidueId[]
     structurePDB: string
+    surroundingResidues: ResidueId[]
 }
 
-function MotifDetail({num, sugar, rmsd, residues, structurePDB}: MotifDetailProps) {
+function MotifDetail({num, sugar, rmsd, residueIds, structurePDB, surroundingResidues}: MotifDetailProps) {
     return (
         <VStack alignItems="flex-start" border="1px" borderColor="rgb(206, 201, 186)">
             <Box background="orange.100" w="full" px="3" py="2">
@@ -33,9 +34,9 @@ function MotifDetail({num, sugar, rmsd, residues, structurePDB}: MotifDetailProp
                                 </Td>
                             </Tr>
                             <Tr>
-                                <Td width="2" fontWeight="bold" px="0">Motif residues:</Td>
+                                <Td width="2" fontWeight="bold" px="0">Motif match residues:</Td>
                                 <Td style={{maxWidth: "17rem", textWrap: "auto"}}>
-                                   {residues.map(i => `${i.type} ${i.label_seq}/${i.label_asym}`).join(", ")}
+                                   {residueIds.map(i => `${i.res_name} ${i.res_id}/${i.chain_id}`).join(", ")}
                                 </Td>
                             </Tr>
                             <Tr>
@@ -49,6 +50,12 @@ function MotifDetail({num, sugar, rmsd, residues, structurePDB}: MotifDetailProp
                                             <ExternalLinkIcon />
                                         </HStack>
                                     </ChakraLink>
+                                </Td>
+                            </Tr>
+                            <Tr>
+                                <Td width="2" fontWeight="bold" px="0">Motif residues:</Td>
+                                <Td style={{maxWidth: "17rem", textWrap: "auto"}}>
+                                   {surroundingResidues.map(i => `${i.res_name} ${i.res_id}/${i.chain_id}`).join(", ")}
                                 </Td>
                             </Tr>
                         </Tbody>

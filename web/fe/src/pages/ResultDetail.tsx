@@ -1,6 +1,6 @@
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Center, HStack, Link as ChakraLink, Spinner, Table, TableContainer, Tbody, Td, Text, Tr, VStack } from "@chakra-ui/react"
 import MainContainer from "../components/MainContainer"
-import { getCompStruct, ComputedStructure, mergeRisudeInfo } from "../api/computed_structure"
+import { getCompStruct, ComputedStructure } from "../api/computed_structure"
 import { resultDetailRoute } from "../Router";
 import MotifDetail from "../components/MotifDetail";
 import { useEffect, useState } from "react";
@@ -155,7 +155,17 @@ function ResultDetail() {
                             </Table>
                         </TableContainer>
                         <VStack mt="3">
-                            {compStruct.motifs.map((m, i) => <MotifDetail num={i+1} sugar={m.sugar} rmsd={m.score} residues={mergeRisudeInfo(m.residue_types, m.residue_ids)} structurePDB={m.original_struct} />)}
+                            {compStruct.motifs.map((m, i) => (
+                                <MotifDetail
+                                    key={i}
+                                    num={i+1}
+                                    sugar={m.sugar}
+                                    rmsd={m.score}
+                                    residueIds={m.residue_ids}
+                                    structurePDB={m.original_struct}
+                                    surroundingResidues={m.surrounding_residues}
+                                />
+                            ))}
                         </VStack>
                     </Box>
                     <VStack flexGrow="1">
