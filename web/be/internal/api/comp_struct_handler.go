@@ -171,6 +171,43 @@ func constructFilter(searchParams *ResultsSearchParams) resultsFilter {
 	return filter
 }
 
+func findBestMotifMatch(motifs []Motif) *Match {
+	if len(motifs) == 0 {
+		return nil
+	}
+
+	match := Match{ Rmsd: float32(math.Inf(+1)) }
+	for _, m := range motifs {
+		if m.Score < match.Rmsd {
+			match.Rmsd = m.Score
+			match.Sugar = m.Sugar
+		}
+	}
+	return &match
+}
+
+func processRawComputedStructs(rawStructs []RawComputedStructure) []ComputedStructure {
+	compStructs := make([]ComputedStructure, 0, len(rawStructs))
+
+	for _, s := range rawStructs {
+		newStruct := ComputedStructure{
+			PdbId: s.PdbId,
+			AfdbId: s.AfdbId,
+			Title: s.Title,
+			Organism: s.Organism,
+			Plddt: s.Plddt,
+			AfVersion: s.AfVersion,
+			AfRevision: s.AfRevision,
+			BestMatch: findBestMotifMatch(s.Motifs),
+			AcceptedMotifs: s.Motifs,
+			RejectedMotifs: nil,
+		}
+		compStructs = append(compStructs, newStruct)
+	}
+
+	return compStructs
+}
+
 
 func filterComputedStructures(computedStructures []ComputedStructure, filter *resultsFilter) []ComputedStructure {
 	start := time.Now()
@@ -203,7 +240,7 @@ func filterComputedStructures(computedStructures []ComputedStructure, filter *re
 
 		containsSugar := false
 		containsPdb := false
-		for _, motif := range computedStructure.Motifs {
+		for _, motif := range computedStructure.AcceptedMotifs {
 			if filter.PdbStructure != nil {
 				if *filter.PdbStructure != motif.OriginalStructure {
 					continue
@@ -260,7 +297,9 @@ func getComputedStructures(filter *resultsFilter) []ComputedStructure {
 
 	if dateTime == nil || !dateTime.Equal(*newestTime) {
 		slog.Debug("Loading data from JSON")
-		loadFromJson(file, &computedStructures)
+		var rawStructs []RawComputedStructure
+		loadFromJson(file, &rawStructs)
+		computedStructures = processRawComputedStructs(rawStructs)
 		compStructCache.write(newestTime, computedStructures)
 	}
 
@@ -380,7 +419,7 @@ func extractOptions(data []ComputedStructure, outputPath string) error {
 		if structure.Plddt > plddtRange.Max {
 			plddtRange.Max = structure.Plddt
 		}
-		for _, motif := range structure.Motifs {
+		for _, motif := range structure.AcceptedMotifs {
 			sugarSet.Add(motif.Sugar)
 			pdbStructSet.Add(motif.OriginalStructure)
 		}

@@ -33,7 +33,7 @@ type Motif struct {
 	Transformation []float32 `json:"transformation"`
 }
 
-type ComputedStructure struct {
+type RawComputedStructure struct {
 	PdbId string `json:"pdb_id"`
 	AfdbId string `json:"afdb_id"`
 	Title string `json:"title"`
@@ -42,6 +42,24 @@ type ComputedStructure struct {
 	AfVersion string `json:"af_version"`
 	AfRevision int `json:"af_revision"`
 	Motifs []Motif `json:"motifs"`
+}
+
+type Match struct {
+	Sugar string `json:"sugar"`
+	Rmsd float32 `json:"rmsd"`
+}
+
+type ComputedStructure struct {
+	PdbId string `json:"pdb_id"`
+	AfdbId string `json:"afdb_id"`
+	Title string `json:"title"`
+	Organism []string `json:"organism"`
+	Plddt float32 `json:"plddt"`
+	AfVersion string `json:"af_version"`
+	AfRevision int `json:"af_revision"`
+	BestMatch *Match `json:"best_match"`
+	AcceptedMotifs []Motif `json:"accepted_motifs"`
+	RejectedMotifs []Motif `json:"rejected_motifs"`
 }
 
 type LastUpdated struct {
