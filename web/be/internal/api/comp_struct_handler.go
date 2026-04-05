@@ -303,8 +303,18 @@ func loadFromJson(file string, v any) {
 	}
 }
 
+func paginateComputedStructures(computedStructures []ComputedStructure, pagination *PaginationInfo) []ComputedStructure {
+	if pagination == nil {
+		return computedStructures
+	}
 
-func getComputedStructures(filter *resultsFilter) []ComputedStructure {
+	startIdx := pagination.Count * (pagination.Page - 1)
+	endIdx := startIdx + pagination.Count
+
+	return computedStructures[startIdx:endIdx]
+}
+
+func getComputedStructures(filter *resultsFilter, pagination *PaginationInfo) (int, []ComputedStructure) {
 	start := time.Now()
 	var computedStructures []ComputedStructure
 	file, newestTime, err := getNewest("data/workflow_runs/", "_merged.json")
@@ -328,7 +338,9 @@ func getComputedStructures(filter *resultsFilter) []ComputedStructure {
 
 	filteredStructs := filterComputedStructures(computedStructures, filter)
 
-	return sortComputedStructures(filteredStructs)
+	sortedCompStructs := sortComputedStructures(filteredStructs)
+
+	return len(sortedCompStructs), paginateComputedStructures(sortedCompStructs, pagination)
 }
 
 
@@ -357,6 +369,17 @@ func getFilterOptions(w http.ResponseWriter, r *http.Request) {
 }
 
 
+func getPaginationInfo(searchParams *ResultsSearchParams) PaginationInfo {
+	count := 10
+	if searchParams.Count != nil {
+		count = *searchParams.Count
+	}
+	return PaginationInfo{
+		Page: searchParams.Page,
+		Count: count,
+	}
+}
+
 
 func getAllResults(w http.ResponseWriter, r *http.Request) {
 	var requestBody ResultsSearchParams
@@ -371,12 +394,19 @@ func getAllResults(w http.ResponseWriter, r *http.Request) {
 	filter := constructFilter(&requestBody)
 
 	slog.Debug("getAllResults", "filter", filter)
+
+	pagination := getPaginationInfo(&requestBody)
 	
-	results := getComputedStructures(&filter)
+	totalCount, results := getComputedStructures(&filter, &pagination)
+
+	data := GetComputedStructuresResponse{
+		TotalCount: totalCount,
+		Data: results,
+	}
 	
 	w.Header().Set("Content-Type", "application/json")
 
-	if err := json.NewEncoder(w).Encode(results); err != nil {
+	if err := json.NewEncoder(w).Encode(data); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -394,7 +424,7 @@ func getCompStructDetail(w http.ResponseWriter, r *http.Request) {
 	filter := constructFilter(&requestBody)
 
 	afid := r.PathValue("afid")
-	results := getComputedStructures(&filter)
+	_, results := getComputedStructures(&filter, nil)
 	index := slices.IndexFunc(results, func(c ComputedStructure) bool {
 		return c.AfdbId == afid
 	})
@@ -466,7 +496,7 @@ func EnsureGeneratedData() error {
 	dateOnly, timeOnly := getDateTime("data/workflow_runs/", "_merged.json")
 	optionsPath := fmt.Sprintf("data/workflow_runs/%sT%s_options.json", dateOnly, timeOnly)
 
-	data := getComputedStructures(nil)
+	_, data := getComputedStructures(nil, nil)
 
 	var err error
 

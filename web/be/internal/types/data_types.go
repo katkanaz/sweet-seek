@@ -71,4 +71,16 @@ type ResultsSearchParams struct {
 	Plddt        []float32 `json:"plddt"`
 	Organism     []int     `json:"organism"`
 	PdbStructure *int      `json:"pdbStructure"`
+	Page 		 int	   `json:"page"`
+	Count		 *int	   `json:"count"`
+}
+
+type PaginationInfo struct {
+	Page  int `json:"page"`
+	Count int `json:"count"`
+}
+
+type GetComputedStructuresResponse struct {
+	TotalCount int 				   `json:"total_count"`
+	Data	   []ComputedStructure `json:"data"`
 }
