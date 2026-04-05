@@ -219,6 +219,30 @@ func sortComputedStructures(computedStructures []ComputedStructure) []ComputedSt
 }
 
 
+func filterMotifs(motifs []Motif, filter *resultsFilter) ([]Motif, []Motif) {
+	acceptedMotifs := make([]Motif, 0, len(motifs))
+	rejectedMotifs := make([]Motif, 0, len(motifs))
+	
+	for _, motif := range motifs {
+		if filter.PdbStructure != nil {
+			if *filter.PdbStructure != motif.OriginalStructure {
+				rejectedMotifs = append(rejectedMotifs, motif)
+				continue
+			}
+		}
+		if len(filter.Sugar) != 0 {
+			if !slices.Contains(filter.Sugar, motif.Sugar) {
+				rejectedMotifs = append(rejectedMotifs, motif)
+				continue
+			}
+		}
+		acceptedMotifs = append(acceptedMotifs, motif)
+	}
+
+	return acceptedMotifs, rejectedMotifs
+}
+
+
 func filterComputedStructures(computedStructures []ComputedStructure, filter *resultsFilter) []ComputedStructure {
 	start := time.Now()
 	if filter == nil || isFilterEmpty(filter) {
@@ -227,8 +251,6 @@ func filterComputedStructures(computedStructures []ComputedStructure, filter *re
 
 	filteredComputedStrucutres := make([]ComputedStructure, 0, len(computedStructures))
 	
-
-
 	for _, computedStructure := range computedStructures {
 		if len(filter.Plddt) != 0 {
 			if computedStructure.Plddt < filter.Plddt[0] || computedStructure.Plddt > filter.Plddt[1] {
@@ -248,29 +270,16 @@ func filterComputedStructures(computedStructures []ComputedStructure, filter *re
 			}
 		}
 
-		containsSugar := false
-		containsPdb := false
-		for _, motif := range computedStructure.AcceptedMotifs {
-			if filter.PdbStructure != nil {
-				if *filter.PdbStructure != motif.OriginalStructure {
-					continue
-				}
-				containsPdb = true
-			}
-			if len(filter.Sugar) != 0 {
-				if !slices.Contains(filter.Sugar, motif.Sugar) {
-					continue
-				}
-				containsSugar = true
-			}
+		acceptedMotifs, rejectedMotifs := filterMotifs(computedStructure.AcceptedMotifs, filter)
+
+		if len(acceptedMotifs) == 0 {
+			continue
 		}
 
-		if len(filter.Sugar) != 0 && !containsSugar {
-			continue
-		}
-		if filter.PdbStructure != nil && !containsPdb {
-			continue
-		}
+		computedStructure.AcceptedMotifs = acceptedMotifs
+		computedStructure.RejectedMotifs = rejectedMotifs
+		
+		computedStructure.BestMatch = findBestMotifMatch(acceptedMotifs)
 
 		filteredComputedStrucutres = append(filteredComputedStrucutres, computedStructure)
 	}
