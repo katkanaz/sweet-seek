@@ -1,6 +1,7 @@
 package api
 
 import (
+	"cmp"
 	"encoding/json"
 	"fmt"
 	"log/slog"
@@ -208,6 +209,15 @@ func processRawComputedStructs(rawStructs []RawComputedStructure) []ComputedStru
 	return compStructs
 }
 
+func sortComputedStructures(computedStructures []ComputedStructure) []ComputedStructure {
+	start := time.Now()
+	slices.SortFunc(computedStructures, func(a, b ComputedStructure) int {
+		return cmp.Compare(a.BestMatch.Rmsd, b.BestMatch.Rmsd)
+	})
+	slog.Debug("sort structures", "duration", time.Since(start))
+	return computedStructures
+}
+
 
 func filterComputedStructures(computedStructures []ComputedStructure, filter *resultsFilter) []ComputedStructure {
 	start := time.Now()
@@ -307,7 +317,9 @@ func getComputedStructures(filter *resultsFilter) []ComputedStructure {
 
 	slog.Debug("data load duartion", "duration", end.Sub(start))
 
-	return filterComputedStructures(computedStructures, filter)
+	filteredStructs := filterComputedStructures(computedStructures, filter)
+
+	return sortComputedStructures(filteredStructs)
 }
 
 
