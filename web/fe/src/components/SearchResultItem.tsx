@@ -28,21 +28,16 @@ function SearchResultItem({result}: SearchResultItemProps) {
                                 <Td width="2" fontWeight="bold" px="0">Organism</Td>
                                 {/* FIXME: for link taxon id needed */}
                                 <Td>
-                                    <ChakraLink>
-                                        <HStack alignItems="center" gap="1">
-                                            <Text>
-                                                {result.organism}
-                                            </Text>
-                                            <ExternalLinkIcon />
-                                        </HStack>
-                                    </ChakraLink>
+                                    <Text>
+                                        {result.organism}
+                                    </Text>
                                 </Td>
                             </Tr>
                             <Tr>
                                 <Td width="2" fontWeight="bold" px="0">AlphaFold DB</Td>
                                 <Td>
                                 {/* FIXME: why is the link so "long" */}
-                                    <ChakraLink href={`https://alphafold.ebi.ac.uk/entry/${result.afdb_id.split("-")[1]}`}>
+                                    <ChakraLink href={`https://alphafold.ebi.ac.uk/entry/${result.afdb_id.split("-")[1]}`} target="_blank">
                                         <HStack alignItems="center" gap="1">
                                             <Text>
                                                 {result.afdb_id}
@@ -55,7 +50,7 @@ function SearchResultItem({result}: SearchResultItemProps) {
                             <Tr>
                                 <Td width="2" fontWeight="bold" px="0">UniProtKB</Td>
                                 <Td>
-                                    <ChakraLink href={`https://www.uniprot.org/uniprotkb/${result.afdb_id.split("-")[1]}`}>
+                                    <ChakraLink href={`https://www.uniprot.org/uniprotkb/${result.afdb_id.split("-")[1]}`} target="_blank">
                                         <HStack alignItems="center" gap="1">
                                             <Text>
                                                 {`${result.afdb_id.split("-")[1]}`}

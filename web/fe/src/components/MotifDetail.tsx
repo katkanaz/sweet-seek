@@ -42,7 +42,7 @@ function MotifDetail({num, sugar, rmsd, residueIds, structurePDB, surroundingRes
                             <Tr>
                                 <Td width="2" fontWeight="bold" px="0">Original structure PDB ID:</Td>
                                 <Td>
-                                    <ChakraLink href={`https://www.rcsb.org/structure/${structurePDB}`}>
+                                    <ChakraLink href={`https://www.rcsb.org/structure/${structurePDB}`} target="_blank">
                                         <HStack alignItems="center" gap="1">
                                             <Text>
                                                 {structurePDB}

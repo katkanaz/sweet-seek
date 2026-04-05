@@ -103,7 +103,7 @@ function ResultDetail() {
                                     <Tr>
                                         <Td width="2" fontWeight="bold" px="0">AlphaFold DB:</Td>
                                         <Td>
-                                            <ChakraLink href={`https://alphafold.ebi.ac.uk/entry/${compStruct.afdb_id.split("-")[1]}`}>
+                                            <ChakraLink href={`https://alphafold.ebi.ac.uk/entry/${compStruct.afdb_id.split("-")[1]}`} target="_blank">
                                                 <HStack alignItems="center" gap="1">
                                                     <Text>
                                                         {compStruct.afdb_id}
@@ -116,7 +116,7 @@ function ResultDetail() {
                                     <Tr>
                                         <Td width="2" fontWeight="bold" px="0">UniProtKB:</Td>
                                         <Td>
-                                            <ChakraLink href={`https://www.uniprot.org/uniprotkb/${compStruct.afdb_id.split("-")[1]}`}>
+                                            <ChakraLink href={`https://www.uniprot.org/uniprotkb/${compStruct.afdb_id.split("-")[1]}`} target="_blank">
                                                 <HStack alignItems="center" gap="1">
                                                     <Text>
                                                         {`${compStruct.afdb_id.split("-")[1]}`}
@@ -135,14 +135,9 @@ function ResultDetail() {
                                     <Tr>
                                         <Td width="2" fontWeight="bold" px="0">Organism:</Td>
                                         <Td>
-                                            <ChakraLink>
-                                                <HStack alignItems="center" gap="1">
-                                                    <Text>
-                                                        {compStruct.organism}
-                                                    </Text>
-                                                    <ExternalLinkIcon />
-                                                </HStack>
-                                            </ChakraLink>
+                                            <Text>
+                                                {compStruct.organism}
+                                            </Text>
                                         </Td>
                                     </Tr>
                                     <Tr>
