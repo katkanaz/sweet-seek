@@ -18,18 +18,18 @@ type FilterOptions struct {
 }
 
 type ResidueId struct {
-	LabelAsymId string `json:"label_asym_id"`
-	StructOperId string `json:"struct_oper_id"`
-	LabelSeqId int `json:"label_seq_id"`
+	ResidueName string `json:"res_name"`
+	ResidueId int `json:"res_id"`
+	ChainId string `json:"chain_id"`
 }
 
 type Motif struct {
 	Surrounding string `json:"surrounding"`
 	Sugar string `json:"sugar"`
 	OriginalStructure string `json:"original_struct"`
+	SurroundingResidues []ResidueId `json:"surrounding_residues"`
 	ResidueIds []ResidueId `json:"residue_ids"`
 	Score float32 `json:"score"`
-	ResidueTypes []string `json:"residue_types"`
 	Transformation []float32 `json:"transformation"`
 }
 
