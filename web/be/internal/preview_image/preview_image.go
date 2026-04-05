@@ -32,10 +32,7 @@ func GenerateImages(data []ComputedStructure) error {
 		return fmt.Errorf("MOLRENDER_CMD environment variable is not set")
 	}
 
-	num_data := len(data)
-
-	for i, structure := range data {
-		slog.Debug("Downloading structure", "pdbid", structure.PdbId, "num", i+1, "total", num_data)
+	for _, structure := range data {
 		if err := downloadStructure(structure.PdbId); err != nil {
 			return err
 		}
@@ -51,9 +48,10 @@ func downloadStructure(pdbId string) error {
 	filePath := fmt.Sprintf("%s/%s.bcif", structuresDir, pdbId)
 
 	if _, err := os.Stat(filePath); err == nil {
-		slog.Debug("Structure already exists", "pdbid", pdbId)
 		return nil
 	}
+
+	slog.Debug("Structure not cached", "pdbid", pdbId)
 
 	url := fmt.Sprintf("https://models.rcsb.org/%s.bcif", pdbId)
 
@@ -80,9 +78,9 @@ func downloadStructure(pdbId string) error {
 func renderStructure(molrenderCmd, pdbId string) error {
 	newPath := fmt.Sprintf("%s/%s.jpeg", previewImgDir, pdbId)
 	if _, err := os.Stat(newPath); err == nil {
-		slog.Debug("Image already exists", "pdbid", pdbId)
 		return nil
 	}
+	slog.Debug("Rendering image", "pdbid", pdbId)
 
 	filePath := fmt.Sprintf("%s/%s.bcif", structuresDir, pdbId)
 	var cmd *exec.Cmd
