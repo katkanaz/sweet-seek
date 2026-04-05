@@ -1,13 +1,10 @@
-import { SearchIcon } from "@chakra-ui/icons"
-import { InputGroup, InputLeftElement, Input, InputRightElement, Box, Kbd, VStack, Center, Spinner, Text, AlertIcon, Alert, AlertTitle, AlertDescription } from "@chakra-ui/react"
+import { Box, VStack, Center, Spinner, Text, AlertIcon, Alert, AlertTitle, AlertDescription } from "@chakra-ui/react"
 import MainContainer from "../components/MainContainer"
 import SearchResultItem from "../components/SearchResultItem"
 
 import { getResults, ComputedStructure, getFilterOptions } from "../api/computed_structure";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-// import { useEffect, useRef, useState } from "react";
 import FilterBar from "../components/FilterBar";
-import { getRouteApi, useSearch } from "@tanstack/react-router";
 import { resultsRoute } from "../Router";
 import { useEffect } from "react";
 

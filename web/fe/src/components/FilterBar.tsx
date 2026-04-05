@@ -3,7 +3,7 @@ import { Box, Button, HStack, NumberInput, NumberInputField, RangeSlider, RangeS
 
 import MultiSelect, { useMultiSelect } from "./MultiSelect";
 import { FilterOptions, getFilterOptions } from "../api/computed_structure";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import SingleSelect, { useSingleSelect } from "./SingleSelect";
 import { useNavigate } from "@tanstack/react-router";
@@ -12,7 +12,6 @@ import { resultsRoute, ResultsSearch } from "../Router";
 
 function FilterBar() {
     const navigate = useNavigate({ from: resultsRoute.fullPath });
-    const queryClient = useQueryClient();
 
     const filters = resultsRoute.useSearch()
 
