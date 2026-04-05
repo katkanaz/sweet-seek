@@ -14,15 +14,45 @@ import (
 	preview "sweetseek-be/internal/preview_image"
 	"sweetseek-be/internal/set"
 	. "sweetseek-be/internal/types"
+	"sync"
 	"time"
 )
 
 
+type resultsFilter struct {
+	Sugar        []string
+	Plddt        []float32
+	Organism     []string
+	PdbStructure *string
+}
 
-func getNewest(dir string, sufix string) (string, error) {
+type computedStructureCache struct {
+	data []ComputedStructure
+	lock sync.RWMutex
+	dateTime *time.Time
+}
+
+func (c *computedStructureCache) read() (*time.Time, []ComputedStructure) {
+	c.lock.RLock()
+	defer c.lock.RUnlock()
+
+	return c.dateTime, c.data
+}
+
+func (c *computedStructureCache) write(dateTime *time.Time, data []ComputedStructure)  {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+
+	c.dateTime = dateTime
+	c.data = data
+}
+
+var compStructCache computedStructureCache
+
+func getNewest(dir string, sufix string) (string, *time.Time, error) {
 	entries, err := os.ReadDir(dir)
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 
 	var newestTime time.Time
@@ -54,15 +84,15 @@ func getNewest(dir string, sufix string) (string, error) {
 	}
 
 	if newestFile == "" {
-		return "", fmt.Errorf("No matching files found")
+		return "", nil, fmt.Errorf("No matching files found")
 	}
 
-	return newestFile, nil
+	return newestFile, &newestTime, nil
 }
 
 
 func getDateTime(dir_path string, file_sufix string) (string, string) {
-	file, err := getNewest(dir_path, file_sufix)
+	file, _, err := getNewest(dir_path, file_sufix)
 	if err != nil {
 		panic (err)
 	}
@@ -143,6 +173,7 @@ func constructFilter(searchParams *ResultsSearchParams) resultsFilter {
 
 
 func filterComputedStructures(computedStructures []ComputedStructure, filter *resultsFilter) []ComputedStructure {
+	start := time.Now()
 	if filter == nil || isFilterEmpty(filter) {
 		return computedStructures
 	}
@@ -197,25 +228,45 @@ func filterComputedStructures(computedStructures []ComputedStructure, filter *re
 		filteredComputedStrucutres = append(filteredComputedStrucutres, computedStructure)
 	}
 
+	end := time.Now()
+
+	slog.Debug("filter duration", "duration", end.Sub(start))
 	return filteredComputedStrucutres
 }
 
 
+func loadFromJson(file string, v any) {
+	data, err := os.Open(file)
+	if err != nil {
+		panic(err)
+	}
+	defer data.Close()
+
+	if err := json.NewDecoder(data).Decode(v); err != nil {
+		panic(err)
+	}
+}
+
+
 func getComputedStructures(filter *resultsFilter) []ComputedStructure {
+	start := time.Now()
 	var computedStructures []ComputedStructure
-	file, err := getNewest("data/workflow_runs/", "_merged.json")
+	file, newestTime, err := getNewest("data/workflow_runs/", "_merged.json")
 	if err != nil {
 		panic (err)
 	}
-	merged, err := os.Open(file)
-	if err != nil {
-		panic(err)
-	}
-	defer merged.Close()
 
-	if err := json.NewDecoder(merged).Decode(&computedStructures); err != nil {
-		panic(err)
+	dateTime, computedStructures := compStructCache.read()
+
+	if dateTime == nil || !dateTime.Equal(*newestTime) {
+		slog.Debug("Loading data from JSON")
+		loadFromJson(file, &computedStructures)
+		compStructCache.write(newestTime, computedStructures)
 	}
+
+	end := time.Now()
+
+	slog.Debug("data load duartion", "duration", end.Sub(start))
 
 	return filterComputedStructures(computedStructures, filter)
 }
@@ -223,19 +274,12 @@ func getComputedStructures(filter *resultsFilter) []ComputedStructure {
 
 func loadFilterOptions() FilterOptions {
 	var filterOptions FilterOptions
-	file, err := getNewest("data/workflow_runs/", "_options.json")
+	file, _, err := getNewest("data/workflow_runs/", "_options.json")
 	if err != nil {
 		panic (err)
 	}
-	opts, err := os.Open(file)
-	if err != nil {
-		panic(err)
-	}
-	defer opts.Close()
 
-	if err := json.NewDecoder(opts).Decode(&filterOptions); err != nil {
-		panic(err)
-	}
+	loadFromJson(file, &filterOptions)
 	
 	return filterOptions
 }
@@ -253,12 +297,6 @@ func getFilterOptions(w http.ResponseWriter, r *http.Request) {
 }
 
 
-type resultsFilter struct {
-	Sugar        []string
-	Plddt        []float32
-	Organism     []string
-	PdbStructure *string
-}
 
 func getAllResults(w http.ResponseWriter, r *http.Request) {
 	var requestBody ResultsSearchParams
