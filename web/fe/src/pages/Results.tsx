@@ -2,22 +2,26 @@ import { Box, VStack, Center, Spinner, Text, AlertIcon, Alert, AlertTitle, Alert
 import MainContainer from "../components/MainContainer"
 import SearchResultItem from "../components/SearchResultItem"
 
-import { getResults, ComputedStructure, getFilterOptions } from "../api/computed_structure";
+import { getResults, getFilterOptions, GetComputedStructuresResponse } from "../api/computed_structure";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import FilterBar from "../components/FilterBar";
 import { resultsRoute } from "../Router";
 import { useEffect } from "react";
+import Pagination from "../components/Pagination";
 
 
 function Results() {
+    const searchParams = resultsRoute.useSearch();
+    const {sugar, plddt, organism, pdbStructure} = searchParams;
 
-    const filters = resultsRoute.useSearch()
-    const {sugar, plddt, organism, pdbStructure} = filters;
+    const page = searchParams.page;
+    const count = searchParams.count ?? 10;
 
+    const navigate = resultsRoute.useNavigate();
 
-    const { data: resultsList, isLoading, isError } = useQuery<ComputedStructure[], Error>({
-        queryKey: ["results", sugar, plddt, organism, pdbStructure],
-        queryFn: () => getResults(filters)
+    const { data: results, isLoading, isError } = useQuery<GetComputedStructuresResponse, Error>({
+        queryKey: ["results", sugar, plddt, organism, pdbStructure, page, count],
+        queryFn: () => getResults(searchParams)
     });
 
     const queryClient = useQueryClient();
@@ -29,6 +33,26 @@ function Results() {
             staleTime: 300000, // 5 min
         });
     }, []);
+
+    const handleNextPage = () => {
+        navigate({
+            search: (prev) => ({...prev, page: prev.page + 1}),
+        });
+    }
+
+    const handlePrevPage = () => {
+        navigate({
+            search: (prev) => ({...prev, page: prev.page - 1}),
+        });
+    }
+
+    const handleCountChange = (count: number) => {
+        console.log(count, "aaaa")
+        navigate({
+            search: (prev) => ({...prev, page: 1, count: count}),
+        });
+    }
+
 
     if (isLoading) { // TODO: only show loader in the body, always render filter bar
         return (
@@ -74,14 +98,16 @@ function Results() {
         <MainContainer>
             <VStack pt="4" alignItems="stretch">
                 <FilterBar />
+                <Pagination page={page} count={count} handlePrev={handlePrevPage} handleNext={handleNextPage} handleCountChange={handleCountChange} totalCount={results?.total_count ?? 0} />
                 <VStack mt="6" divider={<Box borderBottom="solid" borderBottomColor="lightgrey" borderBottomWidth="thin" boxSize="full" w="full"></Box>}>
-                    {resultsList?.length === 0 &&
+                    {results?.data.length === 0 &&
                         <Box>
                             No results found
                         </Box>
                     }
-                    {resultsList?.map(r => <SearchResultItem result={r} />)}
+                    {results?.data.map(r => <SearchResultItem result={r} />)}
                 </VStack>
+                <Pagination page={page} count={count} handlePrev={handlePrevPage} handleNext={handleNextPage} handleCountChange={handleCountChange} totalCount={results?.total_count ?? 0} />
             </VStack>
         </MainContainer>
     )

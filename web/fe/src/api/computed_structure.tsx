@@ -51,14 +51,19 @@ export type FilterOptions = {
     pdb_structures: SelectOption[],
 }
 
-export const getResults = async (filters: ResultsSearch): Promise<ComputedStructure[]> => {
+export type GetComputedStructuresResponse = {
+	total_count: number,
+	data: ComputedStructure[],
+}
+
+export const getResults = async (filters: ResultsSearch): Promise<GetComputedStructuresResponse> => {
     const res = await fetch("/api/results", {
         method: "POST", // TODO: try using get request
         body: JSON.stringify(filters)
     });
 
     if (!res.ok) throw new Error("Failed to fetch results");
-    const data: ComputedStructure[] = await res.json();
+    const data: GetComputedStructuresResponse = await res.json();
     return data;
 };
 
