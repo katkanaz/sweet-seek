@@ -356,6 +356,11 @@ func getStats(w http.ResponseWriter, r *http.Request) {}
 
 
 func extractOptions(data []ComputedStructure, outputPath string) error {
+	if _, err := os.Stat(outputPath); err == nil {
+		slog.Info("Filter options already exist", "path", outputPath)
+		return nil
+	}
+
 	slog.Info("Extracting filter options")
 	plddtRange := PlddtRange{
 		Min: float32(math.Inf(+1)),
