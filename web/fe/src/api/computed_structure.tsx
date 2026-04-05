@@ -7,6 +7,11 @@ export type ResidueId = {
 	chain_id: string,
 }
 
+export type Match = {
+	sugar: string,
+	rmsd: number,
+}
+
 export type Motif = {
 	surrounding: string,
 	sugar: string,
@@ -25,7 +30,9 @@ export type ComputedStructure = {
 	plddt: number,
 	af_version: string,
 	af_revision: number,
-	motifs: Motif[],
+	best_match: Match | null,
+	accepted_motifs: Motif[],
+	rejected_motifs: Motif[],
 };
 
 export type LastUpdated = {

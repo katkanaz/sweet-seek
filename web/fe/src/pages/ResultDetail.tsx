@@ -143,14 +143,15 @@ function ResultDetail() {
                                     <Tr>
                                         <Td width="2" fontWeight="bold" px="0">Total number of found motifs:</Td>
                                         <Td>
-                                            {compStruct.motifs.length}
+                                            {compStruct.accepted_motifs.length}
+                                            {/* TODO: should count all motifs or only accepted? */}
                                         </Td>
                                     </Tr>
                                 </Tbody>
                             </Table>
                         </TableContainer>
                         <VStack mt="3">
-                            {compStruct.motifs.map((m, i) => (
+                            {compStruct.accepted_motifs.map((m, i) => (
                                 <MotifDetail
                                     key={i}
                                     num={i+1}

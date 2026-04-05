@@ -66,6 +66,14 @@ function SearchResultItem({result}: SearchResultItemProps) {
                                     {result.plddt}
                                 </Td>
                             </Tr>
+                            {result.best_match &&
+                                <Tr>
+                                    <Td width="2" fontWeight="bold" px="0">Best Motif Match</Td>
+                                    <Td>
+                                        Sugar: {result.best_match.sugar}, RMSD: {result.best_match.rmsd}
+                                    </Td>
+                                </Tr>
+                            }
                         </Tbody>
                     </Table>
                 </TableContainer>
