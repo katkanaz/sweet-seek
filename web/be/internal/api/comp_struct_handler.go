@@ -308,8 +308,9 @@ func paginateComputedStructures(computedStructures []ComputedStructure, paginati
 		return computedStructures
 	}
 
+
 	startIdx := pagination.Count * (pagination.Page - 1)
-	endIdx := startIdx + pagination.Count
+	endIdx := min(startIdx + pagination.Count, len(computedStructures))
 
 	return computedStructures[startIdx:endIdx]
 }
