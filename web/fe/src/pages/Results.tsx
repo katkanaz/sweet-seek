@@ -1,4 +1,4 @@
-import { Box, VStack, Center, Spinner, Text, AlertIcon, Alert, AlertTitle, AlertDescription, HStack } from "@chakra-ui/react"
+import { Box, VStack, Center, Spinner, Text, AlertIcon, Alert, AlertTitle, AlertDescription, Skeleton } from "@chakra-ui/react"
 import MainContainer from "../components/MainContainer"
 import SearchResultItem from "../components/SearchResultItem"
 
@@ -67,19 +67,6 @@ function Results() {
         });
     }
 
-
-    if (isLoading) { // TODO: only show loader in the body, always render filter bar
-        return (
-            <Center minH="60vh">
-                <VStack spacing={4}>
-                    <Spinner size="xl" thickness="4px" />
-                    <Text fontSize="lg" color="gray.500">
-                        Loading results...
-                    </Text>
-                </VStack>
-            </Center>
-        )
-    }
     if (isError) {
         return (
             <Center minH="60vh">
@@ -113,18 +100,29 @@ function Results() {
             <VStack pt="4" alignItems="stretch" position="relative">
                 <VStack alignItems="flex-start" position="sticky" top="14" background="white">
                     <FilterBar />
-                    <Pagination
-                        page={page}
-                        count={count}
-                        handlePrev={handlePrevPage}
-                        handleNext={handleNextPage}
-                        handleCountChange={handleCountChange}
-                        totalCount={results?.total_count ?? 0}
-                        nextEnabled={nextPageEnable}
-                        prevEnabled={prevPageEnable}
-                    />
+                    <Skeleton isLoaded={!isLoading} width="full">
+                        <Pagination
+                            page={page}
+                            count={count}
+                            handlePrev={handlePrevPage}
+                            handleNext={handleNextPage}
+                            handleCountChange={handleCountChange}
+                            totalCount={results?.total_count ?? 0}
+                            nextEnabled={nextPageEnable}
+                            prevEnabled={prevPageEnable}
+                        />
+                    </Skeleton>
                 </VStack>
-                <VStack mt="6" divider={<Box borderBottom="solid" borderBottomColor="lightgrey" borderBottomWidth="thin" boxSize="full" w="full"></Box>}>
+                {isLoading
+                ? <Center minH="60vh">
+                    <VStack spacing={4}>
+                        <Spinner size="xl" thickness="4px" />
+                        <Text fontSize="lg" color="gray.500">
+                            Loading results...
+                        </Text>
+                    </VStack>
+                </Center>
+                : <VStack mt="6" divider={<Box borderBottom="solid" borderBottomColor="lightgrey" borderBottomWidth="thin" boxSize="full" w="full"></Box>}>
                     {results?.data.length === 0 &&
                         <Box>
                             No results found
@@ -132,22 +130,23 @@ function Results() {
                     }
                     {results?.data.map(r => <SearchResultItem result={r} />)}
                 </VStack>
+                }
                 <Box borderBottom="solid" borderBottomColor="lightgrey" borderBottomWidth="thin" boxSize="full" w="full"></Box>
-                <Pagination
-                    page={page}
-                    count={count}
-                    handlePrev={handlePrevPage}
-                    handleNext={handleNextPage}
-                    handleCountChange={handleCountChange}
-                    totalCount={results?.total_count ?? 0}
-                    nextEnabled={nextPageEnable}
-                    prevEnabled={prevPageEnable}
-                />
+                    <Skeleton isLoaded={!isLoading} width="full">
+                        <Pagination
+                            page={page}
+                            count={count}
+                            handlePrev={handlePrevPage}
+                            handleNext={handleNextPage}
+                            handleCountChange={handleCountChange}
+                            totalCount={results?.total_count ?? 0}
+                            nextEnabled={nextPageEnable}
+                            prevEnabled={prevPageEnable}
+                        />
+                    </Skeleton>
             </VStack>
         </MainContainer>
     )
 }
-
-// TODO: how many results displayed overall, choose how many on page + go to next page
 
 export default Results
