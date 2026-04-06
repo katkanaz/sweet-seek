@@ -25,19 +25,21 @@ function ResultDetail() {
 
     useEffect(() => {
         if (!compStruct || !molStar) return
-        molStar
-            .build()
-            .toRoot()
-            .apply(Download, {url: `https://models.rcsb.org/${compStruct.pdb_id}.bcif`, isBinary: true})
-            .apply(ParseCif)
-            .apply(TrajectoryFromMmCif)
-            .apply(ModelFromTrajectory)
-            .apply(StructureFromModel)
-            .apply(StructureComponent, {type: {name: "static", params: "polymer"}})
-            .apply(StructureRepresentation3D, {
-                type: {name: "cartoon", params: {alpha: 1, ignoreLight: false}},
-                colorTheme: {name: "plddt-confidence", params: {}}
-            }).commit()
+        molStar.clear().then(() => {
+            molStar
+                .build()
+                .toRoot()
+                .apply(Download, {url: `https://models.rcsb.org/${compStruct.pdb_id}.bcif`, isBinary: true})
+                .apply(ParseCif)
+                .apply(TrajectoryFromMmCif)
+                .apply(ModelFromTrajectory)
+                .apply(StructureFromModel)
+                .apply(StructureComponent, {type: {name: "static", params: "polymer"}})
+                .apply(StructureRepresentation3D, {
+                    type: {name: "cartoon", params: {alpha: 1, ignoreLight: false}},
+                    colorTheme: {name: "plddt-confidence", params: {}}
+                }).commit()
+        })
     }, [compStruct, molStar]);
 
     // color_from_source

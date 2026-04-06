@@ -15,7 +15,7 @@ declare global {
 }
 
 interface MolStarWrapperProps {
-    setMolStar: (molstar: PluginUIContext) => void;
+    setMolStar: (molstar: PluginUIContext|undefined) => void;
 }
 
 
@@ -56,6 +56,7 @@ export function MolStarWrapper({ setMolStar }: MolStarWrapperProps) {
         }
         init();
         return () => {
+            setMolStar(undefined)
             window.molstar?.dispose();
             window.molstar = undefined;
         };
