@@ -1,4 +1,4 @@
-import { Text, Button, HStack, VStack } from "@chakra-ui/react";
+import { Text, HStack, Link as ChakraLink, Box } from "@chakra-ui/react";
 import MainContainer from "../components/MainContainer";
 import { Link as TanstackRouterLink } from '@tanstack/react-router'
 import { docsRoute, resultsRoute, statsRoute } from "../Router";
@@ -18,9 +18,9 @@ function Home() {
                 Donec tempus odio ipsum, a lobortis ipsum consectetur sit amet. Praesent finibus arcu sed felis faucibus semper. Aliquam sem lectus, commodo quis elementum ut, efficitur non elit. Phasellus accumsan eros in dolor posuere auctor. Nullam vel est tempus, porttitor ligula sed, sagittis urna.
             </Text>
             <HStack mt="10" spacing="3">
-                <HomeCard color="#F4CDD3" buttonText="Advanced Search" cardText="Explore the reuslts" route={resultsRoute.to} />
-                <HomeCard color="#F7E1D7" buttonText="Statistics" cardText="See result statistics" route={statsRoute.to} />
-                <HomeCard color="#DEDBD2" buttonText="Documentation" cardText="Learn more" route={docsRoute.to} />
+                <HomeCard color="#F4CDD3" cardText="Explore the reuslts" route={resultsRoute.to} />
+                <HomeCard color="#F7E1D7" cardText="See result statistics" route={statsRoute.to} />
+                <HomeCard color="#DEDBD2" cardText="Learn more" route={docsRoute.to} />
             </HStack>
         </MainContainer>
     )
@@ -29,17 +29,17 @@ function Home() {
 
 interface HomeCardProps {
     color: string
-    buttonText: string
     cardText: string
     route: string
 }
 
-function HomeCard({ color, buttonText, cardText, route }: HomeCardProps) {
+function HomeCard({ color, cardText, route }: HomeCardProps) {
     return (
-        <VStack background={color} w="52" h="60" borderRadius="lg" fontSize="xl" padding="5" alignItems="flex-start" justifyContent="space-between" color="gray.800">
-            <Text fontWeight="bold">{cardText}</Text>
-            <Button as={TanstackRouterLink} to={route} variant="outline" colorScheme="black">{buttonText}</Button>
-        </VStack>
+        <ChakraLink as={TanstackRouterLink} to={route}>
+            <Box background={color} w="44" h="40" borderRadius="lg" fontSize="xl" padding="5" color="gray.800">
+                <Text fontWeight="bold">{cardText}</Text>
+            </Box>
+        </ChakraLink>
     )
 }
 
