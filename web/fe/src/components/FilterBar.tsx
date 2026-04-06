@@ -54,18 +54,15 @@ function FilterBar() {
 
     const handleFilterClick = () => {
         console.log(pdbStructSingleSelect.props)
-        const search: ResultsSearch = {
+        const search: Partial<ResultsSearch> = {
             sugar: sugarMultiSelect.props.selected.length === 0 ? undefined : sugarMultiSelect.props.selected.map(o => o.id),
             organism: organismMultiSelect.props.selected.length === 0 ? undefined : organismMultiSelect.props.selected.map(o => o.id),
             pdbStructure: pdbStructSingleSelect.props.selected?.id ?? undefined,
             plddt: range[0] === min && range[1] === max ? undefined : range
         }
-        console.log(search)
         navigate({
-            search: search
+            search: (prev) => ({...prev, ...search, page: 1})
         });
-        
-        // queryClient.invalidateQueries({queryKey: ["results"]})
     }
 
     // FIXME: the filter button does not render well across screens

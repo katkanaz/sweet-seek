@@ -8,11 +8,13 @@ interface PaginationProps {
     handleNext: () => void
     handlePrev: () => void
     handleCountChange: (count: number) => void
+    nextEnabled?: boolean
+    prevEnabled?: boolean
 };
 
-function Pagination({ totalCount, page, count, handleNext, handlePrev, handleCountChange }: PaginationProps) {
+function Pagination({ totalCount, page, count, handleNext, handlePrev, handleCountChange, nextEnabled = true, prevEnabled = true }: PaginationProps) {
     const startIdx = (page - 1) * count
-    const endIdx = startIdx + count
+    const endIdx = Math.min(startIdx + count, totalCount)
     return (
         <HStack w="full" justifyContent="flex-end" spacing="6">
             <HStack>
@@ -35,8 +37,20 @@ function Pagination({ totalCount, page, count, handleNext, handlePrev, handleCou
                 </Text>
             </HStack>
             <HStack>
-                <Button size="xs" variant="ghost" leftIcon={<ChevronLeftIcon />} onClick={() => handlePrev()}>Previous</Button>
-                <Button size="xs" variant="ghost" rightIcon={<ChevronRightIcon />} onClick={() => handleNext()}>Next</Button>
+                <Button
+                    size="xs"
+                    variant="ghost"
+                    leftIcon={<ChevronLeftIcon />}
+                    onClick={() => handlePrev()}
+                    disabled={!prevEnabled}
+                >Previous</Button>
+                <Button
+                    size="xs"
+                    variant="ghost"
+                    rightIcon={<ChevronRightIcon />}
+                    onClick={() => handleNext()}
+                    disabled={!nextEnabled}
+                >Next</Button>
             </HStack>
         </HStack> 
     )

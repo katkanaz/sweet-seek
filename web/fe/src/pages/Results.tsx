@@ -1,4 +1,4 @@
-import { Box, VStack, Center, Spinner, Text, AlertIcon, Alert, AlertTitle, AlertDescription } from "@chakra-ui/react"
+import { Box, VStack, Center, Spinner, Text, AlertIcon, Alert, AlertTitle, AlertDescription, HStack } from "@chakra-ui/react"
 import MainContainer from "../components/MainContainer"
 import SearchResultItem from "../components/SearchResultItem"
 
@@ -8,6 +8,17 @@ import FilterBar from "../components/FilterBar";
 import { resultsRoute } from "../Router";
 import { useEffect } from "react";
 import Pagination from "../components/Pagination";
+
+function clampPageParam(newPage: number, count: number, totalCount: number): number {
+    if (newPage <= 0) {
+        return 1;
+    }
+
+    if (((newPage - 1) * count) + 1 > totalCount) {
+        return newPage - 1;
+    }
+    return newPage;
+}
 
 
 function Results() {
@@ -26,6 +37,9 @@ function Results() {
 
     const queryClient = useQueryClient();
 
+    const nextPageEnable = clampPageParam(page + 1, count, results?.total_count ?? 0) === page + 1;
+    const prevPageEnable = clampPageParam(page - 1, count, results?.total_count ?? 0) === page - 1;
+
     useEffect(() => { // TODO: check if this loads before filterbar starts rendering
         queryClient.prefetchQuery({
             queryKey: ["options"],
@@ -36,13 +50,13 @@ function Results() {
 
     const handleNextPage = () => {
         navigate({
-            search: (prev) => ({...prev, page: prev.page + 1}),
+            search: (prev) => ({...prev, page: clampPageParam(prev.page + 1, count, results?.total_count ?? 0)}),
         });
     }
 
     const handlePrevPage = () => {
         navigate({
-            search: (prev) => ({...prev, page: prev.page - 1}),
+            search: (prev) => ({...prev, page: clampPageParam(prev.page - 1, count, results?.total_count ?? 0)}),
         });
     }
 
@@ -96,9 +110,20 @@ function Results() {
 
     return (
         <MainContainer>
-            <VStack pt="4" alignItems="stretch">
-                <FilterBar />
-                <Pagination page={page} count={count} handlePrev={handlePrevPage} handleNext={handleNextPage} handleCountChange={handleCountChange} totalCount={results?.total_count ?? 0} />
+            <VStack pt="4" alignItems="stretch" position="relative">
+                <VStack alignItems="flex-start" position="sticky" top="14" background="white">
+                    <FilterBar />
+                    <Pagination
+                        page={page}
+                        count={count}
+                        handlePrev={handlePrevPage}
+                        handleNext={handleNextPage}
+                        handleCountChange={handleCountChange}
+                        totalCount={results?.total_count ?? 0}
+                        nextEnabled={nextPageEnable}
+                        prevEnabled={prevPageEnable}
+                    />
+                </VStack>
                 <VStack mt="6" divider={<Box borderBottom="solid" borderBottomColor="lightgrey" borderBottomWidth="thin" boxSize="full" w="full"></Box>}>
                     {results?.data.length === 0 &&
                         <Box>
@@ -107,7 +132,17 @@ function Results() {
                     }
                     {results?.data.map(r => <SearchResultItem result={r} />)}
                 </VStack>
-                <Pagination page={page} count={count} handlePrev={handlePrevPage} handleNext={handleNextPage} handleCountChange={handleCountChange} totalCount={results?.total_count ?? 0} />
+                <Box borderBottom="solid" borderBottomColor="lightgrey" borderBottomWidth="thin" boxSize="full" w="full"></Box>
+                <Pagination
+                    page={page}
+                    count={count}
+                    handlePrev={handlePrevPage}
+                    handleNext={handleNextPage}
+                    handleCountChange={handleCountChange}
+                    totalCount={results?.total_count ?? 0}
+                    nextEnabled={nextPageEnable}
+                    prevEnabled={prevPageEnable}
+                />
             </VStack>
         </MainContainer>
     )
