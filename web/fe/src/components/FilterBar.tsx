@@ -1,5 +1,6 @@
 import { QuestionOutlineIcon, SearchIcon } from "@chakra-ui/icons"
-import { Box, Button, HStack, NumberInput, NumberInputField, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Skeleton, Text, Tooltip, VStack } from "@chakra-ui/react"
+import { Box, Button, HStack, IconButton, NumberInput, NumberInputField, Popover, PopoverArrow, Link as ChakraLink, PopoverCloseButton, PopoverContent, PopoverFooter, PopoverTrigger, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Skeleton, Text, VStack, PopoverBody } from "@chakra-ui/react"
+import { Link as TanstackRouterLink } from "@tanstack/react-router"
 
 import MultiSelect, { useMultiSelect } from "./MultiSelect";
 import { FilterOptions, getFilterOptions } from "../api/computed_structure";
@@ -7,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import SingleSelect, { useSingleSelect } from "./SingleSelect";
 import { useNavigate } from "@tanstack/react-router";
-import { resultsRoute, ResultsSearch } from "../Router";
+import { docsRoute, resultsRoute, ResultsSearch } from "../Router";
 
 
 function FilterBar() {
@@ -65,17 +66,14 @@ function FilterBar() {
         });
     }
 
-    // FIXME: the filter button does not render well across screens
     return (
-        <HStack >
+        <HStack w="full" alignItems="stretch">
             <VStack alignItems="flex-start">
                 <HStack spacing="1" w="full">
-                    <Text>
+                    <Text fontWeight="bold" color="gray.800">
                         Sugar
                     </Text>
-                    <Tooltip label="" fontSize="sm">
-                        <QuestionOutlineIcon boxSize="3.5" />
-                    </Tooltip>
+                    <PopoverDetail body="Sugar the protein can potentially bind." />
                     {sugarMultiSelect.props.selected.length > 0 &&
                         <Button variant="ghost" size="xs" ml="auto" fontStyle="italic" color="gray.400" onClick={() => sugarMultiSelect.clearSelected()}>
                             clear
@@ -86,12 +84,10 @@ function FilterBar() {
             </VStack>
             <VStack alignItems="flex-start">
                 <HStack spacing="1">
-                    <Text>
+                    <Text fontWeight="bold" color="gray.800">
                         pLDDT
                     </Text>
-                    <Tooltip label="" fontSize="sm">
-                        <QuestionOutlineIcon boxSize="3.5" />
-                    </Tooltip>
+                    <PopoverDetail body="Global pLDDT value representing the overall confidence of the model." />
                 </HStack>
                 <VStack spacing="0">
                     <Box px="2" w="full">
@@ -142,12 +138,10 @@ function FilterBar() {
             </VStack>
             <VStack alignItems="flex-start">
                 <HStack spacing="1" w="full">
-                    <Text>
+                    <Text fontWeight="bold" color="gray.800">
                         Organism
                     </Text>
-                    <Tooltip label="Organism from which the protein originates" fontSize="sm">
-                        <QuestionOutlineIcon boxSize="3.5" />
-                    </Tooltip>
+                    <PopoverDetail body="Organism from which the protein originates." />
                     {organismMultiSelect.props.selected.length > 0 &&
                         <Button variant="ghost" size="xs" ml="auto" fontStyle="italic" color="gray.400" onClick={() => organismMultiSelect.clearSelected()}>
                             clear
@@ -158,12 +152,10 @@ function FilterBar() {
             </VStack>
             <VStack alignItems="flex-start">
                 <HStack spacing="1" w="full">
-                    <Text>
+                    <Text fontWeight="bold" color="gray.800">
                         PDB Structure
                     </Text>
-                    <Tooltip label="" fontSize="sm">
-                        <QuestionOutlineIcon boxSize="3.5" />
-                    </Tooltip>
+                    <PopoverDetail body="PDB ID of the structure the motif originates from." />
                     {pdbStructSingleSelect.props.selected !== null &&
                         <Button variant="ghost" size="xs" ml="auto" fontStyle="italic" color="gray.400" onClick={() => pdbStructSingleSelect.clearSelected()}>
                             clear
@@ -172,16 +164,69 @@ function FilterBar() {
                 </HStack>
                 <SingleSelect {...pdbStructSingleSelect.props} width="9rem" placeholder="e.g. 7KHU"/>
             </VStack>
-            <Button
-                aria-label="Filter results"
-                leftIcon={<SearchIcon aria-label="Search icon" />}
-                ml="auto"
-                color="gray.600"
-                onClick={handleFilterClick}
-            >
-                Filter
-            </Button>
+            <VStack alignItems="flex-start">
+                <HStack spacing="1" w="full">
+                    <Text fontWeight="bold" color="gray.800">
+                        Title
+                    </Text>
+                    <PopoverDetail body="Title of the protein." />
+                    {sugarMultiSelect.props.selected.length > 0 &&
+                        <Button variant="ghost" size="xs" ml="auto" fontStyle="italic" color="gray.400" onClick={() => sugarMultiSelect.clearSelected()}>
+                            clear
+                        </Button>
+                    }
+                </HStack>
+                <MultiSelect {...sugarMultiSelect.props} width="9rem" placeholder="TODO THIS"/>
+            </VStack>
+
+            <VStack>
+                <Box flexGrow={1} w="full"></Box>
+                <Button
+                    aria-label="Filter results"
+                    leftIcon={<SearchIcon aria-label="Search icon" color="gray.800" />}
+                    bgColor="#DEDBD2"
+                    color="gray.800"
+                    minW="24"
+                    h="10"
+                    onClick={handleFilterClick}
+                >
+                    Filter
+                </Button>
+
+            </VStack>
         </HStack>
+    )
+}
+
+
+interface PopoverDetailProps {
+    body: string
+}
+
+function PopoverDetail({ body }: PopoverDetailProps) {
+    return (
+        <Popover
+            placement="bottom"
+            closeOnBlur={true}
+        >
+            <PopoverTrigger>
+                <IconButton aria-label="Tooltip" icon={<QuestionOutlineIcon w="4" h="4" />} variant="ghost" size="xs" />
+            </PopoverTrigger>
+            <PopoverContent color="black" bg="#F7E1D7" borderColor="#F7E1D7" p={2}>
+                <PopoverArrow bg="#F7E1D7" />
+                <PopoverCloseButton />
+                <PopoverBody>
+                    {body}
+                </PopoverBody>
+                <PopoverFooter
+                    border="0"
+                >
+                    <Text fontSize="sm">
+                        For more information see the <ChakraLink as={TanstackRouterLink} to={docsRoute.to} target="_blank" color="green.800">documentation</ChakraLink>
+                    </Text>
+                </PopoverFooter>
+            </PopoverContent>
+        </Popover>
     )
 }
 
