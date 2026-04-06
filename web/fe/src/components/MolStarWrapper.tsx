@@ -14,6 +14,24 @@ declare global {
     }
 }
 
+export type DecomposedTransform = {
+    rotation: number[];
+    translation: [number, number, number];
+}
+
+export function decompose4x4Matrix(matrix: number[]): DecomposedTransform {
+    const rotation = [
+        matrix[0], matrix[1], matrix[2],
+        matrix[4], matrix[5], matrix[6],
+        matrix[8], matrix[9], matrix[10],
+    ];
+
+    const translation: [number, number, number] = [matrix[12], matrix[13], matrix[14]];
+
+    return { rotation, translation };
+}
+
+
 interface MolStarWrapperProps {
     setMolStar: (molstar: PluginUIContext|undefined) => void;
 }
@@ -27,6 +45,7 @@ export function MolStarWrapper({ setMolStar }: MolStarWrapperProps) {
             const defaultSpecs = DefaultPluginUISpec();
             const specs: PluginUISpec = {
                 behaviors: [...defaultSpecs.behaviors, PluginSpec.Behavior(MolViewSpec), PluginSpec.Behavior(MAQualityAssessment)],
+                animations: [], // TODO: remove?
                 components: {
                     ...defaultSpecs.components,
                     remoteState: "none",

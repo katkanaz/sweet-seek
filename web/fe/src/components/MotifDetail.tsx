@@ -1,6 +1,7 @@
-import { Box, Link as ChakraLink, HStack, Table, TableContainer, Tbody, Td, Text, Tr, VStack } from "@chakra-ui/react"
+import { Box, Button, Link as ChakraLink, HStack, Table, TableContainer, Tbody, Td, Text, Tr, VStack } from "@chakra-ui/react"
 import { ResidueId } from "../api/computed_structure"
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import React from "react";
 
 type MotifDetailProps = {
     num: number
@@ -9,14 +10,21 @@ type MotifDetailProps = {
     residueIds: ResidueId[]
     structurePDB: string
     surroundingResidues: ResidueId[]
+    enableAlign: boolean
+    handleAlignClick: () => void
 }
 
-function MotifDetail({num, sugar, rmsd, residueIds, structurePDB, surroundingResidues}: MotifDetailProps) {
+function MotifDetail({num, sugar, rmsd, residueIds, structurePDB, surroundingResidues, enableAlign, handleAlignClick}: MotifDetailProps) {
     return (
         <VStack alignItems="flex-start" border="1px" borderColor="rgb(206, 201, 186)">
-            <Box background="orange.100" w="full" px="3" py="2">
-                Motif {num}
-            </Box>
+            <HStack background="orange.100" w="full" px="3" py="2" justifyContent="space-between">
+                <Text>
+                    Motif Match {num}
+                </Text>
+                <Button variant="outline" borderColor="black" background="orange.100" disabled={!enableAlign} onClick={() => handleAlignClick()}>
+                    Align
+                </Button>
+            </HStack>
             <Box px="3" pb="2">
                 <TableContainer>
                     <Table variant="striped" colorScheme="whiteAlpha" size="sm">
@@ -39,6 +47,19 @@ function MotifDetail({num, sugar, rmsd, residueIds, structurePDB, surroundingRes
                                    {residueIds.map(i => `${i.res_name} ${i.res_id}/${i.chain_id}`).join(", ")}
                                 </Td>
                             </Tr>
+                        </Tbody>
+                    </Table>
+                </TableContainer>
+            </Box>
+            <Box background="orange.100" w="full" px="3" h="7" py="1">
+                <Text fontSize="sm">
+                    Original Motif
+                </Text>
+            </Box>
+            <Box px="3" pb="2">
+                <TableContainer>
+                    <Table variant="striped" colorScheme="whiteAlpha" size="sm">
+                        <Tbody>
                             <Tr>
                                 <Td width="2" fontWeight="bold" px="0">Original structure PDB ID:</Td>
                                 <Td>

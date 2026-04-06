@@ -1,17 +1,50 @@
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Center, HStack, Link as ChakraLink, Spinner, Table, TableContainer, Tbody, Td, Text, Tr, VStack } from "@chakra-ui/react"
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Center, HStack, Link as ChakraLink, Spinner, Table, TableContainer, Tbody, Td, Text, Tr, VStack, Button } from "@chakra-ui/react"
 import MainContainer from "../components/MainContainer"
-import { getCompStruct, ComputedStructure } from "../api/computed_structure"
+import { getCompStruct, ComputedStructure, Motif } from "../api/computed_structure"
 import { resultDetailRoute } from "../Router";
 import MotifDetail from "../components/MotifDetail";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { MolStarWrapper } from "../components/MolStarWrapper";
+import { decompose4x4Matrix, MolStarWrapper } from "../components/MolStarWrapper";
 import { PluginUIContext } from "molstar/lib/mol-plugin-ui/context";
-import { Download, ParseCif } from "molstar/lib/mol-plugin-state/transforms/data";
-import { ModelFromTrajectory, StructureComponent, StructureFromModel, TrajectoryFromMmCif } from "molstar/lib/mol-plugin-state/transforms/model";
-import { StructureRepresentation3D } from "molstar/lib/mol-plugin-state/transforms/representation";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 
+import { loadMVS, MVSData } from "molstar/lib/extensions/mvs";
+
+function mvsComputed(pdbId: string, transform?: number[]) {
+    const mvsBuilder = MVSData.createBuilder()
+    const struct = mvsBuilder
+        .download({url: `https://models.rcsb.org/${pdbId}.bcif`})
+        .parse({format: "bcif"})
+        .modelStructure()
+
+    if (transform !== undefined) {
+        const {rotation, translation} = decompose4x4Matrix(transform)
+        struct
+            .transform({
+                rotation: rotation,
+                translation: translation,
+            })
+    }
+
+    struct
+        .component()
+        .representation()
+        .colorFromSource(
+            {
+                schema: "all_atomic",
+                category_name: "atom_site",
+                field_name: "B_iso_or_equiv",
+                palette: {
+                    kind: "discrete",
+                    colors: [["#FF7D45", 0], ["#FFDB13", 50], ["#65CBF3", 70], ["#0053D6", 90]],
+                    mode: "absolute",
+                }
+            }
+        )
+
+    return mvsBuilder
+}
 
 function ResultDetail() {
     const { afId } = resultDetailRoute.useParams();
@@ -22,29 +55,69 @@ function ResultDetail() {
     });
 
     const [ molStar, setMolStar ] = useState<PluginUIContext|undefined>(undefined);
+    const [ molStarReady, setMolStarReady] = useState(false);
+    const [ alignActive, setAlignActive] = useState<number|null>(null);
+
+    const showComputedStruct = () => {
+        if (!compStruct || !molStar) return
+
+        const mvsData = mvsComputed(compStruct.pdb_id).getState()
+
+        try {
+            loadMVS(molStar, mvsData, {sourceUrl: undefined, sanityChecks: true});
+        }
+        catch (e) {
+            console.error("loadMVS error: ", e);
+        }
+    }
 
     useEffect(() => {
         if (!compStruct || !molStar) return
         molStar.clear().then(() => {
-            molStar
-                .build()
-                .toRoot()
-                .apply(Download, {url: `https://models.rcsb.org/${compStruct.pdb_id}.bcif`, isBinary: true})
-                .apply(ParseCif)
-                .apply(TrajectoryFromMmCif)
-                .apply(ModelFromTrajectory)
-                .apply(StructureFromModel)
-                .apply(StructureComponent, {type: {name: "static", params: "polymer"}})
-                .apply(StructureRepresentation3D, {
-                    type: {name: "cartoon", params: {alpha: 1, ignoreLight: false}},
-                    colorTheme: {name: "plddt-confidence", params: {}}
-                }).commit()
+            showComputedStruct();
+
+            setMolStarReady(true);
         })
     }, [compStruct, molStar]);
 
-    // color_from_source
-    // palette - DiscretePalete
-    // examples.py, jupiternotebook setup
+    const handleAlignClick = (motif: Motif, num: number) => {
+        if (!compStruct || !molStar || !molStarReady) return
+
+        molStar.clear().then(() => {
+            const mvsBuilder = mvsComputed(compStruct.pdb_id, motif.transformation);
+
+            const structure = mvsBuilder
+            .download({url: `https://files.rcsb.org/download/${motif.original_struct}.cif`})
+            .parse({format: "mmcif"})
+            .modelStructure()
+
+            structure
+                .component({selector: "polymer"})
+                .representation({type: "cartoon"})
+                .color({color: "red"})
+
+
+            structure.component({selector: "branched"}).representation({type: "ball_and_stick"}).color({color: "green"})
+            structure.component({selector: "branched"}).representation({type: "carbohydrate"}).color({
+                custom: {"molstar_use_default_coloring": true}
+            })
+
+            const mvsData = mvsBuilder.getState();
+
+            try {
+                loadMVS(molStar, mvsData, {sourceUrl: undefined, sanityChecks: true});
+            }
+            catch (e) {
+                console.error("loadMVS error: ", e);
+            }
+            setAlignActive(num);
+        })
+    }
+
+    const clearAlign = () => {
+        showComputedStruct();
+        setAlignActive(null);
+    }
 
     if (isLoading) {
         return (
@@ -153,6 +226,7 @@ function ResultDetail() {
                             </Table>
                         </TableContainer>
                         <VStack mt="3">
+                            {/* TODO: show rejected motifs + transfer filters */}
                             {compStruct.accepted_motifs.map((m, i) => (
                                 <MotifDetail
                                     key={i}
@@ -162,6 +236,8 @@ function ResultDetail() {
                                     residueIds={m.residue_ids}
                                     structurePDB={m.original_struct}
                                     surroundingResidues={m.surrounding_residues}
+                                    enableAlign={molStarReady}
+                                    handleAlignClick={() => handleAlignClick(m, i+1)}
                                 />
                             ))}
                         </VStack>
@@ -170,6 +246,12 @@ function ResultDetail() {
                         <Box position="relative" width="100%" zIndex="10">
                             <MolStarWrapper setMolStar={setMolStar} />
                         </Box>
+                        {alignActive &&
+                            <HStack w="full" p="2" bg="#F7E1D7" spacing="4" justifyContent="space-between">
+                                <Box>Showing aligned Motif Match {alignActive}</Box>
+                                <Button onClick={() => clearAlign()} variant="outline" borderColor="black">Clear</Button>
+                            </HStack>
+                        }
                     </VStack>
                 </HStack>
             </VStack>
