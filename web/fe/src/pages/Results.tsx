@@ -23,7 +23,7 @@ function clampPageParam(newPage: number, count: number, totalCount: number): num
 
 function Results() {
     const searchParams = resultsRoute.useSearch();
-    const {sugar, plddt, organism, pdbStructure} = searchParams;
+    const {sugar, plddt, organism, pdbStructure, title} = searchParams;
 
     const page = searchParams.page;
     const count = searchParams.count ?? 10;
@@ -31,7 +31,7 @@ function Results() {
     const navigate = resultsRoute.useNavigate();
 
     const { data: results, isLoading, isError } = useQuery<GetComputedStructuresResponse, Error>({
-        queryKey: ["results", sugar, plddt, organism, pdbStructure, page, count],
+        queryKey: ["results", sugar, plddt, organism, pdbStructure, title, page, count],
         queryFn: () => getResults(searchParams)
     });
 

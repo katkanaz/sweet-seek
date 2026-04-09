@@ -1,5 +1,5 @@
 import { QuestionOutlineIcon, SearchIcon } from "@chakra-ui/icons"
-import { Box, Button, HStack, IconButton, NumberInput, NumberInputField, Popover, PopoverArrow, Link as ChakraLink, PopoverCloseButton, PopoverContent, PopoverFooter, PopoverTrigger, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Skeleton, Text, VStack, PopoverBody } from "@chakra-ui/react"
+import { Box, Button, HStack, IconButton, NumberInput, NumberInputField, Popover, PopoverArrow, Link as ChakraLink, PopoverCloseButton, PopoverContent, PopoverFooter, PopoverTrigger, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Skeleton, Text, VStack, PopoverBody, Input } from "@chakra-ui/react"
 import { Link as TanstackRouterLink } from "@tanstack/react-router"
 
 import MultiSelect, { useMultiSelect } from "./MultiSelect";
@@ -23,6 +23,8 @@ function FilterBar() {
     const sugarMultiSelect = useMultiSelect(data?.sugars, { isLoading, isError });
     const organismMultiSelect = useMultiSelect(data?.organisms, { isLoading, isError });
     const pdbStructSingleSelect = useSingleSelect(data?.pdb_structures, { isLoading, isError });
+    const [title, setTitle] = useState<string|null>(null)
+    const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => setTitle(event.target.value)
 
     const min = data?.plddt_range.min;
     const max = data?.plddt_range.max;
@@ -47,6 +49,9 @@ function FilterBar() {
         if (filters.plddt) {
             setRange(filters.plddt);
         }
+        if (filters.title) {
+            setTitle(filters.title)
+        }
     }, [filters, data])
 
     if (!data || !range ) {
@@ -59,7 +64,8 @@ function FilterBar() {
             sugar: sugarMultiSelect.props.selected.length === 0 ? undefined : sugarMultiSelect.props.selected.map(o => o.id),
             organism: organismMultiSelect.props.selected.length === 0 ? undefined : organismMultiSelect.props.selected.map(o => o.id),
             pdbStructure: pdbStructSingleSelect.props.selected?.id ?? undefined,
-            plddt: range[0] === min && range[1] === max ? undefined : range
+            plddt: range[0] === min && range[1] === max ? undefined : range,
+            title: title ?? undefined,
         }
         navigate({
             search: (prev) => ({...prev, ...search, page: 1})
@@ -170,13 +176,20 @@ function FilterBar() {
                         Title
                     </Text>
                     <PopoverDetail body="Title of the protein." />
-                    {sugarMultiSelect.props.selected.length > 0 &&
-                        <Button variant="ghost" size="xs" ml="auto" fontStyle="italic" color="gray.400" onClick={() => sugarMultiSelect.clearSelected()}>
+                    {title !== null &&
+                        <Button variant="ghost" size="xs" ml="auto" fontStyle="italic" color="gray.400" onClick={() => setTitle(null)}>
                             clear
                         </Button>
                     }
                 </HStack>
-                <MultiSelect {...sugarMultiSelect.props} width="9rem" placeholder="TODO THIS"/>
+                <Input
+                    value={title ?? ""}
+                    onChange={handleTitleChange}
+                    size="md"
+                    type="text"
+                    w="16rem"
+                    placeholder="Fucose-specific"
+                />
             </VStack>
 
             <VStack>

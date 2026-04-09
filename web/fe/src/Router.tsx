@@ -26,6 +26,7 @@ export type ResultsSearch = {
     plddt?: [number, number]
     organism?: number[]
     pdbStructure?: number
+    title?: string
     page: number
     count?: number
 }
@@ -39,6 +40,7 @@ export const resultsRoute = createRoute({
             plddt: (search.plddt as [number, number]) ?? undefined,
             organism: (search.organism as number[]) ?? undefined,
             pdbStructure: (search.pdbStructure as number) ?? undefined,
+            title: (search.title as string) ?? undefined,
             page: (search.page as number) ?? 1,
             count: (search.count as number) ?? undefined,
         }
