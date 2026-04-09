@@ -25,6 +25,7 @@ type resultsFilter struct {
 	Plddt        []float32
 	Organism     []string
 	PdbStructure *string
+	Title		 *string
 }
 
 type computedStructureCache struct {
@@ -129,7 +130,7 @@ func getLastModifiedDate(w http.ResponseWriter, r *http.Request) {
 
 
 func isFilterEmpty(filter *resultsFilter) bool {
-	return len(filter.Sugar) == 0 && len(filter.Plddt) == 0 && len(filter.Organism) == 0 && filter.PdbStructure == nil
+	return len(filter.Sugar) == 0 && len(filter.Plddt) == 0 && len(filter.Organism) == 0 && filter.PdbStructure == nil && filter.Title == nil
 }
 
 
@@ -165,6 +166,7 @@ func constructFilter(searchParams *ResultsSearchParams) resultsFilter {
 	filter := resultsFilter{
 		Sugar: filteredSugars,
 		Plddt: searchParams.Plddt,
+		Title: searchParams.Title,
 		Organism: filteredOrganism,
 		PdbStructure: filteredPdbStructure,
 	}
@@ -266,6 +268,11 @@ func filterComputedStructures(computedStructures []ComputedStructure, filter *re
 				}
 			}
 			if !containsOrganism {
+				continue
+			}
+		}
+		if filter.Title != nil {
+			if !strings.Contains(strings.ToLower(computedStructure.Title), strings.ToLower(*filter.Title)) {
 				continue
 			}
 		}

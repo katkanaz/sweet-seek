@@ -71,6 +71,7 @@ type ResultsSearchParams struct {
 	Plddt        []float32 `json:"plddt"`
 	Organism     []int     `json:"organism"`
 	PdbStructure *int      `json:"pdbStructure"`
+	Title		 *string   `json:"title"`
 	Page 		 int	   `json:"page"`
 	Count		 *int	   `json:"count"`
 }
