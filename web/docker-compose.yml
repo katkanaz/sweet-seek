@@ -4,9 +4,13 @@ services:
       context: ./be
       dockerfile: ./Dockerfile
     image: backend
+    volumes:
+    - /home/user/data/:/data
     ports:
-      - "8081:8081"
+      - "3000:3000"
     restart: always
+    networks:
+      - app
   frontend:
     build:
       context: ./fe
@@ -15,3 +19,9 @@ services:
     ports:
       - "8080:8080"
     restart: always
+    networks:
+      - app
+
+networks:
+  app:
+    driver: bridge
