@@ -1,7 +1,6 @@
 import { Box, Link as ChakraLink, HStack, Image, Text } from "@chakra-ui/react"
 import { Link as TanstackRouterLink } from '@tanstack/react-router'
 import logo from "../assets/logo.svg"
-
 import { useQuery } from "@tanstack/react-query";
 import { getLastModified, LastUpdated } from "../api/computed_structure";
 import { docsRoute, homeRoute, resultsRoute, statsRoute } from "../Router";
@@ -52,4 +51,4 @@ function NavBar() {
     )
 }
 
-export default NavBar
+export default NavBar;

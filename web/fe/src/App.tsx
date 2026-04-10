@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from "@tanstack/react-router"
 import { router } from "./Router"
 
+
 const queryClient = new QueryClient();
 
 function App() {
@@ -15,4 +16,4 @@ function App() {
     )
 }
 
-export default App
+export default App;

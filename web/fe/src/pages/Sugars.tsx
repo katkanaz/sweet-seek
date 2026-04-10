@@ -5,9 +5,6 @@ import { getSugars, Sugar } from "../api/sugars";
 import MainContainer from "../components/MainContainer";
 import SugarCard from "../components/SugarCard";
 
-//
-// TODO: sugar names proper via regex - italics and smallcaps
-// TODO: functional search bar, search bar match grid of sugars, sugar graphic pic, fix small caps and italic (not called this, not tag i) via CSS
 
 function Sugars() {
     const { data: sugarList, isLoading, isError, error } = useQuery<Sugar[], Error>({
@@ -41,6 +38,4 @@ function Sugars() {
     )
 }
 
-
-export default Sugars
-
+export default Sugars;

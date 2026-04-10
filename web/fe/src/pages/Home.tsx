@@ -1,7 +1,7 @@
-import { Text, HStack, Link as ChakraLink, Box } from "@chakra-ui/react";
+import { Text, HStack } from "@chakra-ui/react";
 import MainContainer from "../components/MainContainer";
-import { Link as TanstackRouterLink } from '@tanstack/react-router'
 import { docsRoute, resultsRoute, statsRoute } from "../Router";
+import HomeCard from "../components/HomeCard";
 
 
 function Home() {
@@ -26,21 +26,4 @@ function Home() {
     )
 }
 
-
-interface HomeCardProps {
-    color: string
-    cardText: string
-    route: string
-}
-
-function HomeCard({ color, cardText, route }: HomeCardProps) {
-    return (
-        <ChakraLink as={TanstackRouterLink} to={route}>
-            <Box background={color} w="44" h="40" borderRadius="lg" fontSize="xl" padding="5" color="gray.800">
-                <Text fontWeight="bold">{cardText}</Text>
-            </Box>
-        </ChakraLink>
-    )
-}
-
-export default Home
+export default Home;

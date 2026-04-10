@@ -3,6 +3,7 @@ import { CheckIcon, SmallCloseIcon } from "@chakra-ui/icons"
 import { Box, HStack, IconButton, Input, List, ListItem } from "@chakra-ui/react"
 import { useRef, useState } from "react"
 
+
 export type SelectOption = {
     id: number,
     value: string
@@ -164,4 +165,4 @@ function MultiSelect({ options, optionInfo, query, setQuery, selected, setSelect
     )
 }
 
-export default MultiSelect
+export default MultiSelect;

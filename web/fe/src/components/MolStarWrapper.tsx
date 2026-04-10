@@ -8,6 +8,7 @@ import { MolViewSpec } from 'molstar/lib/extensions/mvs/behavior';
 import "molstar/lib/mol-plugin-ui/skin/light.scss";
 import { MAQualityAssessment } from "molstar/lib/extensions/model-archive/quality-assessment/behavior";
 
+
 declare global {
     interface Window {
         molstar?: PluginUIContext;
@@ -36,8 +37,7 @@ interface MolStarWrapperProps {
     setMolStar: (molstar: PluginUIContext|undefined) => void;
 }
 
-
-export function MolStarWrapper({ setMolStar }: MolStarWrapperProps) {
+function MolStarWrapper({ setMolStar }: MolStarWrapperProps) {
     const parent = createRef<HTMLDivElement>();
 
     useEffect(() => {
@@ -83,3 +83,5 @@ export function MolStarWrapper({ setMolStar }: MolStarWrapperProps) {
 
     return <div ref={parent} style={{ width: 640, height: 480 }}/>;
 }
+
+export default MolStarWrapper;

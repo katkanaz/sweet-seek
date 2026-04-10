@@ -1,6 +1,7 @@
 import MainContainer from "../components/MainContainer"
 import { Box, Flex, Link, Text, VStack } from "@chakra-ui/react"
 
+
 function Docs() {
     return (
         <MainContainer>
@@ -56,6 +57,4 @@ function Docs() {
     )
 }
 
-// TODO: link to github?
-
-export default Docs
+export default Docs;

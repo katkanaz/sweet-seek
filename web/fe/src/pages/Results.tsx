@@ -1,13 +1,13 @@
 import { Box, VStack, Center, Spinner, Text, AlertIcon, Alert, AlertTitle, AlertDescription, Skeleton } from "@chakra-ui/react"
 import MainContainer from "../components/MainContainer"
 import SearchResultItem from "../components/SearchResultItem"
-
 import { getResults, getFilterOptions, GetComputedStructuresResponse } from "../api/computed_structure";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import FilterBar from "../components/FilterBar";
 import { resultsRoute } from "../Router";
 import { useEffect } from "react";
 import Pagination from "../components/Pagination";
+
 
 function clampPageParam(newPage: number, count: number, totalCount: number): number {
     if (newPage <= 0) {
@@ -19,7 +19,6 @@ function clampPageParam(newPage: number, count: number, totalCount: number): num
     }
     return newPage;
 }
-
 
 function Results() {
     const searchParams = resultsRoute.useSearch();
@@ -149,4 +148,4 @@ function Results() {
     )
 }
 
-export default Results
+export default Results;

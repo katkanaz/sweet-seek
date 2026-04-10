@@ -1,7 +1,7 @@
 import { Box, Button, Link as ChakraLink, HStack, Table, TableContainer, Tbody, Td, Text, Tr, VStack } from "@chakra-ui/react"
 import { ResidueId } from "../api/computed_structure"
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-import React from "react";
+
 
 type MotifDetailProps = {
     num: number
@@ -87,4 +87,4 @@ function MotifDetail({num, sugar, rmsd, residueIds, structurePDB, surroundingRes
     )
 }
 
-export default MotifDetail
+export default MotifDetail;

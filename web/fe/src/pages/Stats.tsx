@@ -1,6 +1,7 @@
 import { Text } from "@chakra-ui/react";
 import MainContainer from "../components/MainContainer";
 
+
 function Stats() {
     return (
         <MainContainer>
@@ -21,4 +22,4 @@ function Stats() {
     )
 }
 
-export default Stats
+export default Stats;

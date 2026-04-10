@@ -1,6 +1,7 @@
 import { Link as TanstackRouterLink } from '@tanstack/react-router'
 import { Card, CardBody, Image, Link as ChakraLink, Text } from "@chakra-ui/react";
 
+
 export type SugarInfo = {
     name: string
     abrev: string
@@ -29,4 +30,4 @@ function SugarCard({sugar}: SugarCardProps) {
     )
 }
 
-export default SugarCard
+export default SugarCard;

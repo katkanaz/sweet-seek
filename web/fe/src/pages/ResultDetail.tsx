@@ -8,8 +8,8 @@ import { useQuery } from "@tanstack/react-query";
 import { decompose4x4Matrix, MolStarWrapper } from "../components/MolStarWrapper";
 import { PluginUIContext } from "molstar/lib/mol-plugin-ui/context";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-
 import { loadMVS, MVSData } from "molstar/lib/extensions/mvs";
+
 
 function mvsComputed(pdbId: string, transform?: number[]) {
     const mvsBuilder = MVSData.createBuilder()
@@ -259,4 +259,4 @@ function ResultDetail() {
     )
 }
 
-export default ResultDetail
+export default ResultDetail;

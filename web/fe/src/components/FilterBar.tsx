@@ -1,14 +1,13 @@
-import { QuestionOutlineIcon, SearchIcon } from "@chakra-ui/icons"
-import { Box, Button, HStack, IconButton, NumberInput, NumberInputField, Popover, PopoverArrow, Link as ChakraLink, PopoverCloseButton, PopoverContent, PopoverFooter, PopoverTrigger, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Skeleton, Text, VStack, PopoverBody, Input } from "@chakra-ui/react"
-import { Link as TanstackRouterLink } from "@tanstack/react-router"
-
+import { SearchIcon } from "@chakra-ui/icons"
+import { Box, Button, HStack, NumberInput, NumberInputField, RangeSlider, RangeSliderFilledTrack, RangeSliderThumb, RangeSliderTrack, Skeleton, Text, VStack, Input } from "@chakra-ui/react"
 import MultiSelect, { useMultiSelect } from "./MultiSelect";
 import { FilterOptions, getFilterOptions } from "../api/computed_structure";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import SingleSelect, { useSingleSelect } from "./SingleSelect";
 import { useNavigate } from "@tanstack/react-router";
-import { docsRoute, resultsRoute, ResultsSearch } from "../Router";
+import { resultsRoute, ResultsSearch } from "../Router";
+import PopoverDetail from "./PopoverDetail";
 
 
 function FilterBar() {
@@ -208,38 +207,6 @@ function FilterBar() {
 
             </VStack>
         </HStack>
-    )
-}
-
-
-interface PopoverDetailProps {
-    body: string
-}
-
-function PopoverDetail({ body }: PopoverDetailProps) {
-    return (
-        <Popover
-            placement="bottom"
-            closeOnBlur={true}
-        >
-            <PopoverTrigger>
-                <IconButton aria-label="Tooltip" icon={<QuestionOutlineIcon w="4" h="4" />} variant="ghost" size="xs" />
-            </PopoverTrigger>
-            <PopoverContent color="black" bg="#F7E1D7" borderColor="#F7E1D7" p={2}>
-                <PopoverArrow bg="#F7E1D7" />
-                <PopoverCloseButton />
-                <PopoverBody>
-                    {body}
-                </PopoverBody>
-                <PopoverFooter
-                    border="0"
-                >
-                    <Text fontSize="sm">
-                        For more information see the <ChakraLink as={TanstackRouterLink} to={docsRoute.to} target="_blank" color="green.800">documentation</ChakraLink>
-                    </Text>
-                </PopoverFooter>
-            </PopoverContent>
-        </Popover>
     )
 }
 

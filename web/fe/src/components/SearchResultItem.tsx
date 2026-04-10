@@ -8,7 +8,6 @@ interface SearchResultItemProps {
     result: ComputedStructure
 };
 
-
 function SearchResultItem({result}: SearchResultItemProps) {
     return (
         <HStack align="flex-start" w="full" spacing={4}>
@@ -82,4 +81,4 @@ function SearchResultItem({result}: SearchResultItemProps) {
     )
 }
 
-export default SearchResultItem
+export default SearchResultItem;

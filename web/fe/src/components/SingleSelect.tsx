@@ -125,4 +125,4 @@ function SingleSelect({ options, optionInfo, query, setQuery, selected, setSelec
     )
 }
 
-export default SingleSelect
+export default SingleSelect;
