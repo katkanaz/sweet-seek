@@ -32,7 +32,6 @@ export function decompose4x4Matrix(matrix: number[]): DecomposedTransform {
     return { rotation, translation };
 }
 
-
 interface MolStarWrapperProps {
     setMolStar: (molstar: PluginUIContext|undefined) => void;
 }
@@ -45,12 +44,11 @@ function MolStarWrapper({ setMolStar }: MolStarWrapperProps) {
             const defaultSpecs = DefaultPluginUISpec();
             const specs: PluginUISpec = {
                 behaviors: [...defaultSpecs.behaviors, PluginSpec.Behavior(MolViewSpec), PluginSpec.Behavior(MAQualityAssessment)],
-                animations: [], // TODO: remove?
                 components: {
                     ...defaultSpecs.components,
                     remoteState: "none",
                 },
-
+                animations: defaultSpecs.animations,
                 layout: {
                     initial: {
                         isExpanded: false,
@@ -70,6 +68,14 @@ function MolStarWrapper({ setMolStar }: MolStarWrapperProps) {
                 spec: specs,
                 render: renderReact18
             });
+            const origResize = window.molstar.handleResize;
+            window.molstar.handleResize = () => {
+                console.log("handle resize")
+                origResize();
+            }
+
+            await window.molstar.initialized;
+
             setMolStar(window.molstar)
 
         }

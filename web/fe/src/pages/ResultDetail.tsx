@@ -5,7 +5,7 @@ import { resultDetailRoute } from "../Router";
 import MotifDetail from "../components/MotifDetail";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { decompose4x4Matrix, MolStarWrapper } from "../components/MolStarWrapper";
+import MolStarWrapper, { decompose4x4Matrix } from "../components/MolStarWrapper";
 import { PluginUIContext } from "molstar/lib/mol-plugin-ui/context";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { loadMVS, MVSData } from "molstar/lib/extensions/mvs";
@@ -58,22 +58,18 @@ function ResultDetail() {
     const [ molStarReady, setMolStarReady] = useState(false);
     const [ alignActive, setAlignActive] = useState<number|null>(null);
 
-    const showComputedStruct = () => {
-        if (!compStruct || !molStar) return
+    const showComputedStruct = async () => {
+        if (!compStruct || !molStar || !window.molstar) return
 
         const mvsData = mvsComputed(compStruct.pdb_id).getState()
 
-        try {
-            loadMVS(molStar, mvsData, {sourceUrl: undefined, sanityChecks: true});
-        }
-        catch (e) {
-            console.error("loadMVS error: ", e);
-        }
+        await window.molstar?.initialized;
+        await loadMVS(window.molstar, mvsData, {sourceUrl: undefined, sanityChecks: true});
     }
 
     useEffect(() => {
-        if (!compStruct || !molStar) return
-        molStar.clear().then(() => {
+        if (!compStruct || !molStar || !window.molstar) return
+        window.molstar.clear().then(() => {
             showComputedStruct();
 
             setMolStarReady(true);
@@ -81,9 +77,9 @@ function ResultDetail() {
     }, [compStruct, molStar]);
 
     const handleAlignClick = (motif: Motif, num: number) => {
-        if (!compStruct || !molStar || !molStarReady) return
+        if (!compStruct || !molStar || !molStarReady || !window.molstar) return
 
-        molStar.clear().then(() => {
+        window.molstar.clear().then(async () => {
             const mvsBuilder = mvsComputed(compStruct.pdb_id, motif.transformation);
 
             const structure = mvsBuilder
@@ -104,18 +100,15 @@ function ResultDetail() {
 
             const mvsData = mvsBuilder.getState();
 
-            try {
-                loadMVS(molStar, mvsData, {sourceUrl: undefined, sanityChecks: true});
-            }
-            catch (e) {
-                console.error("loadMVS error: ", e);
-            }
+
+            await window.molstar?.initialized;
+            await loadMVS(window.molstar!, mvsData, {sourceUrl: undefined, sanityChecks: true});
             setAlignActive(num);
         })
     }
 
-    const clearAlign = () => {
-        showComputedStruct();
+    const clearAlign = async () => {
+        await showComputedStruct();
         setAlignActive(null);
     }
 
