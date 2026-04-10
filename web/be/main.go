@@ -29,7 +29,11 @@ func main() {
 	}
 	r := api.NewRouter()
 
+	port := "8081"
+	if os.Getenv("PORT") != "" {
+		port = os.Getenv("PORT")
+	}
 
 	slog.Info("Starting server")
-	http.ListenAndServe(":8081", r)
+	http.ListenAndServe(":" + port, r)
 }
