@@ -75,7 +75,7 @@ function FilterBar() {
         <HStack w="full" alignItems="stretch">
             <VStack alignItems="flex-start">
                 <HStack spacing="1" w="full">
-                    <Text fontWeight="bold" color="gray.800">
+                    <Text fontWeight="bold">
                         Sugar
                     </Text>
                     <PopoverDetail body="Sugar the protein can potentially bind." />
@@ -89,7 +89,7 @@ function FilterBar() {
             </VStack>
             <VStack alignItems="flex-start">
                 <HStack spacing="1">
-                    <Text fontWeight="bold" color="gray.800">
+                    <Text fontWeight="bold">
                         pLDDT
                     </Text>
                     <PopoverDetail body="Global pLDDT value representing the overall confidence of the model." />
@@ -143,7 +143,7 @@ function FilterBar() {
             </VStack>
             <VStack alignItems="flex-start">
                 <HStack spacing="1" w="full">
-                    <Text fontWeight="bold" color="gray.800">
+                    <Text fontWeight="bold">
                         Organism
                     </Text>
                     <PopoverDetail body="Organism from which the protein originates." />
@@ -157,7 +157,7 @@ function FilterBar() {
             </VStack>
             <VStack alignItems="flex-start">
                 <HStack spacing="1" w="full">
-                    <Text fontWeight="bold" color="gray.800">
+                    <Text fontWeight="bold">
                         PDB Structure
                     </Text>
                     <PopoverDetail body="PDB ID of the structure the motif originates from." />
@@ -171,7 +171,7 @@ function FilterBar() {
             </VStack>
             <VStack alignItems="flex-start">
                 <HStack spacing="1" w="full">
-                    <Text fontWeight="bold" color="gray.800">
+                    <Text fontWeight="bold">
                         Title
                     </Text>
                     <PopoverDetail body="Title of the protein." />
@@ -195,9 +195,9 @@ function FilterBar() {
                 <Box flexGrow={1} w="full"></Box>
                 <Button
                     aria-label="Filter results"
-                    leftIcon={<SearchIcon aria-label="Search icon" color="gray.800" />}
-                    bgColor="#DEDBD2"
-                    color="gray.800"
+                    leftIcon={<SearchIcon aria-label="Search icon" color="text" />}
+                    bgColor="accent"
+                    color="text"
                     minW="24"
                     h="10"
                     onClick={handleFilterClick}

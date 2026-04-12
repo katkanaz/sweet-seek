@@ -13,7 +13,7 @@ function SearchResultItem({result}: SearchResultItemProps) {
         <HStack align="flex-start" w="full" spacing={4}>
             <Box boxSize="250px" flexShrink={0} alignItems="center" display="flex">
                 <ChakraLink  as={TanstackRouterLink} to={result.afdb_id}>
-                    <Image src={`api/img/preview/${result.pdb_id}.jpeg`} borderRadius="md"/>
+                    <Image src={`api/img/preview/${result.pdb_id}.jpeg`} borderRadius="md" mixBlendMode="multiply" />
                 </ChakraLink>
             </Box>
             <VStack align="left-start" spacing={3} flex="1" minW={0}>

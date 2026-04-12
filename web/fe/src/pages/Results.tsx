@@ -79,6 +79,7 @@ function Results() {
                         textAlign="center"
                         borderRadius="lg"
                         maxW="md"
+                        bgColor="primary"
                     >
                         <AlertIcon boxSize="40px" mr={0} />
                         <AlertTitle mt={4} mb={1} fontSize="lg">
@@ -97,7 +98,16 @@ function Results() {
     return (
         <MainContainer>
             <VStack pt="4" alignItems="stretch" position="relative">
-                <VStack alignItems="flex-start" position="sticky" top="14" background="white">
+                <VStack
+                    alignItems="flex-start"
+                    position="sticky"
+                    top="14"
+                    background="mainbg"
+                    zIndex="500"
+                    shadow="0 4px 2px -2px rgba(0,0,0,0.05)"
+                    pb="2"
+                    pt="2"
+                >
                     <FilterBar />
                     <Skeleton isLoaded={!isLoading} width="full">
                         <Pagination

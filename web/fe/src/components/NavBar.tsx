@@ -13,12 +13,12 @@ function NavBar() {
     });
 
     return (
-        <Box background="white" shadow="sm" h="3.5em" display="flex" justifyContent="space-between" alignItems="center" px="6" top="0" position="sticky" zIndex="1000">
+        <Box backgroundColor="primary" shadow="sm" h="3.5em" display="flex" justifyContent="space-between" alignItems="center" px="6" top="0" position="sticky" zIndex="1000">
             <Box>
                 <ChakraLink as={TanstackRouterLink} to={homeRoute.to} textDecoration="none" _hover={{ textDecoration: "none" }}>
                     <HStack spacing="1">
                         <Image src={logo} alt="Website Logo" boxSize="40px"/>
-                        <Text fontWeight="bold" fontSize="2xl" fontFamily="fantasy" color="#DD697B">
+                        <Text fontWeight="bold" fontSize="2xl" fontFamily="fantasy" color="text">
                             SweetSeek
                         </Text>
                     </HStack>
@@ -26,24 +26,24 @@ function NavBar() {
             </Box>
             {lastUpdated &&
                 <>
-                    <Box ml="4" height="60%" borderLeft="1px" borderColor="#4A5759"></Box>
-                    <Box ml="4" color="gray.400">
+                    <Box ml="4" height="60%" borderLeft="1px" borderColor="text"></Box>
+                    <Box ml="4" color="text">
                         Last updated {lastUpdated.date}
                     </Box>
                 </>
             }
             <Box flexGrow="1"></Box>
             <HStack spacing="5">
-                <ChakraLink as={TanstackRouterLink} to={homeRoute.to}>
+                <ChakraLink as={TanstackRouterLink} to={homeRoute.to} color="text">
                     Home
                 </ChakraLink>
-                <ChakraLink as={TanstackRouterLink} to={resultsRoute.to}>
+                <ChakraLink as={TanstackRouterLink} to={resultsRoute.to} color="text">
                     Results
                 </ChakraLink>
-                <ChakraLink as={TanstackRouterLink} to={statsRoute.to}>
+                <ChakraLink as={TanstackRouterLink} to={statsRoute.to} color="text">
                     Statistics
                 </ChakraLink>
-                <ChakraLink as={TanstackRouterLink} to={docsRoute.to}>
+                <ChakraLink as={TanstackRouterLink} to={docsRoute.to} color="text">
                     Docs
                 </ChakraLink>
             </HStack>

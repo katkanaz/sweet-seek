@@ -16,12 +16,25 @@ type MotifDetailProps = {
 
 function MotifDetail({num, sugar, rmsd, residueIds, structurePDB, surroundingResidues, enableAlign, handleAlignClick}: MotifDetailProps) {
     return (
-        <VStack alignItems="flex-start" border="1px" borderColor="rgb(206, 201, 186)">
-            <HStack background="orange.100" w="full" px="3" py="2" justifyContent="space-between">
-                <Text>
+        <VStack alignItems="flex-start" border="1px" borderColor="accent">
+            <HStack
+                background="accent"
+                w="full"
+                px="3"
+                py="2"
+                justifyContent="space-between"
+            >
+                <Text color="text">
                     Motif Match {num}
                 </Text>
-                <Button variant="outline" borderColor="black" background="orange.100" disabled={!enableAlign} onClick={() => handleAlignClick()}>
+                <Button
+                    variant="outline"
+                    borderColor="text"
+                    textColor="text"
+                    background="accent"
+                    disabled={!enableAlign}
+                    onClick={() => handleAlignClick()}
+                >
                     Align
                 </Button>
             </HStack>
@@ -51,8 +64,11 @@ function MotifDetail({num, sugar, rmsd, residueIds, structurePDB, surroundingRes
                     </Table>
                 </TableContainer>
             </Box>
-            <Box background="orange.100" w="full" px="3" h="7" py="1">
-                <Text fontSize="sm">
+            <Box background="accent" w="full" px="3" h="7" py="1">
+                <Text
+                    color="text"
+                    fontSize="sm"
+                >
                     Original Motif
                 </Text>
             </Box>

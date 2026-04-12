@@ -15,10 +15,10 @@ function PopoverDetail({ body }: PopoverDetailProps) {
             closeOnBlur={true}
         >
             <PopoverTrigger>
-                <IconButton aria-label="Tooltip" icon={<QuestionOutlineIcon w="4" h="4" />} variant="ghost" size="xs" />
+                <IconButton aria-label="Tooltip" icon={<QuestionOutlineIcon w="4" h="4" color="text"/>} variant="ghost" size="xs" />
             </PopoverTrigger>
-            <PopoverContent color="black" bg="#F7E1D7" borderColor="#F7E1D7" p={2}>
-                <PopoverArrow bg="#F7E1D7" />
+            <PopoverContent color="text" bg="secondary" borderColor="secondary" p={2}>
+                <PopoverArrow bg="secondary" />
                 <PopoverCloseButton />
                 <PopoverBody>
                     {body}
@@ -27,7 +27,7 @@ function PopoverDetail({ body }: PopoverDetailProps) {
                     border="0"
                 >
                     <Text fontSize="sm">
-                        For more information see the <ChakraLink as={TanstackRouterLink} to={docsRoute.to} target="_blank" color="green.800">documentation</ChakraLink>
+                        For more information see the <ChakraLink as={TanstackRouterLink} to={docsRoute.to} target="_blank" color="accent">documentation</ChakraLink>
                     </Text>
                 </PopoverFooter>
             </PopoverContent>

@@ -18,9 +18,9 @@ function Home() {
                 Donec tempus odio ipsum, a lobortis ipsum consectetur sit amet. Praesent finibus arcu sed felis faucibus semper. Aliquam sem lectus, commodo quis elementum ut, efficitur non elit. Phasellus accumsan eros in dolor posuere auctor. Nullam vel est tempus, porttitor ligula sed, sagittis urna.
             </Text>
             <HStack mt="10" spacing="3">
-                <HomeCard color="#F4CDD3" cardText="Explore the reuslts" route={resultsRoute.to} />
-                <HomeCard color="#F7E1D7" cardText="See result statistics" route={statsRoute.to} />
-                <HomeCard color="#DEDBD2" cardText="Learn more" route={docsRoute.to} />
+                <HomeCard color="accent" cardText="Explore the reuslts" route={resultsRoute.to} />
+                <HomeCard color="secondary" cardText="See result statistics" route={statsRoute.to} />
+                <HomeCard color="primary" cardText="Learn more" route={docsRoute.to} />
             </HStack>
         </MainContainer>
     )

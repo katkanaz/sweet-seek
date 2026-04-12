@@ -235,7 +235,7 @@ function ResultDetail() {
                     </Box>
                     <VStack flexGrow="1">
                         <HStack justifyContent="flex-end" w="full">
-                            <Box textColor="gray.300" fontSize="sm">
+                            <Box textColor="gray.400" fontSize="sm">
                                 AFDB version: {compStruct.af_revision}
                             </Box>
                         </HStack>
@@ -243,9 +243,9 @@ function ResultDetail() {
                             <MolStarWrapper setMolStar={setMolStar} />
                         </Box>
                         {alignActive &&
-                            <HStack w="full" p="2" bg="#F7E1D7" spacing="4" justifyContent="space-between">
-                                <Box>Showing aligned Motif Match {alignActive}</Box>
-                                <Button onClick={() => clearAlign()} variant="outline" borderColor="black">Clear</Button>
+                            <HStack w="full" p="2" bg="primary" spacing="4" justifyContent="space-between">
+                                <Box pl="1">Showing aligned Motif Match {alignActive}</Box>
+                                <Button onClick={() => clearAlign()} variant="outline" borderColor="text">Clear</Button>
                             </HStack>
                         }
                     </VStack>

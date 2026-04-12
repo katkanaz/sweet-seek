@@ -7,9 +7,9 @@ interface MainContainerProps {
     children?: ReactNode | ReactNode[]
 };
 
-function MainContainer({children, width = {base: "100%", lg: "60%"}}: MainContainerProps) {
+function MainContainer({children, width = {base: "100%", lg: "90%", xl: "80%", "2xl": "65%"}}: MainContainerProps) {
     return (
-        <Box as="main" display="flex" justifyContent="center" mb="5">
+        <Box as="main" display="flex" justifyContent="center" mb="5" color="text" bg="inherit">
             <Box width={width}>
                 {children}
             </Box>
