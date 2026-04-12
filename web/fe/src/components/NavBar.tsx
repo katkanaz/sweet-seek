@@ -1,9 +1,9 @@
 import { Box, Link as ChakraLink, HStack, Image, Text } from "@chakra-ui/react"
 import { Link as TanstackRouterLink } from '@tanstack/react-router'
-import logo from "../assets/logo.svg"
 import { useQuery } from "@tanstack/react-query";
 import { getLastModified, LastUpdated } from "../api/computed_structure";
 import { docsRoute, homeRoute, resultsRoute, statsRoute } from "../Router";
+import SweetSeekLogo from "../assets/sweet-seek-logo";
 
 
 function NavBar() {
@@ -16,8 +16,10 @@ function NavBar() {
         <Box backgroundColor="primary" shadow="sm" h="3.5em" display="flex" justifyContent="space-between" alignItems="center" px="6" top="0" position="sticky" zIndex="1000">
             <Box>
                 <ChakraLink as={TanstackRouterLink} to={homeRoute.to} textDecoration="none" _hover={{ textDecoration: "none" }}>
-                    <HStack spacing="1">
-                        <Image src={logo} alt="Website Logo" boxSize="40px"/>
+                    <HStack spacing="2">
+                        <Box w="9" h="9" color="text">
+                            <SweetSeekLogo />
+                        </Box>
                         <Text fontWeight="bold" fontSize="2xl" fontFamily="fantasy" color="text">
                             SweetSeek
                         </Text>
