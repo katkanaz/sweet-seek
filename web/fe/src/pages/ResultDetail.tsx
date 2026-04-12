@@ -236,6 +236,11 @@ function ResultDetail() {
                         </VStack>
                     </Box>
                     <VStack flexGrow="1">
+                        <HStack justifyContent="flex-end" w="full">
+                            <Box textColor="gray.300" fontSize="sm">
+                                AFDB version: {compStruct.af_revision}
+                            </Box>
+                        </HStack>
                         <Box position="relative" width="100%" zIndex="10">
                             <MolStarWrapper setMolStar={setMolStar} />
                         </Box>
