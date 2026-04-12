@@ -1,4 +1,4 @@
-import { Box, Link as ChakraLink, HStack, Image, Text } from "@chakra-ui/react"
+import { Box, Link as ChakraLink, HStack, Text } from "@chakra-ui/react"
 import { Link as TanstackRouterLink } from '@tanstack/react-router'
 import { useQuery } from "@tanstack/react-query";
 import { getLastModified, LastUpdated } from "../api/computed_structure";
@@ -35,17 +35,17 @@ function NavBar() {
                 </>
             }
             <Box flexGrow="1"></Box>
-            <HStack spacing="5">
-                <ChakraLink as={TanstackRouterLink} to={homeRoute.to} color="text">
+            <HStack spacing="5" className="navlinks">
+                <ChakraLink as={TanstackRouterLink} to={homeRoute.to} color="text" fontWeight="bold">
                     Home
                 </ChakraLink>
-                <ChakraLink as={TanstackRouterLink} to={resultsRoute.to} color="text">
+                <ChakraLink as={TanstackRouterLink} to={resultsRoute.to} color="text" fontWeight="bold">
                     Results
                 </ChakraLink>
-                <ChakraLink as={TanstackRouterLink} to={statsRoute.to} color="text">
+                <ChakraLink as={TanstackRouterLink} to={statsRoute.to} color="text" fontWeight="bold">
                     Statistics
                 </ChakraLink>
-                <ChakraLink as={TanstackRouterLink} to={docsRoute.to} color="text">
+                <ChakraLink as={TanstackRouterLink} to={docsRoute.to} color="text" fontWeight="bold">
                     Docs
                 </ChakraLink>
             </HStack>
