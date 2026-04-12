@@ -209,17 +209,15 @@ function ResultDetail() {
                                         </Td>
                                     </Tr>
                                     <Tr>
-                                        <Td width="2" fontWeight="bold" px="0">Total number of found motifs:</Td>
+                                        <Td width="2" fontWeight="bold" px="0">Total number of motif matches:</Td>
                                         <Td>
-                                            {compStruct.accepted_motifs.length}
-                                            {/* TODO: should count all motifs or only accepted? */}
+                                            {compStruct.accepted_motifs.length + (compStruct.rejected_motifs?.length ?? 0)}
                                         </Td>
                                     </Tr>
                                 </Tbody>
                             </Table>
                         </TableContainer>
                         <VStack mt="3">
-                            {/* TODO: show rejected motifs + transfer filters */}
                             {compStruct.accepted_motifs.map((m, i) => (
                                 <MotifDetail
                                     key={i}
