@@ -22,7 +22,3 @@ func NewRouter() *chi.Mux {
 	return r
 }
 
-
-// nginx
-// -> / -> html.index js
-// -> /api -> redirect to backend and remove /api

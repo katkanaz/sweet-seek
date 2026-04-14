@@ -14,6 +14,7 @@ import (
 	"sweetseek-be/internal/functools"
 	preview "sweetseek-be/internal/preview_image"
 	"sweetseek-be/internal/set"
+	"sweetseek-be/internal/statistics"
 	. "sweetseek-be/internal/types"
 	"sync"
 	"time"
@@ -450,9 +451,6 @@ func getCompStructDetail(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func getStats(w http.ResponseWriter, r *http.Request) {}
-
-
 func extractOptions(data []ComputedStructure, outputPath string) error {
 	if _, err := os.Stat(outputPath); err == nil {
 		slog.Info("Filter options already exist", "path", outputPath)
@@ -502,7 +500,8 @@ func extractOptions(data []ComputedStructure, outputPath string) error {
 
 func EnsureGeneratedData() error {
 	dateOnly, timeOnly := getDateTime("data/workflow_runs/", "_merged.json")
-	optionsPath := fmt.Sprintf("data/workflow_runs/%sT%s_options.json", dateOnly, timeOnly)
+	dateTime := fmt.Sprintf("%sT%s", dateOnly, timeOnly)
+	optionsPath := fmt.Sprintf("data/workflow_runs/%s_options.json", dateTime)
 
 	_, data := getComputedStructures(nil, nil)
 
@@ -514,6 +513,11 @@ func EnsureGeneratedData() error {
 	}
 
 	err = preview.GenerateImages(data)
+	if err != nil {
+		return err
+	}
+
+	err = statistics.GenerateResultsStatistics(data, dateTime)
 	if err != nil {
 		return err
 	}

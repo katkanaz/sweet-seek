@@ -85,3 +85,27 @@ type GetComputedStructuresResponse struct {
 	TotalCount int 				   `json:"total_count"`
 	Data	   []ComputedStructure `json:"data"`
 }
+
+type PreProcessedDataStats struct {
+	PdbMirrorDate string `json:"pdb_mirror_date"`
+	PdbMirrorCount int `json:"pdb_mirror_count"`
+	StructsWithSugars int `json:"structs_with_sugars"`
+	StructsWithLigands int `json:"structs_with_ligands"`
+	StructsWithAltlocs int `json:"structs_with_altlocs"`
+	StructsUnsuppAltlocs int `json:"structs_unsupp_altlocs"`
+	StructsAfterFilter int `json:"structs_after_filter"`
+}
+
+type ResultsStats struct {
+	NumResults int `json:"num_results"`
+	NumMotifMatches int `json:"num_motif_matches"`
+	MotifMatchesPerSugar map[string]int `json:"motif_matches_per_sugar"`
+	MotifMatchesPerProtein map[int]int `json:"motif_matches_per_protein"`
+	BestPlddtPerSugar map[string]float32 `json:"best_plddt_per_sugar"`
+	PlddtPerProtein []float32 `json:"plddt_per_protein"`
+}
+
+type StatsResponse struct {
+	Preproc PreProcessedDataStats `json:"preproc"`
+	Results ResultsStats `json:"results"`
+}
