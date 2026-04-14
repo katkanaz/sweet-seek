@@ -11,7 +11,6 @@ func NewRouter() *chi.Mux {
 
 	fileServer := http.FileServer(http.Dir("./data/img"))
 	r.Handle("/img/*", http.StripPrefix("/img/", fileServer))
-	r.Get("/sugars", getSugars)
 	r.Get("/last-modified", getLastModifiedDate)
 	r.Get("/stats", getStats)
 
