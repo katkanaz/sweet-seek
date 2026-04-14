@@ -41,7 +41,7 @@ function SearchResultItem({result}: SearchResultItemProps) {
                                             <Text>
                                                 {result.afdb_id}
                                             </Text>
-                                            <ExternalLinkIcon />
+                                            <ExternalLinkIcon color="greyonpink" />
                                         </HStack>
                                     </ChakraLink>
                                 </Td>
@@ -54,7 +54,7 @@ function SearchResultItem({result}: SearchResultItemProps) {
                                             <Text>
                                                 {`${result.afdb_id.split("-")[1]}`}
                                             </Text>
-                                                <ExternalLinkIcon />
+                                            <ExternalLinkIcon color="greyonpink" />
                                         </HStack>
                                     </ChakraLink>
                                 </Td>

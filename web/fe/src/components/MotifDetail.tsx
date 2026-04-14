@@ -84,7 +84,7 @@ function MotifDetail({num, sugar, rmsd, residueIds, structurePDB, surroundingRes
                                             <Text>
                                                 {structurePDB}
                                             </Text>
-                                            <ExternalLinkIcon />
+                                            <ExternalLinkIcon color="greyonpink" />
                                         </HStack>
                                     </ChakraLink>
                                 </Td>

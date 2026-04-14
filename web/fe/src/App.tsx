@@ -11,7 +11,8 @@ const theme = extendTheme({
         accent: "#F5A9A9",
         mainbg: "#FFF9F9",
         text: "#4A3C4A",
-        border: "#5C4A5A",
+        grey: "#DAD2DA",
+        greyonpink: "#917891",
     },
     styles: {
         global: () => ({

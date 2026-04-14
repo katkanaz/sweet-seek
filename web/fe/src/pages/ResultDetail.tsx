@@ -176,7 +176,7 @@ function ResultDetail() {
                                                     <Text>
                                                         {compStruct.afdb_id}
                                                     </Text>
-                                                    <ExternalLinkIcon />
+                                                    <ExternalLinkIcon color="greyonpink" />
                                                 </HStack>
                                             </ChakraLink>
                                         </Td>
@@ -189,7 +189,7 @@ function ResultDetail() {
                                                     <Text>
                                                         {`${compStruct.afdb_id.split("-")[1]}`}
                                                     </Text>
-                                                    <ExternalLinkIcon />
+                                                    <ExternalLinkIcon color="greyonpink" />
                                                 </HStack>
                                             </ChakraLink>
                                         </Td>
@@ -235,7 +235,7 @@ function ResultDetail() {
                     </Box>
                     <VStack flexGrow="1">
                         <HStack justifyContent="flex-end" w="full">
-                            <Box textColor="gray.400" fontSize="sm">
+                            <Box textColor="greyonpink" fontSize="sm">
                                 AFDB version: {compStruct.af_revision}
                             </Box>
                         </HStack>

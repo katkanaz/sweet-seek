@@ -131,7 +131,7 @@ function Results() {
                         </Text>
                     </VStack>
                 </Center>
-                : <VStack mt="6" divider={<Box borderBottom="solid" borderBottomColor="lightgrey" borderBottomWidth="thin" boxSize="full" w="full"></Box>}>
+                : <VStack mt="6" divider={<Box borderBottom="solid" borderBottomColor="grey" color="grey" borderBottomWidth="thin" boxSize="full" w="full"></Box>}>
                     {results?.data.length === 0 &&
                         <Box>
                             No results found
@@ -140,7 +140,7 @@ function Results() {
                     {results?.data.map(r => <SearchResultItem result={r} />)}
                 </VStack>
                 }
-                <Box borderBottom="solid" borderBottomColor="lightgrey" borderBottomWidth="thin" boxSize="full" w="full"></Box>
+                <Box borderBottom="solid" borderBottomColor="grey" color="grey" borderBottomWidth="thin" boxSize="full" w="full"></Box>
                     <Skeleton isLoaded={!isLoading} width="full">
                         <Pagination
                             page={page}

@@ -28,8 +28,8 @@ function NavBar() {
             </Box>
             {lastUpdated &&
                 <>
-                    <Box ml="4" height="60%" borderLeft="1px" borderColor="text"></Box>
-                    <Box ml="4" color="text">
+                    <Box ml="4" height="60%" borderLeft="1px" borderColor="greyonpink"></Box>
+                    <Box ml="4" color="greyonpink">
                         Last updated {lastUpdated.date}
                     </Box>
                 </>
