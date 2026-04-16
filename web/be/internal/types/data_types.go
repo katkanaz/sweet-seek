@@ -96,16 +96,24 @@ type PreProcessedDataStats struct {
 	StructsAfterFilter int `json:"structs_after_filter"`
 }
 
+type RawFilteredSurroundings struct {
+	Raw int `json:"raw"`
+	Filtered int `json:"filtered"`
+}
+
+type SurroundingsDataStats map[string]RawFilteredSurroundings
+
 type ResultsStats struct {
 	NumResults int `json:"num_results"`
 	NumMotifMatches int `json:"num_motif_matches"`
 	MotifMatchesPerSugar map[string]int `json:"motif_matches_per_sugar"`
 	MotifMatchesPerProtein map[int]int `json:"motif_matches_per_protein"`
-	BestPlddtPerSugar map[string]float32 `json:"best_plddt_per_sugar"`
+	PlddtRangePerSugar map[string]PlddtRange `json:"plddt_range_per_sugar"`
 	PlddtPerProtein []float32 `json:"plddt_per_protein"`
 }
 
 type StatsResponse struct {
 	Preproc PreProcessedDataStats `json:"preproc"`
+	Surroundings SurroundingsDataStats `json:"surroundings"`
 	Results ResultsStats `json:"results"`
 }

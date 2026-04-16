@@ -16,6 +16,13 @@ func getStats(w http.ResponseWriter, r *http.Request) {
 	}
 	preProcessedData := statistics.LoadPreProcessedDataStats(preprocFile)
 
+	surroundingsFile, _, err := getNewest("data/workflow_runs/statistics", "_surroundings.json")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	surroundingsData := statistics.LoadSurroundingsStats(surroundingsFile)
+
 	resFile, _, err := getNewest("data/workflow_runs/statistics", "_results.json")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -25,6 +32,7 @@ func getStats(w http.ResponseWriter, r *http.Request) {
 
 	stats := StatsResponse{
 		Preproc: preProcessedData,
+		Surroundings: surroundingsData,
 		Results: resData,
 	}
 

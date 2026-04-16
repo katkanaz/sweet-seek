@@ -3,6 +3,7 @@ package statistics
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"os"
 	. "sweetseek-be/internal/types"
 )
@@ -13,6 +14,21 @@ const (
 
 func LoadPreProcessedDataStats(filePath string) PreProcessedDataStats {
 	var stats PreProcessedDataStats
+
+	data, err := os.Open(filePath)
+	if err != nil {
+		panic(err)
+	}
+	defer data.Close()
+
+	if err := json.NewDecoder(data).Decode(&stats); err != nil {
+		panic(err)
+	}
+	return stats
+}
+
+func LoadSurroundingsStats(filePath string) SurroundingsDataStats {
+	var stats SurroundingsDataStats
 
 	data, err := os.Open(filePath)
 	if err != nil {
@@ -46,7 +62,7 @@ func ComputeResultsStatistics(data []ComputedStructure) ResultsStats {
 		NumResults: len(data),
 		MotifMatchesPerSugar: make(map[string]int),
 		MotifMatchesPerProtein: make(map[int]int),
-		BestPlddtPerSugar: make(map[string]float32),
+		PlddtRangePerSugar: make(map[string]PlddtRange),
 		PlddtPerProtein: make([]float32, 0, len(data)),
 	}
 
@@ -61,8 +77,22 @@ func ComputeResultsStatistics(data []ComputedStructure) ResultsStats {
 		for _, motif := range s.AcceptedMotifs {
 			stats.MotifMatchesPerSugar[motif.Sugar] += 1
 
-			if stats.BestPlddtPerSugar[motif.Sugar] < s.Plddt {
-				stats.BestPlddtPerSugar[motif.Sugar] = s.Plddt
+			if _, exists := stats.PlddtRangePerSugar[motif.Sugar]; !exists {
+				stats.PlddtRangePerSugar[motif.Sugar] = PlddtRange{
+					Min: float32(math.Inf(+1)),
+					Max: float32(math.Inf(-1)),
+				}
+			}
+
+			if stats.PlddtRangePerSugar[motif.Sugar].Max < s.Plddt {
+				p := stats.PlddtRangePerSugar[motif.Sugar]
+				p.Max = s.Plddt
+				stats.PlddtRangePerSugar[motif.Sugar] = p
+			}
+			if stats.PlddtRangePerSugar[motif.Sugar].Min > s.Plddt {
+				p := stats.PlddtRangePerSugar[motif.Sugar]
+				p.Min = s.Plddt
+				stats.PlddtRangePerSugar[motif.Sugar] = p
 			}
 		}
 	}
