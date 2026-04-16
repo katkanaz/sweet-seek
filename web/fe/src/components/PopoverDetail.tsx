@@ -6,16 +6,20 @@ import { docsRoute } from "../Router";
 
 interface PopoverDetailProps {
     body: string
+    children?: React.ReactNode
 }
 
-function PopoverDetail({ body }: PopoverDetailProps) {
+function PopoverDetail({ body, children }: PopoverDetailProps) {
     return (
         <Popover
             placement="bottom"
             closeOnBlur={true}
         >
             <PopoverTrigger>
-                <IconButton aria-label="Tooltip" icon={<QuestionOutlineIcon w="4" h="4" color="text"/>} variant="ghost" size="xs" />
+                {children
+                ? children
+                : <IconButton aria-label="Tooltip" icon={<QuestionOutlineIcon w="4" h="4" color="text"/>} variant="ghost" size="xs" />
+                }
             </PopoverTrigger>
             <PopoverContent color="text" bg="secondary" borderColor="secondary" p={2}>
                 <PopoverArrow bg="secondary" />

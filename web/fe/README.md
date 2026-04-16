@@ -6,6 +6,7 @@ Frontend for the SweetSeek web application. Utilized technologies:
 - Tanstack Query
 - Tanstack Router
 - Chakra UI
+- Chart.js, react-chartjs-2
 
 ## Install prerequisites
 
