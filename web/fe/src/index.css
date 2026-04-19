@@ -2,3 +2,7 @@
 .navlinks a.active {
     text-decoration: underline;
 }
+
+html:has(.docs) {
+    scroll-padding-top: 80px;
+}

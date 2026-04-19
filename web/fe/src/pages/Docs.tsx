@@ -16,7 +16,7 @@ function Docs() {
                       <Link href="#usage-instructions">Usage Instructions</Link>
                     </VStack>
                 </Box>
-                <Box flex="1" p={6}>
+                <Box flex="1" p={6} className="docs">
                     <VStack align="start" spacing={8}>
                         <Box id="web">
                             <Text fontSize="4xl" fontWeight="bold">Web</Text>
