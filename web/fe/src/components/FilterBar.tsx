@@ -28,6 +28,9 @@ function FilterBar() {
     const min = data?.plddt_range.min;
     const max = data?.plddt_range.max;
     const [ range, setRange ] = useState<[number, number]|undefined>(undefined);
+    const clearRange = () => {
+        setRange(undefined);
+    }
 
     useEffect(() => {
       if (min !== undefined && max !== undefined && !range) {
@@ -93,6 +96,11 @@ function FilterBar() {
                         pLDDT
                     </Text>
                     <PopoverDetail body="Global pLDDT value representing the overall confidence of the model." />
+                    {(range[0] !== data?.plddt_range.min || range[1] !== data?.plddt_range.max) &&
+                        <Button variant="ghost" size="xs" ml="auto" fontStyle="italic" color="gray.400" onClick={clearRange}>
+                            clear
+                        </Button>
+                    }
                 </HStack>
                 <VStack spacing="0">
                     <Box px="2" w="full">
@@ -105,10 +113,10 @@ function FilterBar() {
                             onChange={(val) => setRange(val as [number, number])}
                         >
                             <RangeSliderTrack>
-                                <RangeSliderFilledTrack />
+                                <RangeSliderFilledTrack bg="primary" />
                             </RangeSliderTrack>
-                            <RangeSliderThumb index={0} />
-                            <RangeSliderThumb index={1} />
+                            <RangeSliderThumb index={0} bg="greyonpink" />
+                            <RangeSliderThumb index={1} bg="greyonpink" />
                         </RangeSlider>
                     </Box>
                     <HStack>
@@ -187,12 +195,15 @@ function FilterBar() {
                     size="md"
                     type="text"
                     w="16rem"
-                    placeholder="Fucose-specific"
+                    placeholder="e.g. Fucose-specific"
                 />
             </VStack>
 
             <VStack>
-                <Box flexGrow={1} w="full"></Box>
+                <Text fontWeight="bold" visibility="hidden">
+                    Apply Filter
+                </Text>
+
                 <Button
                     aria-label="Filter results"
                     leftIcon={<SearchIcon aria-label="Search icon" color="text" />}
