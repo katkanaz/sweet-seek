@@ -85,13 +85,16 @@ func renderStructure(molrenderCmd, pdbId string) error {
 	filePath := fmt.Sprintf("%s/%s.bcif", structuresDir, pdbId)
 	var cmd *exec.Cmd
 	commonArgs := []string{"model", "--plddt", "on", "--format", "jpeg", "--width", "300", "--height", "300", filePath, previewImgDir, "0"}
-	if strings.Contains(molrenderCmd, " ") {
-		parts := strings.Fields(molrenderCmd)
-		args := append(parts[1:], commonArgs...)
-		cmd = exec.Command(parts[0], args...)
-	} else {
-		cmd = exec.Command(molrenderCmd, commonArgs...)
+	parts := strings.Split(molrenderCmd, ";")
+	var args []string
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed != "" {
+			args = append(args, trimmed)
+		}
 	}
+	args = append(args, commonArgs...)
+	cmd = exec.Command(args[0], args[1:]...)
 	if out, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("molrender failed for %s: %w\n%s", pdbId, err, out)
 	}

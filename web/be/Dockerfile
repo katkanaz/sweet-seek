@@ -29,15 +29,14 @@ WORKDIR /molrender
 #     libxi-dev
 
 RUN apt-get update && apt-get install -y \
+    build-essential \
     python3 \
     python-is-python3 \
-    make \
-    g++ \
+    libglu1-mesa-dev \
+    libglew-dev \
     pkg-config \
-    libx11-dev \
-    libxext-dev \
-    libgl1-mesa-dev \
     libxi-dev \
+    xvfb \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./molrender/package*.json ./
