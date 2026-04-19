@@ -16,7 +16,7 @@ func NewRouter() *chi.Mux {
 
 	r.Post("/results", getAllResults)
 	r.Get("/filter-options", getFilterOptions)
-	r.Post("/results/{afid}", getCompStructDetail)
+	r.Get("/results/{afid}", getCompStructDetail)
 
 	return r
 }

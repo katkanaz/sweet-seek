@@ -423,17 +423,8 @@ func getAllResults(w http.ResponseWriter, r *http.Request) {
 
 
 func getCompStructDetail(w http.ResponseWriter, r *http.Request) {
-	var requestBody ResultsSearchParams
-	if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
-		http.Error(w, "Invalid JSON in request body", http.StatusBadRequest)
-		return
-	}
-	defer r.Body.Close()
-
-	filter := constructFilter(&requestBody)
-
 	afid := r.PathValue("afid")
-	_, results := getComputedStructures(&filter, nil)
+	_, results := getComputedStructures(nil, nil)
 	index := slices.IndexFunc(results, func(c ComputedStructure) bool {
 		return c.AfdbId == afid
 	})
