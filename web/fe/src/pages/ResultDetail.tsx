@@ -171,7 +171,12 @@ function ResultDetail() {
                                     <Tr>
                                         <Td width="2" fontWeight="bold" px="0">AlphaFold DB:</Td>
                                         <Td>
-                                            <ChakraLink href={`https://alphafold.ebi.ac.uk/entry/${compStruct.afdb_id.split("-")[1]}`} target="_blank">
+                                            <ChakraLink
+                                                href={`https://alphafold.ebi.ac.uk/entry/${compStruct.afdb_id.split("-")[1]}`}
+                                                target="_blank"
+                                                w="fit-content"
+                                                display="inline-block"
+                                            >
                                                 <HStack alignItems="center" gap="1">
                                                     <Text>
                                                         {compStruct.afdb_id}
@@ -184,7 +189,12 @@ function ResultDetail() {
                                     <Tr>
                                         <Td width="2" fontWeight="bold" px="0">UniProtKB:</Td>
                                         <Td>
-                                            <ChakraLink href={`https://www.uniprot.org/uniprotkb/${compStruct.afdb_id.split("-")[1]}`} target="_blank">
+                                            <ChakraLink
+                                                href={`https://www.uniprot.org/uniprotkb/${compStruct.afdb_id.split("-")[1]}`}
+                                                target="_blank"
+                                                w="fit-content"
+                                                display="inline-block"
+                                            >
                                                 <HStack alignItems="center" gap="1">
                                                     <Text>
                                                         {`${compStruct.afdb_id.split("-")[1]}`}
