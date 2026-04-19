@@ -1,7 +1,7 @@
 import { Combobox } from "@base-ui/react/combobox"
 import { CheckIcon, SmallCloseIcon } from "@chakra-ui/icons"
 import { Box, HStack, IconButton, Input, List, ListItem } from "@chakra-ui/react"
-import { useRef, useState } from "react"
+import { SetStateAction, useRef, useState } from "react"
 
 
 export type SelectOption = {
@@ -27,19 +27,29 @@ interface MultiSelectProps {
 
 export function useMultiSelect(options: SelectOption[] | undefined, optionInfo: OptionInfo) {
     const [ query, setQuery ] = useState("")
-    const [ selected, setSelected ] = useState<SelectOption[]>([])
+    const [ selected, _setSelected ] = useState<SelectOption[]>([])
     const clearSelected = () => {
         setSelected([])
     }
+
+    const setSelected = (v: SetStateAction<SelectOption[]>) => {
+        _setSelected(v);
+        setQuery("");
+    }
+
     const multiSelectReturn = { props: { query, setQuery, selected, setSelected, options: options ?? [], optionInfo}, clearSelected }
     return multiSelectReturn
 }
 
-function MultiSelect({ options, optionInfo, query, setQuery, selected, setSelected, width, placeholder }: MultiSelectProps) {
-    // TODO: try replace with combobox empty
+function MultiSelect({ options, query, setQuery, selected, setSelected, width, placeholder }: MultiSelectProps) {
     const filtered = options?.filter((item) =>
         item.value.toLowerCase().includes(query.toLowerCase())
-    )
+    ).sort((a, b) => {
+        const isASelected = selected.includes(a);
+        if (isASelected && selected.includes(b)) return 0;
+        else if (isASelected) return -1;
+        return 1;
+    })
     const containerRef = useRef<HTMLDivElement | null>(null);
     const inputRef = useRef<HTMLInputElement|null>(null);
 
@@ -61,9 +71,9 @@ function MultiSelect({ options, optionInfo, query, setQuery, selected, setSelect
                         borderColor="gray.200"
                         borderRadius="md"
                         cursor="text"
+                        px="1"
                         onClick={() => inputRef.current?.focus()}
                         _focusWithin={{ borderColor: "blue.500", boxShadow: "0 0 0 1px var(--chakra-colors-blue-500)" }}
-
                     />
                 )}>
                     <Combobox.Value>
@@ -74,8 +84,28 @@ function MultiSelect({ options, optionInfo, query, setQuery, selected, setSelect
                                         key={option.id}
                                         aria-label={option.value}
                                         render={(props) => (
-                                            <Box {...props} display="flex" alignItems="center" border="1px solid" borderColor="gray.200" borderRadius="md" p="1">
+                                            <Box
+                                                {...props}
+                                                display="flex"
+                                                alignItems="center"
+                                                border="1px solid"
+                                                borderColor="gray.200"
+                                                borderRadius="md"
+                                                maxWidth="100%"
+                                                p="1"
+                                                mt="0.06rem"
+                                                title={option.value}
+                                                bg="lightprimary"
+                                            >
+                                                <Box
+                                                    textOverflow="ellipsis"
+                                                    maxWidth="90%"
+                                                    overflow="hidden"
+                                                    display="inline-block"
+                                                    whiteSpace="nowrap"
+                                                >
                                                 {option.value}
+                                                </Box>
                                                 <Combobox.ChipRemove aria-label="Remove" render={(props) => (
                                                     <IconButton {...props as any} icon={<SmallCloseIcon />} size="xs" variant="ghost"/>
                                                 )} />
@@ -89,11 +119,12 @@ function MultiSelect({ options, optionInfo, query, setQuery, selected, setSelect
                                     ref={inputRef}
                                     render={(props) => (
                                         <Input
+                                            height="38px"
                                             minW="3rem"
                                             flex="1"
                                             width={width ?? "5rem"}
                                             border="none"
-                                            // _focusVisible={{ borderColor: "blue.500", boxShadow: "0 0 0 2px var(--chakra-colors-blue-500)" }}
+                                            px="3"
                                             _focusVisible={{outline: "none"}}
                                             _selected={{outline: "none"}}
                                             {...props}
@@ -101,6 +132,7 @@ function MultiSelect({ options, optionInfo, query, setQuery, selected, setSelect
                                                 props.onChange?.(e)
                                                 setQuery(e.target.value)
                                             }}
+                                            onBlur={() => setQuery("")}
                                         />
                                     )}
                                 />
@@ -110,7 +142,7 @@ function MultiSelect({ options, optionInfo, query, setQuery, selected, setSelect
                 </Combobox.Chips>
             </Box>
                 <Combobox.Portal>
-                    <Combobox.Positioner anchor={containerRef}>
+                    <Combobox.Positioner anchor={containerRef} style={{zIndex: 3000}}>
                         <Combobox.Popup
                             render={(props) => (
                                 <List
@@ -122,11 +154,13 @@ function MultiSelect({ options, optionInfo, query, setQuery, selected, setSelect
                                     width="var(--anchor-width)"
                                     overflowY="auto"
                                     bg="white"
+                                    zIndex="1500"
                                 />
                             )}
                         >
-                            {/* {optionInfo.isLoading && spinner} */}
-                            {/* {optionInfo.isError && message} */}
+                            {filtered.length === 0 &&
+                                <Box fontSize="0.925rem" lineHeight="1rem" color="gray.600" p="1rem">No options found.</Box>
+                            }
                             {filtered.map((item) => (
                                 <Combobox.Item
                                     key={item.id}
@@ -137,11 +171,7 @@ function MultiSelect({ options, optionInfo, query, setQuery, selected, setSelect
                                             px={3}
                                             py={2}
                                             cursor="pointer"
-                                            bg={
-                                                state.highlighted
-                                                    ? "gray.100"
-                                                    : "transparent"
-                                            }
+                                            _hover={{bg: "gray.100"}}
                                         >
                                             <HStack>
                                                 <Box w="3" h="3" display="flex" alignItems="center" justifyContent="center">

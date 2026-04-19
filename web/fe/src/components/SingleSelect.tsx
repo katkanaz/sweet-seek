@@ -1,6 +1,6 @@
 import { Combobox } from "@base-ui/react/combobox"
-import { CheckIcon, ChevronDownIcon } from "@chakra-ui/icons"
-import { Box, HStack, IconButton, Input, List, ListItem } from "@chakra-ui/react"
+import { CheckIcon } from "@chakra-ui/icons"
+import { Box, HStack, Input, List, ListItem } from "@chakra-ui/react"
 import { useRef, useState } from "react"
 import { SelectOption, OptionInfo } from "./MultiSelect"
 
@@ -26,7 +26,7 @@ export function useSingleSelect(options: SelectOption[] | undefined, optionInfo:
     return singleSelectReturn
 }
 
-function SingleSelect({ options, optionInfo, query, setQuery, selected, setSelected, width, placeholder }: SingleSelectProps) {
+function SingleSelect({ options, selected, setSelected, width, placeholder }: SingleSelectProps) {
 //     const filtered = options?.filter((item) =>
 //         item.value.toLowerCase().includes(query.toLowerCase())
 //     )
@@ -48,23 +48,16 @@ function SingleSelect({ options, optionInfo, query, setQuery, selected, setSelec
                                 flex="1"
                                 width={width ?? "5rem"}
                                 {...props}
+                                textTransform="uppercase"
+                                _placeholder={{textTransform: "none"}}
                             />
                         )}
                     />
-                    <Box display="flex" position="absolute" bottom="0" right="0.5rem" height="2.5rem" border="none" alignItems="center" justifyContent="center" >
-                        <Combobox.Trigger aria-label="Open popup"
-                            render={(props) => (
-                                <IconButton {...props as any} icon={<ChevronDownIcon w="1rem" h="1rem" />} />
-                            )}
-                        >
-                            
-                        </Combobox.Trigger>
-                    </Box>
                 </Combobox.InputGroup>
             </Box>
 
             <Combobox.Portal>
-                <Combobox.Positioner anchor={containerRef}>
+                <Combobox.Positioner anchor={containerRef} style={{zIndex: 3000}}>
                     <Combobox.Popup
                         render={(props) => (
                             <Box
@@ -98,6 +91,7 @@ function SingleSelect({ options, optionInfo, query, setQuery, selected, setSelec
                                             px={3}
                                             py={2}
                                             cursor="pointer"
+                                            textTransform="uppercase"
                                             bg={
                                                 state.highlighted
                                                     ? "gray.100"
