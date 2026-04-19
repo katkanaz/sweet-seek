@@ -1,60 +1,406 @@
-import MainContainer from "../components/MainContainer"
-import { Box, Flex, Link, Text, VStack } from "@chakra-ui/react"
-
+import MainContainer from "../components/MainContainer";
+import {
+    Box,
+    Flex,
+    Heading,
+    Link as ChakraLink,
+    List,
+    ListIcon,
+    ListItem,
+    Text,
+    VStack,
+    Image,
+    HStack,
+    OrderedList,
+} from "@chakra-ui/react";
+import SweetSeekBullet from "../assets/sweet-seek-bullet";
+import resultDetailScreenshot from "../assets/result-detail-docs.png";
+import filterbarScreenshot from "../assets/filter-bar-docs.png";
+import workflowFlowchart from "../assets/workflow-with-numbers.svg";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { Link as TanstackRouterLink } from "@tanstack/react-router";
+import { homeRoute, resultsRoute } from "../Router";
 
 function Docs() {
     return (
         <MainContainer>
             <Flex>
-                <Box mt="4" display={{ base: "none", md: "block" }} w="250px" h="fit-content" p={4} top="14" position="sticky">
+                <Box
+                    mt="4"
+                    display={{ base: "none", md: "block" }}
+                    w="250px"
+                    h="fit-content"
+                    p={4}
+                    top="14"
+                    position="sticky"
+                >
                     <VStack align="start" spacing={3}>
-                      <Link href="#web" fontWeight="bold">Web</Link>
-                      <Link href="#web-overview">Overview</Link>
-                      <Link href="#filters">Filters</Link>
-                      <Link href="#workflow" fontWeight="bold">Workflow</Link>
-                      <Link href="#workflow-overview">Overview</Link>
-                      <Link href="#usage-instructions">Usage Instructions</Link>
+                        <ChakraLink href="#web" fontWeight="bold">
+                            Web Application
+                        </ChakraLink>
+                        <ChakraLink href="#web-overview">Pages Overview</ChakraLink>
+                        <ChakraLink href="#filters">Filtering Results</ChakraLink>
+                        <ChakraLink href="#workflow" fontWeight="bold">
+                            Workflow
+                        </ChakraLink>
+                        <ChakraLink href="#workflow-overview">Overview</ChakraLink>
+                        <ChakraLink href="#usage-instructions">Usage Instructions</ChakraLink>
                     </VStack>
                 </Box>
                 <Box flex="1" p={6} className="docs">
                     <VStack align="start" spacing={8}>
                         <Box id="web">
-                            <Text fontSize="4xl" fontWeight="bold">Web</Text>
-                            <Text></Text>
+                            <VStack align="start" spacing={6}>
+                                <Heading as="h1" size="xl">
+                                    Web Application
+                                </Heading>
+                                <Text>
+                                    This website allows you to explore candidate sugar-binding
+                                    proteins. They can be analysed through an interactive interface.
+                                    The results were obtained by a bioinformatics workflow. More
+                                    information about the workflow process and usage can be found in
+                                    section{" "}
+                                    <ChakraLink href="#workflow" color="darkaccent">
+                                        Workflow
+                                    </ChakraLink>
+                                    . The following section details how to use the web application
+                                    and what features are available.
+                                </Text>
+                            </VStack>
                         </Box>
                         <Box id="web-overview">
-                            <Text fontSize="2xl" fontWeight="bold">Overview</Text>
-                            <Text>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ultrices blandit imperdiet. Aliquam eu viverra dolor, sit amet interdum dui. Curabitur luctus molestie sem, a ultrices velit molestie quis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec a suscipit ante, vitae tincidunt ex. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur eleifend velit eget orci ullamcorper gravida. Sed nec velit eget ex vestibulum placerat. Fusce quis sem vel lacus commodo sagittis. Nulla eget diam nec erat dignissim condimentum. Curabitur lobortis, sapien eget cursus tincidunt, massa libero iaculis augue, sed congue est quam et ex. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec consequat auctor erat non dapibus. Sed a ex tristique, molestie arcu sed, commodo erat. Etiam commodo ipsum quis sapien tincidunt pulvinar. Suspendisse scelerisque dictum ante, id facilisis nunc pretium a.
-                            </Text>
+                            <VStack align="start" spacing={6}>
+                                <Heading as="h2" size="lg">
+                                    Pages Overview
+                                </Heading>
+                                <Text>The application is divided into the following pages:</Text>
+                                <List spacing={2}>
+                                    {[
+                                        "Home",
+                                        "Results",
+                                        "Result Detail",
+                                        "Statistics",
+                                        "Documentation (this page)",
+                                    ].map((item) => (
+                                        <ListItem key={item}>
+                                            <ListIcon as={SweetSeekBullet} color="accent" />
+                                            {item}
+                                        </ListItem>
+                                    ))}
+                                </List>
+                                <Text>
+                                    The top bar of each page includes information about when the
+                                    results were last updated as well as navigation links, which you
+                                    can use to move through the application.
+                                </Text>
+                                <Heading as="h3" size="md">
+                                    Home Page
+                                </Heading>
+                                <Text>
+                                    The{" "}
+                                    <ChakraLink
+                                        as={TanstackRouterLink}
+                                        to={homeRoute.to}
+                                        target="_blank"
+                                        color="darkaccent"
+                                    >
+                                        <HStack alignItems="center" gap="1" display="inline-flex">
+                                            <Text>home page</Text>
+                                            <ExternalLinkIcon h="3.5" />
+                                        </HStack>
+                                    </ChakraLink>{" "}
+                                    provides a brief introduction to the purpose of the website and
+                                    explains what kind of data is presented on this website. It also
+                                    includes a glossary of terms specific for this project.
+                                </Text>
+                                <Text>
+                                    You will find three main navigation cards that take you directly
+                                    to:
+                                </Text>
+                                <List spacing={2}>
+                                    {["Results page", "Statistics page", "Documentation page"].map(
+                                        (item) => (
+                                            <ListItem key={item}>
+                                                <ListIcon as={SweetSeekBullet} color="accent" />
+                                                {item}
+                                            </ListItem>
+                                        ),
+                                    )}
+                                </List>
+
+                                <Heading as="h3" size="md">
+                                    Results Page
+                                </Heading>
+                                <Text>
+                                    The{" "}
+                                    <ChakraLink
+                                        as={TanstackRouterLink}
+                                        to={resultsRoute.to}
+                                        target="_blank"
+                                        color="darkaccent"
+                                    >
+                                        <HStack alignItems="center" gap="1" display="inline-flex">
+                                            <Text>results page</Text>
+                                            <ExternalLinkIcon h="3.5" />
+                                        </HStack>
+                                    </ChakraLink>{" "}
+                                    displays a list of candidate sugar-binding proteins. By default,
+                                    results are sorted by the best (lowest) RMSD across all of their
+                                    motif matches. When filtering by sugar, results are re-sorted
+                                    based on the best RMSD of the selected sugar(s). Filtering is
+                                    described in more detail in a separate section:{" "}
+                                    <ChakraLink href="#filters" color="darkaccent">
+                                        Filtering Results
+                                    </ChakraLink>
+                                    .
+                                </Text>
+                                <Text>
+                                    <strong>RMSD (Root Mean Square Deviation)</strong> indicates how
+                                    closely a detected motif match matches the original motif. Lower
+                                    values represent better matches.
+                                </Text>
+                                <Text>Each result in the list shows:</Text>
+                                <List spacing={2}>
+                                    {[
+                                        "Structure title",
+                                        "Organism",
+                                        "Link to the AlphaFold database entry",
+                                        "Link to the UniProt protein entry",
+                                        "Global pLDDT score (computed structure model confidence)",
+                                        "Best motif match described as the sugar and the corresponding RMSD value",
+                                    ].map((item) => (
+                                        <ListItem key={item}>
+                                            <ListIcon as={SweetSeekBullet} color="accent" />
+                                            {item}
+                                        </ListItem>
+                                    ))}
+                                </List>
+                                <Text>
+                                    Each result includes a preview image of the computed protein
+                                    structure, colored by confidence (global pLDDT). Clicking the
+                                    image or title opens the result detail page.
+                                </Text>
+                                <Heading as="h3" size="md">
+                                    Result Detail Page
+                                </Heading>
+                                <Text>
+                                    The result detail page provides an in-depth view of a selected
+                                    protein and its motif matches. Below is a screenshot showing an
+                                    example result detail.
+                                </Text>
+
+                                <Box border="solid" borderWidth="1px" borderColor="primary" p="2">
+                                    <Image src={resultDetailScreenshot} />
+                                </Box>
+
+                                <Heading as="h4" size="sm">
+                                    Left Column
+                                </Heading>
+                                <Text>
+                                    The left column shows basic information about the result and a
+                                    list of motif match cards. The basic information in the top part
+                                    of the column (1) includes:
+                                </Text>
+                                <List spacing={2}>
+                                    {[
+                                        "Organism the protein originates from",
+                                        "Links to AlphaFold and UniProt entries",
+                                        "Global pLDDT score",
+                                    ].map((item) => (
+                                        <ListItem key={item}>
+                                            <ListIcon as={SweetSeekBullet} color="accent" />
+                                            {item}
+                                        </ListItem>
+                                    ))}
+                                </List>
+                                <Text>
+                                    Each motif match card (2) contains the following information:
+                                </Text>
+                                <List spacing={2}>
+                                    {[
+                                        "Possible binding sugar",
+                                        "RMSD value (match quality)",
+                                        "Residues forming the motif match in the computed structure",
+                                        "PDB structure from which the motif originates",
+                                        "Residues forming the original motif",
+                                    ].map((item) => (
+                                        <ListItem key={item}>
+                                            <ListIcon as={SweetSeekBullet} color="accent" />
+                                            {item}
+                                        </ListItem>
+                                    ))}
+                                </List>
+                                <Heading as="h4" size="sm">
+                                    Right Column (3D Viewer)
+                                </Heading>
+                                <Text>
+                                    An interactive 3D viewer (
+                                    <ChakraLink
+                                        href="https://molstar.org/"
+                                        target="_blank"
+                                        color="darkaccent"
+                                    >
+                                        <HStack alignItems="center" gap="0.5" display="inline-flex">
+                                            <Text>Mol*</Text>
+                                            <ExternalLinkIcon h="3.5" />
+                                        </HStack>
+                                    </ChakraLink>
+                                    ) allows you to explore the computed protein structure (3). By
+                                    default, only the computed structure colored by confidence
+                                    (global pLDDT) is shown. Clicking the Align button (4) on a
+                                    given motif match card will superimpose the original PDB
+                                    structure onto the computed structure. Clicking the Clear button
+                                    (5) will switch back to the default view.
+                                </Text>
+                                <Heading as="h3" size="md">
+                                    Statistics Page
+                                </Heading>
+                                <Text>
+                                    The statistics page provides an overview of the results and the
+                                    data used in the workflow (learn more in section{" "}
+                                    <ChakraLink href="#workflow" color="darkaccent">
+                                        Workflow
+                                    </ChakraLink>
+                                    ). The page contains tables, graphs and descriptions of the
+                                    shown data.
+                                </Text>
+                            </VStack>
                         </Box>
                         <Box id="filters">
-                            <Text fontSize="2xl" fontWeight="bold">Filters</Text>
-                            <Text>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ultrices blandit imperdiet. Aliquam eu viverra dolor, sit amet interdum dui. Curabitur luctus molestie sem, a ultrices velit molestie quis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec a suscipit ante, vitae tincidunt ex. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur eleifend velit eget orci ullamcorper gravida. Sed nec velit eget ex vestibulum placerat. Fusce quis sem vel lacus commodo sagittis. Nulla eget diam nec erat dignissim condimentum. Curabitur lobortis, sapien eget cursus tincidunt, massa libero iaculis augue, sed congue est quam et ex. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec consequat auctor erat non dapibus. Sed a ex tristique, molestie arcu sed, commodo erat. Etiam commodo ipsum quis sapien tincidunt pulvinar. Suspendisse scelerisque dictum ante, id facilisis nunc pretium a.
-                            </Text>
+                            {/* <Text fontSize="2xl" fontWeight="bold">Filters</Text> */}
+                            <VStack align="start" spacing={6}>
+                                <Heading as="h2" size="lg">
+                                    Filtering Results
+                                </Heading>
+                                <Box border="solid" borderWidth="1px" borderColor="primary" p="2">
+                                    <Image src={filterbarScreenshot} />
+                                </Box>
+                                <Text>
+                                    You can refine the displayed results using the following
+                                    filters:
+                                </Text>
+                                <List spacing={2}>
+                                    {[
+                                        "Sugar the protein may bind (1)",
+                                        "Model confidence (global pLDDT score) (2)",
+                                        "Organism the protein originates from (3)",
+                                        "Source PDB structure of the queried motif (4)",
+                                        "Title of the computed structure (5)",
+                                    ].map((item) => (
+                                        <ListItem key={item}>
+                                            <ListIcon as={SweetSeekBullet} color="accent" />
+                                            {item}
+                                        </ListItem>
+                                    ))}
+                                </List>
+                                <Text>
+                                    Filter options are automatically generated from the available
+                                    results. Multiple selections are allowed for all filters except
+                                    the PDB structure filter. The title filter performs basic text
+                                    search. You can reset each filter by clicking its clear button.
+                                    Apply your selections using the <strong>Filter</strong> button
+                                    (6). When 2 or more filters are active only results matching all
+                                    active filters are shown. When a filter has multiple values
+                                    selected, any results matching at least one value is shown.
+                                </Text>
+                            </VStack>
                         </Box>
                         <Box id="workflow">
-                            <Text fontSize="4xl" fontWeight="bold">Workflow</Text>
+                            <Heading as="h1" size="xl">
+                                Workflow
+                            </Heading>
                             <Text></Text>
                         </Box>
                         <Box id="workflow-overview">
-                            <Text fontSize="2xl" fontWeight="bold">Overview</Text>
-                            <Text>
-                                Etiam sollicitudin, erat nec venenatis dignissim, metus mi iaculis nulla, convallis lobortis neque risus at arcu. Mauris imperdiet at ipsum ac ultricies. Morbi pulvinar orci ipsum, eget euismod lectus venenatis ac. Aliquam sit amet cursus quam. Mauris consectetur maximus suscipit. Aenean euismod vel sapien quis sodales. Mauris a nunc nec diam cursus dapibus nec nec neque. Pellentesque ex risus, posuere a metus at, ultrices viverra felis. Sed porttitor dui orci. Integer ligula eros, viverra quis purus sit amet, lobortis imperdiet neque. Proin at lorem nibh. Sed bibendum, nulla in aliquet dignissim, purus arcu imperdiet lorem, ac dapibus lorem metus at lacus. Morbi pulvinar porttitor elementum. Vivamus id dui at nunc molestie malesuada. Duis ut sapien sodales, venenatis ante non, placerat erat. Praesent interdum arcu id elementum commodo.
-                            </Text>
+                            <VStack align="start" spacing={6}>
+                                <Heading as="h2" size="lg">
+                                    Overview
+                                </Heading>
+                                <Text>
+                                    An automated bioinformatics workflow was developed to identify
+                                    candidate sugar-binding proteins using structural data. The
+                                    workflow processes experimentally determined structures
+                                    containing sugars, extracts representative binding surroundings
+                                    (motifs), and uses them to search for motif matches in a subset
+                                    of about one million of <strong>AlphaFold 2</strong> predicted
+                                    protein structures available in the{" "}
+                                    <ChakraLink
+                                        href="https://www.rcsb.org/"
+                                        target="_blank"
+                                        color="darkaccent"
+                                    >
+                                        <HStack alignItems="center" gap="0.5" display="inline-flex">
+                                            <Text>Protein Data Bank (PDB)</Text>
+                                            <ExternalLinkIcon h="3.5" />
+                                        </HStack>
+                                    </ChakraLink>
+                                    .
+                                </Text>
+                                <Heading as="h3" size="md">
+                                    Workflow Steps
+                                </Heading>
+                                <Text>
+                                    The workflow consists of two main stages:{" "}
+                                    <strong>Data Pre-processing</strong> and{" "}
+                                    <strong>Surrounding Analysis</strong>. Bellow you can see a
+                                    flowchart of the workflow. Each step is numbered and described
+                                    in the list bellow.
+                                </Text>
+                                <Image src={workflowFlowchart} pl="5" />
+                                <OrderedList spacing={2} pl="5">
+                                    {[
+                                        "Download structures containing sugars from a local PDB mirror.",
+                                        "Identify sugars that are non-covalently bound (ligads), excluding glycosylations and close contacts.",
+                                        "Separate alternative sugar conformations (A/B). Structures with unsupported conformations (e.g., C) are excluded.",
+                                        "Apply quality filtering based on structure resolution, RSCC values, and ligand RMSD validation.",
+                                        "Extract the surroundings of a selected sugar by identifying residues within 5 Å.",
+                                        "Process and filter the extracted surroundings to ensure they contain at least 5 residues and remove other sugars (e.g., from larger glycans).",
+                                        "Cluster similar surroundings based on structural similarity (RMSD) and select representative motifs.",
+                                        "Perform a structure-based search using these motifs against a subset of about one million AlphaFold 2-predicted protein structures.",
+                                    ].map((item, index) => (
+                                        <ListItem key={index}>{item}</ListItem>
+                                    ))}
+                                </OrderedList>
+                                <Text>
+                                    The final output of this workflow is a set of predicted protein
+                                    structures that contain motifs similar to known sugar-binding
+                                    surroundings. These results are then presented and explored
+                                    through the web interface.
+                                </Text>
+                            </VStack>
                         </Box>
                         <Box id="usage-instructions">
-                            <Text fontSize="2xl" fontWeight="bold">Usage Instructions</Text>
-                            <Text>
-                                Integer ullamcorper in neque porttitor laoreet. Integer metus tellus, lacinia id dolor lobortis, congue lacinia odio. Donec accumsan, sem sit amet sollicitudin lacinia, lorem mauris tincidunt sem, quis ultricies nibh dui sit amet eros. Aliquam mattis, velit non maximus malesuada, ipsum justo tempor mi, nec porttitor arcu purus eget nisi. Nam congue, urna eu vestibulum dictum, augue augue volutpat eros, id interdum felis diam tempus diam. Curabitur euismod velit neque, eu porttitor arcu efficitur quis. Maecenas tellus diam, sodales eget sollicitudin eget, ornare ut enim. Praesent sit amet ipsum id urna feugiat sollicitudin at sit amet eros. Mauris vel gravida lorem.
-                            </Text>
+                            <VStack align="start" spacing={6}>
+                                <Heading as="h2" size="lg">
+                                    Usage Instructions
+                                </Heading>
+                                <Text>
+                                    The workflow is primarily written in python. It can be installed
+                                    and run locally or one can use predefined Docker image, which
+                                    conveniently sets up all prerequisites. However, both
+                                    installation methods still require access to a PDB mirror. The
+                                    mirror can either be on the same machine or you can define a
+                                    remote host which holds the mirror. For more detailed
+                                    instructions see the project's{" "}
+                                    <ChakraLink
+                                        href="https://github.com/katkanaz/sweet-seek"
+                                        target="_blank"
+                                        color="darkaccent"
+                                    >
+                                        <HStack alignItems="center" gap="0.5" display="inline-flex">
+                                            <Text>GitHub page</Text>
+                                            <ExternalLinkIcon h="3.5" />
+                                        </HStack>
+                                    </ChakraLink>
+                                    .
+                                </Text>
+                            </VStack>
                         </Box>
                     </VStack>
                 </Box>
-                </Flex>
+            </Flex>
         </MainContainer>
-    )
+    );
 }
 
 export default Docs;
