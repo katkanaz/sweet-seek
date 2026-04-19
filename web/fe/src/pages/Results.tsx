@@ -39,13 +39,13 @@ function Results() {
     const nextPageEnable = clampPageParam(page + 1, count, results?.total_count ?? 0) === page + 1;
     const prevPageEnable = clampPageParam(page - 1, count, results?.total_count ?? 0) === page - 1;
 
-    useEffect(() => { // TODO: check if this loads before filterbar starts rendering
+    useEffect(() => {
         queryClient.prefetchQuery({
             queryKey: ["options"],
             queryFn: getFilterOptions,
             staleTime: 300000, // 5 min
         });
-    }, []);
+    }, [queryClient]);
 
     const handleNextPage = () => {
         navigate({
