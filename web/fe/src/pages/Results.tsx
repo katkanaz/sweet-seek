@@ -110,7 +110,7 @@ function Results() {
                             Something went wrong
                         </AlertTitle>
                         <AlertDescription>
-                            We couldn’t load your results. Please try again.
+                            We couldn't load your results. Please try again.
                         </AlertDescription>
                     </Alert>
                 </VStack>

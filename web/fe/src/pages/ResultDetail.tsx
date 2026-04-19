@@ -170,7 +170,7 @@ function ResultDetail() {
                             Something went wrong
                         </AlertTitle>
                         <AlertDescription>
-                            We couldn’t load your results. Please try again.
+                            We couldn't load your results. Please try again.
                         </AlertDescription>
                     </Alert>
                 </VStack>
@@ -181,7 +181,7 @@ function ResultDetail() {
     if (compStruct === undefined) {
         return (
             <MainContainer>
-                <Box>Unknow AlphaFold ID</Box>
+                <Box>Unknown AlphaFold ID</Box>
             </MainContainer>
         );
     }
@@ -197,6 +197,14 @@ function ResultDetail() {
                         <TableContainer>
                             <Table variant="striped" colorScheme="whiteAlpha" size="sm">
                                 <Tbody>
+                                    <Tr>
+                                        <Td width="2" fontWeight="bold" px="0">
+                                            Organism:
+                                        </Td>
+                                        <Td>
+                                            <Text>{compStruct.organism}</Text>
+                                        </Td>
+                                    </Tr>
                                     <Tr>
                                         <Td width="2" fontWeight="bold" px="0">
                                             AlphaFold DB:
@@ -240,14 +248,6 @@ function ResultDetail() {
                                             pLDDT (global)
                                         </Td>
                                         <Td>{compStruct.plddt}</Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td width="2" fontWeight="bold" px="0">
-                                            Organism:
-                                        </Td>
-                                        <Td>
-                                            <Text>{compStruct.organism}</Text>
-                                        </Td>
                                     </Tr>
                                     <Tr>
                                         <Td width="2" fontWeight="bold" px="0">
