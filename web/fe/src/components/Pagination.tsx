@@ -1,21 +1,29 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { Button, HStack, Select, Text } from "@chakra-ui/react";
 
-
 interface PaginationProps {
-    totalCount: number
-    page: number
-    count: number
-    handleNext: () => void
-    handlePrev: () => void
-    handleCountChange: (count: number) => void
-    nextEnabled?: boolean
-    prevEnabled?: boolean
-};
+    totalCount: number;
+    page: number;
+    count: number;
+    handleNext: () => void;
+    handlePrev: () => void;
+    handleCountChange: (count: number) => void;
+    nextEnabled?: boolean;
+    prevEnabled?: boolean;
+}
 
-function Pagination({ totalCount, page, count, handleNext, handlePrev, handleCountChange, nextEnabled = true, prevEnabled = true }: PaginationProps) {
-    const startIdx = (page - 1) * count
-    const endIdx = Math.min(startIdx + count, totalCount)
+function Pagination({
+    totalCount,
+    page,
+    count,
+    handleNext,
+    handlePrev,
+    handleCountChange,
+    nextEnabled = true,
+    prevEnabled = true,
+}: PaginationProps) {
+    const startIdx = (page - 1) * count;
+    const endIdx = Math.min(startIdx + count, totalCount);
     return (
         <HStack w="full" justifyContent="flex-end" spacing="6">
             <HStack>
@@ -44,17 +52,21 @@ function Pagination({ totalCount, page, count, handleNext, handlePrev, handleCou
                     leftIcon={<ChevronLeftIcon />}
                     onClick={() => handlePrev()}
                     disabled={!prevEnabled}
-                >Previous</Button>
+                >
+                    Previous
+                </Button>
                 <Button
                     size="xs"
                     variant="ghost"
                     rightIcon={<ChevronRightIcon />}
                     onClick={() => handleNext()}
                     disabled={!nextEnabled}
-                >Next</Button>
+                >
+                    Next
+                </Button>
             </HStack>
-        </HStack> 
-    )
+        </HStack>
+    );
 }
 
 export default Pagination;

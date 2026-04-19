@@ -1,47 +1,42 @@
-import { Combobox } from "@base-ui/react/combobox"
-import { CheckIcon } from "@chakra-ui/icons"
-import { Box, HStack, Input, List, ListItem } from "@chakra-ui/react"
-import { useRef, useState } from "react"
-import { SelectOption, OptionInfo } from "./MultiSelect"
-
+import { Combobox } from "@base-ui/react/combobox";
+import { CheckIcon } from "@chakra-ui/icons";
+import { Box, HStack, Input, List, ListItem } from "@chakra-ui/react";
+import { useRef, useState } from "react";
+import { SelectOption, OptionInfo } from "./MultiSelect";
 
 interface SingleSelectProps {
-    options: SelectOption[]
-    optionInfo: OptionInfo
-    query: string 
-    setQuery: (query: string) => void
-    selected: SelectOption | null
-    setSelected: (selected: SelectOption | null) => void
-    width?: string
-    placeholder: string
+    options: SelectOption[];
+    optionInfo: OptionInfo;
+    query: string;
+    setQuery: (query: string) => void;
+    selected: SelectOption | null;
+    setSelected: (selected: SelectOption | null) => void;
+    width?: string;
+    placeholder: string;
 }
 
 export function useSingleSelect(options: SelectOption[] | undefined, optionInfo: OptionInfo) {
-    const [ query, setQuery ] = useState("")
-    const [ selected, setSelected ] = useState<SelectOption|null>(null)
+    const [query, setQuery] = useState("");
+    const [selected, setSelected] = useState<SelectOption | null>(null);
     const clearSelected = () => {
-        setSelected(null)
-    }
-    const singleSelectReturn = { props: { query, setQuery, selected, setSelected, options: options ?? [], optionInfo}, clearSelected }
-    return singleSelectReturn
+        setSelected(null);
+    };
+    const singleSelectReturn = {
+        props: { query, setQuery, selected, setSelected, options: options ?? [], optionInfo },
+        clearSelected,
+    };
+    return singleSelectReturn;
 }
 
 function SingleSelect({ options, selected, setSelected, width, placeholder }: SingleSelectProps) {
-//     const filtered = options?.filter((item) =>
-//         item.value.toLowerCase().includes(query.toLowerCase())
-//     )
     const containerRef = useRef<HTMLDivElement | null>(null);
-//     const inputRef = useRef<HTMLInputElement|null>(null);
 
     return (
-        <Combobox.Root
-            value={selected}
-            items={options}
-            onValueChange={setSelected}
-        >
+        <Combobox.Root value={selected} items={options} onValueChange={setSelected}>
             <Box>
-                <Combobox.InputGroup  ref={containerRef}>
-                    <Combobox.Input placeholder={placeholder}
+                <Combobox.InputGroup ref={containerRef}>
+                    <Combobox.Input
+                        placeholder={placeholder}
                         render={(props) => (
                             <Input
                                 minW="3rem"
@@ -49,7 +44,7 @@ function SingleSelect({ options, selected, setSelected, width, placeholder }: Si
                                 width={width ?? "5rem"}
                                 {...props}
                                 textTransform="uppercase"
-                                _placeholder={{textTransform: "none"}}
+                                _placeholder={{ textTransform: "none" }}
                             />
                         )}
                     />
@@ -57,7 +52,7 @@ function SingleSelect({ options, selected, setSelected, width, placeholder }: Si
             </Box>
 
             <Combobox.Portal>
-                <Combobox.Positioner anchor={containerRef} style={{zIndex: 3000}}>
+                <Combobox.Positioner anchor={containerRef} style={{ zIndex: 3000 }}>
                     <Combobox.Popup
                         render={(props) => (
                             <Box
@@ -70,21 +65,18 @@ function SingleSelect({ options, selected, setSelected, width, placeholder }: Si
                                 overflowY="auto"
                                 bg="white"
                             />
-
                         )}
                     >
                         <Combobox.Empty>
-                            <Box fontSize="0.925rem" lineHeight="1rem" color="gray.600" p="1rem">No options found.</Box>
+                            <Box fontSize="0.925rem" lineHeight="1rem" color="gray.600" p="1rem">
+                                No options found.
+                            </Box>
                         </Combobox.Empty>
-                        <Combobox.List
-                            render={(props) => (
-                                <List
-                                    {...props}
-                                />
-                            )}
-                        >
+                        <Combobox.List render={(props) => <List {...props} />}>
                             {(item: SelectOption) => (
-                                <Combobox.Item key={item.value} value={item}
+                                <Combobox.Item
+                                    key={item.value}
+                                    value={item}
                                     render={(props, state) => (
                                         <ListItem
                                             {...props}
@@ -92,31 +84,30 @@ function SingleSelect({ options, selected, setSelected, width, placeholder }: Si
                                             py={2}
                                             cursor="pointer"
                                             textTransform="uppercase"
-                                            bg={
-                                                state.highlighted
-                                                    ? "gray.100"
-                                                    : "transparent"
-                                            }
+                                            bg={state.highlighted ? "gray.100" : "transparent"}
                                         >
                                             <HStack>
-                                                <Combobox.ItemIndicator style={{gridColumnStart: 1}}>
-                                                    <CheckIcon display="block" w="0.75rem" h="0.75rem"/>
+                                                <Combobox.ItemIndicator
+                                                    style={{ gridColumnStart: 1 }}
+                                                >
+                                                    <CheckIcon
+                                                        display="block"
+                                                        w="0.75rem"
+                                                        h="0.75rem"
+                                                    />
                                                 </Combobox.ItemIndicator>
-                                                <Box>
-                                                    {item.value}
-                                                </Box>
+                                                <Box>{item.value}</Box>
                                             </HStack>
                                         </ListItem>
                                     )}
-                                >
-                                </Combobox.Item>
+                                ></Combobox.Item>
                             )}
                         </Combobox.List>
                     </Combobox.Popup>
                 </Combobox.Positioner>
             </Combobox.Portal>
         </Combobox.Root>
-    )
+    );
 }
 
 export default SingleSelect;

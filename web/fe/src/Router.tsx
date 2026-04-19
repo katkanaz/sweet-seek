@@ -13,23 +13,23 @@ const rootRoute = createRootRoute({
             <Outlet />
         </>
     ),
-})
+});
 
 export const homeRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: "/",
     component: Home,
-})
+});
 
 export type ResultsSearch = {
-    sugar?: number[]
-    plddt?: [number, number]
-    organism?: number[]
-    pdbStructure?: number
-    title?: string
-    page: number
-    count?: number
-}
+    sugar?: number[];
+    plddt?: [number, number];
+    organism?: number[];
+    pdbStructure?: number;
+    title?: string;
+    page: number;
+    count?: number;
+};
 
 export const resultsRoute = createRoute({
     getParentRoute: () => rootRoute,
@@ -43,36 +43,41 @@ export const resultsRoute = createRoute({
             title: (search.title as string) ?? undefined,
             page: (search.page as number) ?? 1,
             count: (search.count as number) ?? undefined,
-        }
+        };
     },
     component: Results,
-})
+});
 
 export const resultDetailRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: "/results/$afId",
     component: ResultDetail,
-})
+});
 
 export const statsRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: "/stats",
     component: Stats,
-})
+});
 
 export const docsRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: "/docs",
     component: Docs,
-})
+});
 
-const routeTree = rootRoute.addChildren([homeRoute, resultsRoute, resultDetailRoute, docsRoute, statsRoute])
+const routeTree = rootRoute.addChildren([
+    homeRoute,
+    resultsRoute,
+    resultDetailRoute,
+    docsRoute,
+    statsRoute,
+]);
 
-export const router = createRouter({ routeTree })
+export const router = createRouter({ routeTree });
 
-
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router
-  }
+declare module "@tanstack/react-router" {
+    interface Register {
+        router: typeof router;
+    }
 }

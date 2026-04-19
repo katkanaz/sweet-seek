@@ -1,20 +1,34 @@
-import { Box, VStack, Center, Spinner, Text, AlertIcon, Alert, AlertTitle, AlertDescription, Skeleton } from "@chakra-ui/react"
-import MainContainer from "../components/MainContainer"
-import SearchResultItem from "../components/SearchResultItem"
-import { getResults, getFilterOptions, GetComputedStructuresResponse } from "../api/computed_structure";
+import {
+    Box,
+    VStack,
+    Center,
+    Spinner,
+    Text,
+    AlertIcon,
+    Alert,
+    AlertTitle,
+    AlertDescription,
+    Skeleton,
+} from "@chakra-ui/react";
+import MainContainer from "../components/MainContainer";
+import SearchResultItem from "../components/SearchResultItem";
+import {
+    getResults,
+    getFilterOptions,
+    GetComputedStructuresResponse,
+} from "../api/computed_structure";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import FilterBar from "../components/FilterBar";
 import { resultsRoute } from "../Router";
 import { useEffect } from "react";
 import Pagination from "../components/Pagination";
 
-
 function clampPageParam(newPage: number, count: number, totalCount: number): number {
     if (newPage <= 0) {
         return 1;
     }
 
-    if (((newPage - 1) * count) + 1 > totalCount) {
+    if ((newPage - 1) * count + 1 > totalCount) {
         return newPage - 1;
     }
     return newPage;
@@ -22,16 +36,20 @@ function clampPageParam(newPage: number, count: number, totalCount: number): num
 
 function Results() {
     const searchParams = resultsRoute.useSearch();
-    const {sugar, plddt, organism, pdbStructure, title} = searchParams;
+    const { sugar, plddt, organism, pdbStructure, title } = searchParams;
 
     const page = searchParams.page;
     const count = searchParams.count ?? 10;
 
     const navigate = resultsRoute.useNavigate();
 
-    const { data: results, isLoading, isError } = useQuery<GetComputedStructuresResponse, Error>({
+    const {
+        data: results,
+        isLoading,
+        isError,
+    } = useQuery<GetComputedStructuresResponse, Error>({
         queryKey: ["results", sugar, plddt, organism, pdbStructure, title, page, count],
-        queryFn: () => getResults(searchParams)
+        queryFn: () => getResults(searchParams),
     });
 
     const queryClient = useQueryClient();
@@ -49,22 +67,28 @@ function Results() {
 
     const handleNextPage = () => {
         navigate({
-            search: (prev) => ({...prev, page: clampPageParam(prev.page + 1, count, results?.total_count ?? 0)}),
+            search: (prev) => ({
+                ...prev,
+                page: clampPageParam(prev.page + 1, count, results?.total_count ?? 0),
+            }),
         });
-    }
+    };
 
     const handlePrevPage = () => {
         navigate({
-            search: (prev) => ({...prev, page: clampPageParam(prev.page - 1, count, results?.total_count ?? 0)}),
+            search: (prev) => ({
+                ...prev,
+                page: clampPageParam(prev.page - 1, count, results?.total_count ?? 0),
+            }),
         });
-    }
+    };
 
     const handleCountChange = (count: number) => {
-        console.log(count, "aaaa")
+        console.log(count, "aaaa");
         navigate({
-            search: (prev) => ({...prev, page: 1, count: count}),
+            search: (prev) => ({ ...prev, page: 1, count: count }),
         });
-    }
+    };
 
     if (isError) {
         return (
@@ -91,9 +115,8 @@ function Results() {
                     </Alert>
                 </VStack>
             </Center>
-        )
+        );
     }
-
 
     return (
         <MainContainer>
@@ -122,40 +145,58 @@ function Results() {
                         />
                     </Skeleton>
                 </VStack>
-                {isLoading
-                ? <Center minH="60vh">
-                    <VStack spacing={4}>
-                        <Spinner size="xl" thickness="4px" />
-                        <Text fontSize="lg" color="gray.500">
-                            Loading results...
-                        </Text>
+                {isLoading ? (
+                    <Center minH="60vh">
+                        <VStack spacing={4}>
+                            <Spinner size="xl" thickness="4px" />
+                            <Text fontSize="lg" color="gray.500">
+                                Loading results...
+                            </Text>
+                        </VStack>
+                    </Center>
+                ) : (
+                    <VStack
+                        mt="6"
+                        divider={
+                            <Box
+                                borderBottom="solid"
+                                borderBottomColor="grey"
+                                color="grey"
+                                borderBottomWidth="thin"
+                                boxSize="full"
+                                w="full"
+                            ></Box>
+                        }
+                    >
+                        {results?.data.length === 0 && <Box>No results found</Box>}
+                        {results?.data.map((r) => (
+                            <SearchResultItem result={r} />
+                        ))}
                     </VStack>
-                </Center>
-                : <VStack mt="6" divider={<Box borderBottom="solid" borderBottomColor="grey" color="grey" borderBottomWidth="thin" boxSize="full" w="full"></Box>}>
-                    {results?.data.length === 0 &&
-                        <Box>
-                            No results found
-                        </Box>
-                    }
-                    {results?.data.map(r => <SearchResultItem result={r} />)}
-                </VStack>
-                }
-                <Box borderBottom="solid" borderBottomColor="grey" color="grey" borderBottomWidth="thin" boxSize="full" w="full"></Box>
-                    <Skeleton isLoaded={!isLoading} width="full">
-                        <Pagination
-                            page={page}
-                            count={count}
-                            handlePrev={handlePrevPage}
-                            handleNext={handleNextPage}
-                            handleCountChange={handleCountChange}
-                            totalCount={results?.total_count ?? 0}
-                            nextEnabled={nextPageEnable}
-                            prevEnabled={prevPageEnable}
-                        />
-                    </Skeleton>
+                )}
+                <Box
+                    borderBottom="solid"
+                    borderBottomColor="grey"
+                    color="grey"
+                    borderBottomWidth="thin"
+                    boxSize="full"
+                    w="full"
+                ></Box>
+                <Skeleton isLoaded={!isLoading} width="full">
+                    <Pagination
+                        page={page}
+                        count={count}
+                        handlePrev={handlePrevPage}
+                        handleNext={handleNextPage}
+                        handleCountChange={handleCountChange}
+                        totalCount={results?.total_count ?? 0}
+                        nextEnabled={nextPageEnable}
+                        prevEnabled={prevPageEnable}
+                    />
+                </Skeleton>
             </VStack>
         </MainContainer>
-    )
+    );
 }
 
 export default Results;

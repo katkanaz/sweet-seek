@@ -4,10 +4,9 @@ import { renderReact18 } from "molstar/lib/mol-plugin-ui/react18";
 import { PluginUIContext } from "molstar/lib/mol-plugin-ui/context";
 import { DefaultPluginUISpec, PluginUISpec } from "molstar/lib/mol-plugin-ui/spec";
 import { PluginSpec } from "molstar/lib/mol-plugin/spec";
-import { MolViewSpec } from 'molstar/lib/extensions/mvs/behavior';
+import { MolViewSpec } from "molstar/lib/extensions/mvs/behavior";
 import "molstar/lib/mol-plugin-ui/skin/light.scss";
 import { MAQualityAssessment } from "molstar/lib/extensions/model-archive/quality-assessment/behavior";
-
 
 declare global {
     interface Window {
@@ -18,13 +17,19 @@ declare global {
 export type DecomposedTransform = {
     rotation: number[];
     translation: [number, number, number];
-}
+};
 
 export function decompose4x4Matrix(matrix: number[]): DecomposedTransform {
     const rotation = [
-        matrix[0], matrix[1], matrix[2],
-        matrix[4], matrix[5], matrix[6],
-        matrix[8], matrix[9], matrix[10],
+        matrix[0],
+        matrix[1],
+        matrix[2],
+        matrix[4],
+        matrix[5],
+        matrix[6],
+        matrix[8],
+        matrix[9],
+        matrix[10],
     ];
 
     const translation: [number, number, number] = [matrix[12], matrix[13], matrix[14]];
@@ -33,7 +38,7 @@ export function decompose4x4Matrix(matrix: number[]): DecomposedTransform {
 }
 
 interface MolStarWrapperProps {
-    setMolStar: (molstar: PluginUIContext|undefined) => void;
+    setMolStar: (molstar: PluginUIContext | undefined) => void;
 }
 
 function MolStarWrapper({ setMolStar }: MolStarWrapperProps) {
@@ -43,7 +48,11 @@ function MolStarWrapper({ setMolStar }: MolStarWrapperProps) {
         async function init() {
             const defaultSpecs = DefaultPluginUISpec();
             const specs: PluginUISpec = {
-                behaviors: [...defaultSpecs.behaviors, PluginSpec.Behavior(MolViewSpec), PluginSpec.Behavior(MAQualityAssessment)],
+                behaviors: [
+                    ...defaultSpecs.behaviors,
+                    PluginSpec.Behavior(MolViewSpec),
+                    PluginSpec.Behavior(MAQualityAssessment),
+                ],
                 components: {
                     ...defaultSpecs.components,
                     remoteState: "none",
@@ -66,28 +75,27 @@ function MolStarWrapper({ setMolStar }: MolStarWrapperProps) {
             window.molstar = await createPluginUI({
                 target: parent.current as HTMLDivElement,
                 spec: specs,
-                render: renderReact18
+                render: renderReact18,
             });
             const origResize = window.molstar.handleResize;
             window.molstar.handleResize = () => {
-                console.log("handle resize")
+                console.log("handle resize");
                 origResize();
-            }
+            };
 
             await window.molstar.initialized;
 
-            setMolStar(window.molstar)
-
+            setMolStar(window.molstar);
         }
         init();
         return () => {
-            setMolStar(undefined)
+            setMolStar(undefined);
             window.molstar?.dispose();
             window.molstar = undefined;
         };
     }, []);
 
-    return <div ref={parent} style={{ width: 640, height: 480 }}/>;
+    return <div ref={parent} style={{ width: 640, height: 480 }} />;
 }
 
 export default MolStarWrapper;

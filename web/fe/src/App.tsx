@@ -1,8 +1,7 @@
-import { ChakraProvider, extendTheme } from "@chakra-ui/react"
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { RouterProvider } from "@tanstack/react-router"
-import { router } from "./Router"
-
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { RouterProvider } from "@tanstack/react-router";
+import { router } from "./Router";
 
 const theme = extendTheme({
     colors: {
@@ -23,10 +22,10 @@ const theme = extendTheme({
             },
             body: {
                 bg: "mainbg",
-            }
-        })
-    }
-})
+            },
+        }),
+    },
+});
 
 const queryClient = new QueryClient();
 
@@ -37,7 +36,7 @@ function App() {
                 <RouterProvider router={router} />
             </QueryClientProvider>
         </ChakraProvider>
-    )
+    );
 }
 
 export default App;
