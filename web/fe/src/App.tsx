@@ -7,8 +7,10 @@ import { router } from "./Router"
 const theme = extendTheme({
     colors: {
         primary: "#E8B4B8",
+        lightprimary: "#FAF0F1",
         secondary: "#FAE3E3",
         accent: "#F5A9A9",
+        darkaccent: "#F07F7F",
         mainbg: "#FFF9F9",
         text: "#4A3C4A",
         grey: "#DAD2DA",
