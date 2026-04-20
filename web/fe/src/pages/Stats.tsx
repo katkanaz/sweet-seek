@@ -138,13 +138,13 @@ function Stats() {
                     </VStack>
                 </Center>
             ) : (
-                <Box>
+                <Box p={6}>
                     <Heading as="h1" size="lg" mt="5">
                         Results Statistics
                     </Heading>
-                    <HStack align="flex-start" justify="space-between" mt="4">
-                        <Box w="60%">
-                            <Text>
+                    <HStack align="flex-start" justify="space-between" mt="4" flexDir={{base: "column", md: "row"}}>
+                        <Box w={{base: "full", md: "60%"}}>
+                            <Box>
                                 The following statistics were computed using the results displayed
                                 on the{" "}
                                 <ChakraLink
@@ -174,7 +174,7 @@ function Stats() {
                                         cursor="pointer"
                                     />
                                 </PopoverDetail>
-                            </Text>
+                            </Box>
                             <Text>
                                 Total number of results that are displayed on the webpage can be
                                 seen in a table on the right. The table also displays the total
@@ -182,7 +182,7 @@ function Stats() {
                             </Text>
                         </Box>
 
-                        <TableContainer w="40%">
+                        <TableContainer w={{base: "full", md: "40%"}}>
                             <Table variant="simple" size="sm">
                                 <Thead>
                                     <Tr>
@@ -209,8 +209,8 @@ function Stats() {
                         number of motif matches per sugar (right) can be seen bellow.
                     </Box>
 
-                    <HStack align="flex-start" justify="space-between" w="full" mt="8">
-                        <Box w="70%">
+                    <HStack align="flex-start" justify="space-between" mt="8" flexDir={{base: "column", md: "row"}}>
+                        <Box w={{base: "full", md: "70%"}}>
                             <Bar
                                 options={{
                                     scales: {
@@ -247,7 +247,7 @@ function Stats() {
                             />
                         </Box>
 
-                        <Box w="30%">
+                        <Box w={{base: "full", md: "30%"}}>
                             <Doughnut
                                 options={{
                                     plugins: {
@@ -283,8 +283,8 @@ function Stats() {
                         workflow results.
                     </Box>
 
-                    <HStack align="flex-start" justify="space-between" w="full" mt="8">
-                        <TableContainer w="35%">
+                    <HStack align="flex-start" justify="space-between" mt="8" flexDir={{base: "column", md: "row"}}>
+                        <TableContainer w={{base: "full", md: "35%"}}>
                             <Table variant="simple" size="sm">
                                 <TableCaption>
                                     Computed structure global pLDDT range per sugar
@@ -320,7 +320,7 @@ function Stats() {
                             </Table>
                         </TableContainer>
 
-                        <Box w="65%">
+                        <Box w={{base: "full", md:"65%"}}>
                             <Bar
                                 options={{
                                     scales: {
@@ -384,7 +384,7 @@ function Stats() {
                     </Heading>
 
                     <Box w="full" mt="4">
-                        <Text>
+                        <Box>
                             The following section contains statistics regarding the workflow that
                             produced the results that can be seen on this website. It is recommended
                             to read the Workflow section of the{" "}
@@ -401,7 +401,7 @@ function Stats() {
                             </ChakraLink>{" "}
                             to gain a better understanding of the statistics. Especially to study
                             the steps of the workflow described in the workflow flowchart.
-                        </Text>
+                        </Box>
                         <Text>
                             The table on the left shows the number of protein structures in the
                             individual steps of the workflow. The order of the rows mirrors the
@@ -413,7 +413,7 @@ function Stats() {
                             of less than 5 amino acids.
                         </Text>
                     </Box>
-                    <HStack align="flex-start" justify="space-between" mt="8">
+                    <HStack align="flex-start" justify="space-between" mt="8" flexDir={{base: "column", md: "row"}}>
                         <TableContainer>
                             <Table variant="simple" size="sm">
                                 <TableCaption>Pre-processed data statistics</TableCaption>
@@ -462,7 +462,7 @@ function Stats() {
                             </Table>
                         </TableContainer>
 
-                        <Box w="65%">
+                        <Box w={{base: "full", md: "65%"}}>
                             <Bar
                                 options={{
                                     scales: {

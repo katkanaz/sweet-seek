@@ -13,6 +13,11 @@ import {
     Text,
     VStack,
     Input,
+    Drawer,
+    DrawerBody,
+    DrawerContent,
+    DrawerHeader,
+    DrawerOverlay,
 } from "@chakra-ui/react";
 import MultiSelect, { useMultiSelect } from "./MultiSelect";
 import { FilterOptions, getFilterOptions } from "../api/computed_structure";
@@ -22,8 +27,16 @@ import SingleSelect, { useSingleSelect } from "./SingleSelect";
 import { useNavigate } from "@tanstack/react-router";
 import { resultsRoute, ResultsSearch } from "../Router";
 import PopoverDetail from "./PopoverDetail";
+import SweetSeekLogo from "../assets/sweet-seek-logo";
+import { LuFilter } from "react-icons/lu";
 
 function FilterBar() {
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const onDrawerClose = () => {
+        setIsDrawerOpen(false);
+    };
+
+
     const navigate = useNavigate({ from: resultsRoute.fullPath });
 
     const filters = resultsRoute.useSearch();
@@ -43,7 +56,12 @@ function FilterBar() {
     const max = data?.plddt_range.max;
     const [range, setRange] = useState<[number, number] | undefined>(undefined);
     const clearRange = () => {
-        setRange(undefined);
+        if (min === undefined || max === undefined) {
+            setRange(undefined)
+        }
+        else {
+            setRange([min, max]);
+        }
     };
 
     useEffect(() => {
@@ -83,6 +101,7 @@ function FilterBar() {
 
     const handleFilterClick = () => {
         console.log(pdbStructSingleSelect.props);
+        onDrawerClose();
         const search: Partial<ResultsSearch> = {
             sugar:
                 sugarMultiSelect.props.selected.length === 0
@@ -101,8 +120,8 @@ function FilterBar() {
         });
     };
 
-    return (
-        <HStack w="full" alignItems="stretch">
+    const filterBar = (
+        <HStack w="full" alignItems="stretch" flexDir={{base: "column", md: "row"}} flexWrap="wrap">
             <VStack alignItems="flex-start">
                 <HStack spacing="1" w="full">
                     <Text fontWeight="bold">Sugar</Text>
@@ -279,6 +298,38 @@ function FilterBar() {
                 </Button>
             </VStack>
         </HStack>
+    );
+
+    return (
+        <>
+            <Box display={{ base: "block", md: "none"}} w="full" px="4">
+                <Button color="text" bg="accent" onClick={() => setIsDrawerOpen(true)} w="full" leftIcon={<LuFilter />}>Filter Results</Button>
+                <Drawer placement="top" onClose={onDrawerClose} isOpen={isDrawerOpen}>
+                    <DrawerOverlay />
+                    <DrawerContent>
+                        <DrawerHeader borderBottomWidth="1px">
+                            <HStack spacing="2">
+                                <Box w="9" h="9" color="text">
+                                    <SweetSeekLogo />
+                                </Box>
+                                <Text
+                                    fontWeight="bold"
+                                    fontSize="2xl"
+                                    color="text"
+                                >
+                                    Filter Resutls
+                                </Text>
+                            </HStack>
+                        </DrawerHeader>
+                        <DrawerBody>{filterBar}</DrawerBody>
+                    </DrawerContent>
+                </Drawer>
+            </Box>
+
+            <Box w="full" display={{ base: "none", md: "block" }} px={{base: "4", lg: "0"}}>
+                {filterBar}
+            </Box>
+        </>
     );
 }
 

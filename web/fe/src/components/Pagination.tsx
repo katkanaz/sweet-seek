@@ -1,5 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { Button, HStack, Select, Text } from "@chakra-ui/react";
+import { Box, Button, HStack, Select, Text } from "@chakra-ui/react";
 
 interface PaginationProps {
     totalCount: number;
@@ -27,7 +27,8 @@ function Pagination({
     return (
         <HStack w="full" justifyContent="flex-end" spacing="6">
             <HStack>
-                <Text fontSize="sm">Results per page</Text>
+                <Text fontSize="sm" display={{base: "none", md: "initial"}}>Results per page</Text>
+                <Text fontSize="sm" display={{base: "initial", md: "none"}}>Per page</Text>
                 <Select
                     w="fit-content"
                     size="xs"
@@ -41,8 +42,11 @@ function Pagination({
                 </Select>
             </HStack>
             <HStack>
-                <Text>
+                <Text display={{base: "none", md: "initial"}}>
                     {startIdx + 1}-{endIdx} of {totalCount}
+                </Text>
+                <Text display={{base: "initial", md: "none"}}>
+                    {startIdx + 1}-{endIdx}/{totalCount}
                 </Text>
             </HStack>
             <HStack>
@@ -53,7 +57,8 @@ function Pagination({
                     onClick={() => handlePrev()}
                     disabled={!prevEnabled}
                 >
-                    Previous
+                    <Box as="span" display={{base: "initial", md: "none"}}>Prev</Box>
+                    <Box as="span" display={{base: "none", md: "initial"}}>Previous</Box>
                 </Button>
                 <Button
                     size="xs"

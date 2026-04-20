@@ -188,12 +188,12 @@ function ResultDetail() {
 
     return (
         <MainContainer>
-            <VStack width="100%" alignItems="flex-start" mt="3">
+            <VStack width="100%" alignItems="flex-start" mt="3" px={{base: "4", lg: "0"}}>
                 <Box fontWeight="bold" fontSize="3xl">
                     {compStruct.title}
                 </Box>
-                <HStack width="100%" alignItems="flex-start" spacing="10">
-                    <Box>
+                <HStack width="100%" alignItems="flex-start" spacing="10" flexDir={{base: "column", md: "row"}}>
+                    <Box w={{base: "full", md: "40%"}}>
                         <TableContainer>
                             <Table variant="striped" colorScheme="whiteAlpha" size="sm">
                                 <Tbody>
@@ -261,7 +261,7 @@ function ResultDetail() {
                                 </Tbody>
                             </Table>
                         </TableContainer>
-                        <VStack mt="3">
+                        <VStack mt="3" align="flex-start">
                             {compStruct.accepted_motifs.map((m, i) => (
                                 <MotifDetail
                                     key={i}
@@ -277,7 +277,7 @@ function ResultDetail() {
                             ))}
                         </VStack>
                     </Box>
-                    <VStack flexGrow="1">
+                    <VStack flexGrow="1" w={{base: "full", md: "60%"}}>
                         <HStack justifyContent="flex-end" w="full">
                             <Box textColor="greyonpink" fontSize="sm">
                                 AFDB version: {compStruct.af_revision}

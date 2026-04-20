@@ -22,7 +22,7 @@ interface SearchResultItemProps {
 function SearchResultItem({ result }: SearchResultItemProps) {
     return (
         <HStack align="flex-start" w="full" spacing={4}>
-            <Box boxSize="250px" flexShrink={0} alignItems="center" display="flex">
+            <Box boxSize={{base: "100px", md: "250px"}} flexShrink={0} alignItems="center" display="flex">
                 <ChakraLink as={TanstackRouterLink} to={result.afdb_id}>
                     <Image
                         src={`api/img/preview/${result.pdb_id}.jpeg`}

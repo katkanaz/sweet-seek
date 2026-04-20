@@ -77,11 +77,6 @@ function MolStarWrapper({ setMolStar }: MolStarWrapperProps) {
                 spec: specs,
                 render: renderReact18,
             });
-            const origResize = window.molstar.handleResize;
-            window.molstar.handleResize = () => {
-                console.log("handle resize");
-                origResize();
-            };
 
             await window.molstar.initialized;
 
@@ -95,7 +90,7 @@ function MolStarWrapper({ setMolStar }: MolStarWrapperProps) {
         };
     }, []);
 
-    return <div ref={parent} style={{ width: 640, height: 480 }} />;
+    return <div ref={parent} style={{ height: 480 }} />;
 }
 
 export default MolStarWrapper;
