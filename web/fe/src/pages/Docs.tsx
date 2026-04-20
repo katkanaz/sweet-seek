@@ -20,6 +20,7 @@ import workflowFlowchart from "../assets/workflow-with-numbers.svg";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Link as TanstackRouterLink } from "@tanstack/react-router";
 import { homeRoute, resultsRoute } from "../Router";
+import { ImageRef } from "../components/ImageRef";
 
 function Docs() {
     return (
@@ -96,7 +97,7 @@ function Docs() {
                                 <Heading as="h3" size="md">
                                     Home Page
                                 </Heading>
-                                <Text>
+                                <Box>
                                     The{" "}
                                     <ChakraLink
                                         as={TanstackRouterLink}
@@ -112,7 +113,7 @@ function Docs() {
                                     provides a brief introduction to the purpose of the website and
                                     explains what kind of data is presented on this website. It also
                                     includes a glossary of terms specific for this project.
-                                </Text>
+                                </Box>
                                 <Text>
                                     You will find three main navigation cards that take you directly
                                     to:
@@ -131,7 +132,7 @@ function Docs() {
                                 <Heading as="h3" size="md">
                                     Results Page
                                 </Heading>
-                                <Text>
+                                <Box>
                                     The{" "}
                                     <ChakraLink
                                         as={TanstackRouterLink}
@@ -153,7 +154,7 @@ function Docs() {
                                         Filtering Results
                                     </ChakraLink>
                                     .
-                                </Text>
+                                </Box>
                                 <Text>
                                     <strong>RMSD (Root Mean Square Deviation)</strong> indicates how
                                     closely a detected motif match matches the original motif. Lower
@@ -199,7 +200,7 @@ function Docs() {
                                 <Text>
                                     The left column shows basic information about the result and a
                                     list of motif match cards. The basic information in the top part
-                                    of the column (1) includes:
+                                    of the column <ImageRef>(1)</ImageRef> includes:
                                 </Text>
                                 <List spacing={2}>
                                     {[
@@ -214,7 +215,8 @@ function Docs() {
                                     ))}
                                 </List>
                                 <Text>
-                                    Each motif match card (2) contains the following information:
+                                    Each motif match card <ImageRef>(2)</ImageRef> contains the
+                                    following information:
                                 </Text>
                                 <List spacing={2}>
                                     {[
@@ -233,7 +235,7 @@ function Docs() {
                                 <Heading as="h4" size="sm">
                                     Right Column (3D Viewer)
                                 </Heading>
-                                <Text>
+                                <Box>
                                     An interactive 3D viewer (
                                     <ChakraLink
                                         href="https://molstar.org/"
@@ -245,13 +247,14 @@ function Docs() {
                                             <ExternalLinkIcon h="3.5" />
                                         </HStack>
                                     </ChakraLink>
-                                    ) allows you to explore the computed protein structure (3). By
-                                    default, only the computed structure colored by confidence
-                                    (global pLDDT) is shown. Clicking the Align button (4) on a
-                                    given motif match card will superimpose the original PDB
-                                    structure onto the computed structure. Clicking the Clear button
-                                    (5) will switch back to the default view.
-                                </Text>
+                                    ) allows you to explore the computed protein structure{" "}
+                                    <ImageRef>(3)</ImageRef>. By default, only the computed
+                                    structure colored by confidence (global pLDDT) is shown.
+                                    Clicking the Align button <ImageRef>(4)</ImageRef> on a given
+                                    motif match card will superimpose the original PDB structure
+                                    onto the computed structure. Clicking the Clear button{" "}
+                                    <ImageRef>(5)</ImageRef> will switch back to the default view.
+                                </Box>
                                 <Heading as="h3" size="md">
                                     Statistics Page
                                 </Heading>
@@ -267,7 +270,6 @@ function Docs() {
                             </VStack>
                         </Box>
                         <Box id="filters">
-                            {/* <Text fontSize="2xl" fontWeight="bold">Filters</Text> */}
                             <VStack align="start" spacing={6}>
                                 <Heading as="h2" size="lg">
                                     Filtering Results
@@ -281,13 +283,26 @@ function Docs() {
                                 </Text>
                                 <List spacing={2}>
                                     {[
-                                        "Sugar the protein may bind (1)",
-                                        "Model confidence (global pLDDT score) (2)",
-                                        "Organism the protein originates from (3)",
-                                        "Source PDB structure of the queried motif (4)",
-                                        "Title of the computed structure (5)",
-                                    ].map((item) => (
-                                        <ListItem key={item}>
+                                        <>
+                                            Sugar the protein may bind <ImageRef>(1)</ImageRef>
+                                        </>,
+                                        <>
+                                            Model confidence (global pLDDT score){" "}
+                                            <ImageRef>(2)</ImageRef>
+                                        </>,
+                                        <>
+                                            Organism the protein originates from{" "}
+                                            <ImageRef>(3)</ImageRef>
+                                        </>,
+                                        <>
+                                            Source PDB structure of the queried motif{" "}
+                                            <ImageRef>(4)</ImageRef>
+                                        </>,
+                                        <>
+                                            Title of the computed structure <ImageRef>(5)</ImageRef>
+                                        </>,
+                                    ].map((item, i) => (
+                                        <ListItem key={i}>
                                             <ListIcon as={SweetSeekBullet} color="accent" />
                                             {item}
                                         </ListItem>
@@ -298,10 +313,11 @@ function Docs() {
                                     results. Multiple selections are allowed for all filters except
                                     the PDB structure filter. The title filter performs basic text
                                     search. You can reset each filter by clicking its clear button.
-                                    Apply your selections using the <strong>Filter</strong> button
-                                    (6). When 2 or more filters are active only results matching all
-                                    active filters are shown. When a filter has multiple values
-                                    selected, any results matching at least one value is shown.
+                                    Apply your selections using the <strong>Filter</strong> button{" "}
+                                    <ImageRef>(6)</ImageRef>. When 2 or more filters are active only
+                                    results matching all active filters are shown. When a filter has
+                                    multiple values selected, any results matching at least one
+                                    value is shown.
                                 </Text>
                             </VStack>
                         </Box>
@@ -309,14 +325,13 @@ function Docs() {
                             <Heading as="h1" size="xl">
                                 Workflow
                             </Heading>
-                            <Text></Text>
                         </Box>
                         <Box id="workflow-overview">
                             <VStack align="start" spacing={6}>
                                 <Heading as="h2" size="lg">
                                     Overview
                                 </Heading>
-                                <Text>
+                                <Box>
                                     An automated bioinformatics workflow was developed to identify
                                     candidate sugar-binding proteins using structural data. The
                                     workflow processes experimentally determined structures
@@ -335,7 +350,7 @@ function Docs() {
                                         </HStack>
                                     </ChakraLink>
                                     .
-                                </Text>
+                                </Box>
                                 <Heading as="h3" size="md">
                                     Workflow Steps
                                 </Heading>
@@ -374,7 +389,7 @@ function Docs() {
                                 <Heading as="h2" size="lg">
                                     Usage Instructions
                                 </Heading>
-                                <Text>
+                                <Box>
                                     The workflow is primarily written in python. It can be installed
                                     and run locally or one can use predefined Docker image, which
                                     conveniently sets up all prerequisites. However, both
@@ -393,7 +408,7 @@ function Docs() {
                                         </HStack>
                                     </ChakraLink>
                                     .
-                                </Text>
+                                </Box>
                             </VStack>
                         </Box>
                     </VStack>
