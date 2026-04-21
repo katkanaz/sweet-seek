@@ -139,7 +139,7 @@ function Stats() {
                 </Center>
             ) : (
                 <Box p={6}>
-                    <Heading as="h1" size="lg" mt="5">
+                    <Heading as="h1" size="xl">
                         Results Statistics
                     </Heading>
                     <HStack align="flex-start" justify="space-between" mt="4" flexDir={{base: "column", md: "row"}}>
@@ -379,7 +379,7 @@ function Stats() {
                         </Box>
                     </HStack>
 
-                    <Heading as="h1" size="lg" mt="5">
+                    <Heading as="h1" size="xl" mt="5">
                         Workflow Statistics
                     </Heading>
 
