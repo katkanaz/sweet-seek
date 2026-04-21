@@ -1,29 +1,176 @@
-import { Text, HStack } from "@chakra-ui/react";
+import {
+    Text,
+    HStack,
+    Heading,
+    List,
+    ListItem,
+    ListIcon,
+    VStack,
+    Link as ChakraLink,
+    Box,
+    Skeleton,
+} from "@chakra-ui/react";
 import MainContainer from "../components/MainContainer";
 import { docsRoute, resultsRoute, statsRoute } from "../Router";
 import HomeCard from "../components/HomeCard";
+import SweetSeekBullet from "../assets/sweet-seek-bullet";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { FaRegChartBar } from "react-icons/fa";
+import { FaRegFileLines } from "react-icons/fa6";
+import { FaSearch } from "react-icons/fa";
+import { useQuery } from "@tanstack/react-query";
+import { getResultsCount, GetResultsCountResponse } from "../api/computed_structure";
 
 
 function Home() {
+    const {
+        data: resultsCount,
+        isError,
+    } = useQuery<GetResultsCountResponse, Error>({
+        queryKey: ["results count"],
+        queryFn: () => getResultsCount(),
+    });
+
     return (
-        <MainContainer width="60%">
-            <Text mt="12" fontWeight="bold" fontFamily="fantasy" fontSize="xl">
-                Welcome to SweetSeek,
-            </Text>
-            <Text mt="6">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et fringilla mauris, at vestibulum est. Pellentesque posuere feugiat turpis, eu cursus dolor iaculis ut. In varius interdum augue, sed convallis ligula fringilla id. Phasellus et sodales sem. Etiam neque turpis, dignissim non aliquet id, euismod eu erat.
-                In imperdiet quam sed mollis pulvinar. Proin porttitor et mauris in interdum. Proin porttitor nisl ac dignissim hendrerit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque feugiat ante ac massa sagittis pretium. Nunc feugiat lobortis pharetra. Donec quis felis eget orci egestas elementum. Praesent mollis scelerisque maximus. Praesent feugiat tincidunt congue. Aenean consectetur eros id dui scelerisque vulputate.
-            </Text>
-            <Text mt="6" mb="4">
-                Donec tempus odio ipsum, a lobortis ipsum consectetur sit amet. Praesent finibus arcu sed felis faucibus semper. Aliquam sem lectus, commodo quis elementum ut, efficitur non elit. Phasellus accumsan eros in dolor posuere auctor. Nullam vel est tempus, porttitor ligula sed, sagittis urna.
-            </Text>
-            <HStack mt="10" spacing="3">
-                <HomeCard color="accent" cardText="Explore the reuslts" route={resultsRoute.to} />
-                <HomeCard color="secondary" cardText="See result statistics" route={statsRoute.to} />
-                <HomeCard color="primary" cardText="Learn more" route={docsRoute.to} />
+        <MainContainer>
+            <HStack align="flex-start" flexDir={{ base: "column", md: "row" }}>
+                <VStack align="start" spacing={4} p={6}>
+                    <Heading
+                        mt={{ base: "4", md: "12" }}
+                        fontWeight="bold"
+                        fontFamily="PT Serif"
+                        fontSize="4xl"
+                        as="h1"
+                    >
+                        Welcome to{" "}
+                        <Box as="span" color="darkaccent">
+                            SweetSeek
+                        </Box>
+                    </Heading>
+                    <Box mt="4">
+                        An interactive platform for exploring candidate sugar-binding proteins.
+                        Discover{" "}
+                        <Text as="strong" color="darkaccent">
+                            motif matches
+                        </Text>{" "}
+                        from AlphaFold 2 computed structures using{" "}
+                        <Text as="strong" color="darkaccent">
+                            motifs
+                        </Text>{" "}
+                        extracted from known <Box as="span" whiteSpace="nowrap">sugar-protein</Box> complexes in the{" "}
+                        <ChakraLink href="https://www.rcsb.org/" target="_blank" color="greyonpink">
+                            <HStack alignItems="center" gap="0.5" display="inline-flex">
+                                <Text as="span">Protein Data Bank (PDB)</Text>
+                                <ExternalLinkIcon h="3.5" />
+                            </HStack>
+                        </ChakraLink>
+                    </Box>
+                    <List>
+                        <ListItem>
+                            <Text as="strong" color="darkaccent">
+                                Motif:
+                            </Text>{" "}
+                            A processed surrounding of a sugar within 5 Å (5-10 residues)
+                        </ListItem>
+                        <ListItem>
+                            <Text as="strong" color="darkaccent">
+                                Motif match:
+                            </Text>{" "}
+                            A matching motif found in a computed structure.
+                        </ListItem>
+                    </List>
+                    <Text>The website makes it possible to:</Text>
+
+                    <List spacing={2}>
+                        {[
+                            "Browse and filter candidate sugar-binding proteins",
+                            "Visualize protein computed structures",
+                            "Inspect 3D alignmnets of motifs and motif matches",
+                            "Explore statistics about the results",
+                        ].map((item) => (
+                            <ListItem key={item}>
+                                <ListIcon as={SweetSeekBullet} color="accent" />
+                                {item}
+                            </ListItem>
+                        ))}
+                    </List>
+                    <Box
+                        borderBottom="solid"
+                        borderBottomColor="grey"
+                        color="grey"
+                        borderBottomWidth="thin"
+                        boxSize="full"
+                        w="full"
+                        mt="8"
+                    ></Box>
+                    <HStack spacing="6" alignItems="flex-start" mt="4">
+                        {!isError && (
+                            <VStack alignItems="flex-start" spacing={0} maxW="28">
+                                <Skeleton isLoaded={!!resultsCount}>
+                                    <Box fontWeight="bold" fontSize="3xl">
+                                        {resultsCount?.total_count}
+                                    </Box>
+                                </Skeleton>
+                                <Box fontSize="md" color="greyonpink">
+                                    <Box as="span" whiteSpace="nowrap">Sugar-binding</Box> Proteins
+                                </Box>
+                            </VStack>
+                        )}
+                        <VStack alignItems="flex-start" spacing={0}>
+                            <Box fontWeight="bold" fontSize="3xl">
+                                PDB
+                            </Box>
+                            <Box fontSize="md" color="greyonpink">
+                                Motif Source
+                            </Box>
+                        </VStack>
+                        <VStack alignItems="flex-start" spacing={0} maxW="24">
+                            <Box fontWeight="bold" fontSize="3xl">
+                                AFDB
+                            </Box>
+                            <Box fontSize="md" color="greyonpink">
+                                Motif Match Target
+                            </Box>
+                        </VStack>
+                        <VStack alignItems="flex-start" spacing={0}>
+                            <Box fontWeight="bold" fontSize="3xl">
+                                RMSD
+                            </Box>
+                            <Box fontSize="md" color="greyonpink">
+                                Match Evaluation
+                            </Box>
+                        </VStack>
+                    </HStack>
+                </VStack>
+                <VStack w="full" spacing="4" p={6} mt={{ base: "4", md: "12" }}>
+                    <HomeCard
+                        color="accent"
+                        cardTitle="Explore the Results"
+                        cardText="Browse and filter candidate sugar-binding proteins"
+                        route={resultsRoute.to}
+                        actionText="Go to Results"
+                        icon={<FaSearch />}
+                    />
+                    <HomeCard
+                        color="secondary"
+                        cardTitle="See Result Statistics"
+                        cardText="View statistics about the results"
+                        route={statsRoute.to}
+                        actionText="Go to Statistics"
+                        icon={<FaRegChartBar />}
+                    />
+                    <HomeCard
+                        color="primary"
+                        cardTitle="Learn More"
+                        cardText="About the website and methodology"
+                        route={docsRoute.to}
+                        actionText="Go to Documentation"
+                        icon={<FaRegFileLines />}
+                    />
+                </VStack>
             </HStack>
         </MainContainer>
-    )
+    );
 }
 
 export default Home;

@@ -56,6 +56,10 @@ export type GetComputedStructuresResponse = {
     data: ComputedStructure[];
 };
 
+export type GetResultsCountResponse = {
+    total_count: number;
+};
+
 export const getResults = async (
     filters: ResultsSearch,
 ): Promise<GetComputedStructuresResponse> => {
@@ -66,6 +70,14 @@ export const getResults = async (
 
     if (!res.ok) throw new Error("Failed to fetch results");
     const data: GetComputedStructuresResponse = await res.json();
+    return data;
+};
+
+export const getResultsCount = async (): Promise<GetResultsCountResponse> => {
+    const res = await fetch("/api/results/count");
+
+    if (!res.ok) throw new Error("Failed to fetch results count");
+    const data: GetResultsCountResponse = await res.json();
     return data;
 };
 
