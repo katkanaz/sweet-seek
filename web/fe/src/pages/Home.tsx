@@ -21,12 +21,8 @@ import { FaSearch } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { getResultsCount, GetResultsCountResponse } from "../api/computed_structure";
 
-
 function Home() {
-    const {
-        data: resultsCount,
-        isError,
-    } = useQuery<GetResultsCountResponse, Error>({
+    const { data: resultsCount, isError } = useQuery<GetResultsCountResponse, Error>({
         queryKey: ["results count"],
         queryFn: () => getResultsCount(),
     });
@@ -57,7 +53,11 @@ function Home() {
                         <Text as="strong" color="darkaccent">
                             motifs
                         </Text>{" "}
-                        extracted from known <Box as="span" whiteSpace="nowrap">sugar-protein</Box> complexes in the{" "}
+                        extracted from known{" "}
+                        <Box as="span" whiteSpace="nowrap">
+                            sugar-protein
+                        </Box>{" "}
+                        complexes in the{" "}
                         <ChakraLink href="https://www.rcsb.org/" target="_blank" color="greyonpink">
                             <HStack alignItems="center" gap="0.5" display="inline-flex">
                                 <Text as="span">Protein Data Bank (PDB)</Text>
@@ -103,44 +103,50 @@ function Home() {
                         w="full"
                         mt="8"
                     ></Box>
-                    <HStack spacing="6" alignItems="flex-start" mt="4">
-                        {!isError && (
-                            <VStack alignItems="flex-start" spacing={0} maxW="28">
-                                <Skeleton isLoaded={!!resultsCount}>
-                                    <Box fontWeight="bold" fontSize="3xl">
-                                        {resultsCount?.total_count}
+                    <VStack alignItems="flex-start" mt="3">
+                        <Box color="text" fontWeight="bold" fontSize="xl">Database Overview</Box>
+                        <HStack spacing="6" alignItems="flex-start" mt="1">
+                            {!isError && (
+                                <VStack alignItems="flex-start" spacing={0} maxW="28">
+                                    <Skeleton isLoaded={!!resultsCount}>
+                                        <Box fontWeight="bold" fontSize="3xl">
+                                            {resultsCount?.total_count}
+                                        </Box>
+                                    </Skeleton>
+                                    <Box fontSize="md" color="greyonpink">
+                                        <Box as="span" whiteSpace="nowrap">
+                                            Sugar-binding
+                                        </Box>{" "}
+                                        Proteins
                                     </Box>
-                                </Skeleton>
+                                </VStack>
+                            )}
+                            <VStack alignItems="flex-start" spacing={0} maxW="32">
+                                <Box fontWeight="bold" fontSize="3xl">
+                                    PDB
+                                </Box>
                                 <Box fontSize="md" color="greyonpink">
-                                    <Box as="span" whiteSpace="nowrap">Sugar-binding</Box> Proteins
+                                    Motifs from known structures
                                 </Box>
                             </VStack>
-                        )}
-                        <VStack alignItems="flex-start" spacing={0}>
-                            <Box fontWeight="bold" fontSize="3xl">
-                                PDB
-                            </Box>
-                            <Box fontSize="md" color="greyonpink">
-                                Motif Source
-                            </Box>
-                        </VStack>
-                        <VStack alignItems="flex-start" spacing={0} maxW="24">
-                            <Box fontWeight="bold" fontSize="3xl">
-                                AFDB
-                            </Box>
-                            <Box fontSize="md" color="greyonpink">
-                                Motif Match Target
-                            </Box>
-                        </VStack>
-                        <VStack alignItems="flex-start" spacing={0}>
-                            <Box fontWeight="bold" fontSize="3xl">
-                                RMSD
-                            </Box>
-                            <Box fontSize="md" color="greyonpink">
-                                Match Evaluation
-                            </Box>
-                        </VStack>
-                    </HStack>
+                            <VStack alignItems="flex-start" spacing={0} maxW="28">
+                                <Box fontWeight="bold" fontSize="3xl">
+                                    AFDB
+                                </Box>
+                                <Box fontSize="md" color="greyonpink">
+                                    Matches in AlphaFold DB
+                                </Box>
+                            </VStack>
+                            <VStack alignItems="flex-start" spacing={0}>
+                                <Box fontWeight="bold" fontSize="3xl">
+                                    RMSD
+                                </Box>
+                                <Box fontSize="md" color="greyonpink">
+                                    Match Evaluation
+                                </Box>
+                            </VStack>
+                        </HStack>
+                    </VStack>
                 </VStack>
                 <VStack w="full" spacing="4" p={6} mt={{ base: "4", md: "12" }}>
                     <HomeCard
