@@ -86,6 +86,10 @@ type GetComputedStructuresResponse struct {
 	Data	   []ComputedStructure `json:"data"`
 }
 
+type GetResultsCount struct {
+	TotalCount int 				   `json:"total_count"`
+}
+
 type PreProcessedDataStats struct {
 	PdbMirrorDate string `json:"pdb_mirror_date"`
 	PdbMirrorCount int `json:"pdb_mirror_count"`

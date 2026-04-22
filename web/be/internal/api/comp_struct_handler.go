@@ -422,6 +422,22 @@ func getAllResults(w http.ResponseWriter, r *http.Request) {
 }
 
 
+func getResultsCount(w http.ResponseWriter, r *http.Request) {
+	totalCount, _ := getComputedStructures(nil, nil)
+
+	data := GetResultsCount{
+		TotalCount: totalCount,
+	}
+	
+	w.Header().Set("Content-Type", "application/json")
+
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+
 func getCompStructDetail(w http.ResponseWriter, r *http.Request) {
 	afid := r.PathValue("afid")
 	_, results := getComputedStructures(nil, nil)
