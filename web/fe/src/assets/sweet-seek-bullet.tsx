@@ -1,6 +1,6 @@
 import { Icon } from "@chakra-ui/react";
 
-export default function SweetSeekBullet(props) {
+export default function SweetSeekBullet(props: any) {
     return (
         <Icon
             viewBox="0 0 409 406"
