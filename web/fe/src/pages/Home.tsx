@@ -76,7 +76,7 @@ function Home() {
                             <Text as="strong" color="darkaccent">
                                 Motif match:
                             </Text>{" "}
-                            A matching motif found in a computed structure.
+                            A matching motif found in a computed structure
                         </ListItem>
                     </List>
                     <Text>The website makes it possible to:</Text>
@@ -115,7 +115,7 @@ function Home() {
                                     </Skeleton>
                                     <Box fontSize="md" color="greyonpink">
                                         <Box as="span" whiteSpace="nowrap">
-                                            Sugar-binding
+                                            Identified
                                         </Box>{" "}
                                         Proteins
                                     </Box>
