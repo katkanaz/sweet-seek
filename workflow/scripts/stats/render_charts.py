@@ -179,7 +179,7 @@ def plot_raw_vs_filtered(data: Dict[str, Dict[str, int]], output_dir: str) -> No
                 f"{int(height)}",
                 ha="center",
                 va="bottom",
-                fontsize=11,
+                fontsize=13.5,
             )
 
     plt.tight_layout()
