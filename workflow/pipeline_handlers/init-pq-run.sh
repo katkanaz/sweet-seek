@@ -9,7 +9,7 @@ test -n "$SCRATCHDIR" || { echo >&2 "Variable SCRATCHDIR is not set!"; exit 2; }
 echo "$(date "+%Y-%m-%dT%H-%M") starting PDB mirror copy for PQ" >> "$PIPELINE_RUN_LOG"
 echo "Using scratchdir: $SCRATCHDIR" > "$PIPELINE_RUN/pq_run.log"
 
-cp -r "$PDB_MIRROR_ROOT/structures-files" "$SCRATCHDIR/structures-files"
+cp -Lr "$PDB_MIRROR_ROOT/structures-files" "$SCRATCHDIR/structures-files"
 
 module add mono
 
@@ -31,7 +31,7 @@ EOF
 
 mono "$INIT_PQ/PatternQuery_1.1.23.12.27b/WebChemistry.Queries.Service.exe" "$PIPELINE_RUN/pq-results" "$PIPELINE_RUN/pq-config.json" >> "$PIPELINE_RUN/pq_run.log"
 
-cp "$PIPELINE_RUN/pq-results/result.zip" "$INIT_PQ/result.zip"
+cp "$PIPELINE_RUN/pq-results/result/result.zip" "$INIT_PQ/result.zip"
 
 clean_scratch
 
