@@ -34,19 +34,19 @@ def plot_motif_matches_per_protein(
     motif_matches: Dict[str, int], output_dir: str
 ) -> None:
     """Bar chart: Number of motif matches per protein."""
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(8, 4))
 
     proteins = list(motif_matches.keys())
     counts = list(motif_matches.values())
 
     ax.bar(proteins, counts, color=SATURATED_COLORS[0], edgecolor="black")
-    ax.set_xlabel("Number of motif matches", fontsize=16)
-    ax.set_ylabel("Number of proteins", fontsize=16)
-    ax.set_title("Number of motif matches per protein", fontsize=18, fontweight="bold")
+    ax.set_xlabel("Number of motif matches", fontsize=19)
+    ax.set_ylabel("Number of proteins", fontsize=19)
+    ax.set_title("Number of motif matches per protein", fontsize=22, fontweight="bold")
     ax.grid(axis="y", alpha=0.3)
 
-    ax.tick_params(axis="x", labelsize=14)
-    ax.tick_params(axis="y", labelsize=14)
+    ax.tick_params(axis="x", labelsize=19)
+    ax.tick_params(axis="y", labelsize=19)
     plt.xticks(rotation=0)
     plt.tight_layout()
     plt.savefig(
@@ -126,7 +126,7 @@ def plot_plddt_distribution(plddt_values: List[float], output_dir: str) -> None:
 
 def plot_raw_vs_filtered(data: Dict[str, Dict[str, int]], output_dir: str) -> None:
     """Grouped bar chart: Raw vs filtered surroundings for each sugar."""
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(10, 5))
 
     if not data:
         print("Warning: No raw/filtered data to plot")
