@@ -105,15 +105,15 @@ function Home() {
                     ></Box>
                     <VStack alignItems="flex-start" mt="3">
                         <Box color="text" fontWeight="bold" fontSize="xl">Database Overview</Box>
-                        <HStack spacing="6" alignItems="flex-start" mt="1">
+                        <HStack spacing={{base: "3", md: "6"}} alignItems="flex-start" mt="1">
                             {!isError && (
                                 <VStack alignItems="flex-start" spacing={0} maxW="28">
                                     <Skeleton isLoaded={!!resultsCount}>
-                                        <Box fontWeight="bold" fontSize="3xl">
+                                        <Box fontWeight="bold" fontSize={{base: "lg", md: "3xl"}}>
                                             {resultsCount?.total_count}
                                         </Box>
                                     </Skeleton>
-                                    <Box fontSize="md" color="greyonpink">
+                                    <Box fontSize={{base: "xs", md: "md"}} color="greyonpink">
                                         <Box as="span" whiteSpace="nowrap">
                                             Identified
                                         </Box>{" "}
@@ -122,26 +122,26 @@ function Home() {
                                 </VStack>
                             )}
                             <VStack alignItems="flex-start" spacing={0} maxW="32">
-                                <Box fontWeight="bold" fontSize="3xl">
+                                <Box fontWeight="bold" fontSize={{base: "lg", md: "3xl"}}>
                                     PDB
                                 </Box>
-                                <Box fontSize="md" color="greyonpink">
+                                <Box fontSize={{base: "xs", md: "md"}} color="greyonpink">
                                     Motifs from known structures
                                 </Box>
                             </VStack>
                             <VStack alignItems="flex-start" spacing={0} maxW="28">
-                                <Box fontWeight="bold" fontSize="3xl">
+                                <Box fontWeight="bold" fontSize={{base: "lg", md: "3xl"}}>
                                     AFDB
                                 </Box>
-                                <Box fontSize="md" color="greyonpink">
+                                <Box fontSize={{base: "xs", md: "md"}} color="greyonpink">
                                     Matches in AlphaFold DB
                                 </Box>
                             </VStack>
                             <VStack alignItems="flex-start" spacing={0}>
-                                <Box fontWeight="bold" fontSize="3xl">
+                                <Box fontWeight="bold" fontSize={{base: "lg", md: "3xl"}}>
                                     RMSD
                                 </Box>
-                                <Box fontSize="md" color="greyonpink">
+                                <Box fontSize={{base: "xs", md: "md"}} color="greyonpink">
                                     Match Evaluation
                                 </Box>
                             </VStack>

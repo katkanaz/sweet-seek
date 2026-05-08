@@ -35,7 +35,7 @@ function SearchResultItem({ result }: SearchResultItemProps) {
                 <ChakraLink
                     as={TanstackRouterLink}
                     to={result.afdb_id}
-                    fontSize="2xl"
+                    fontSize={{base: "lg", md: "2xl"}}
                     fontWeight="bold"
                     w="full"
                 >
