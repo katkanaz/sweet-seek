@@ -1,0 +1,26 @@
+services:
+  backend:
+    image: backend
+    volumes:
+    - ${PWD}/data:/data
+    ports:
+      - "3000:3000"
+    restart: always
+    networks:
+      - app
+  frontend:
+    image: frontend
+    ports:
+      - "80:8080"
+      - "443:8081"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/www/certbot:/var/www/certbot
+      - ${PWD}/nginx.prod.conf:/etc/nginx/nginx.conf 
+    restart: always
+    networks:
+      - app
+
+networks:
+  app:
+    driver: bridge
