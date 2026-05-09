@@ -158,7 +158,11 @@ function Docs() {
                                 <Text>
                                     <strong>RMSD (Root Mean Square Deviation)</strong> indicates how
                                     closely a detected motif match matches the original motif. Lower
-                                    values represent better matches.
+                                    values represent better matches. It will always be lower than 3 Å, since that is used as the cut off value during the structure-based search step of the workflow (see{" "}
+                                    <ChakraLink href="#workflow-steps" color="darkaccent">
+                                        Workflow Steps
+                                    </ChakraLink>
+                                    ). 
                                 </Text>
                                 <Text>Each result in the list shows:</Text>
                                 <List spacing={2}>
@@ -351,7 +355,7 @@ function Docs() {
                                     </ChakraLink>
                                     .
                                 </Box>
-                                <Heading as="h3" size="md">
+                                <Heading as="h3" size="md" id="workflow-steps">
                                     Workflow Steps
                                 </Heading>
                                 <Text>
@@ -367,7 +371,7 @@ function Docs() {
                                         "Download structures containing sugars from a local PDB mirror.",
                                         "Identify sugars that are non-covalently bound (ligads), excluding glycosylations and close contacts.",
                                         "Separate alternative sugar conformations (A/B). Structures with unsupported conformations (e.g., C) are excluded.",
-                                        "Apply quality filtering based on structure resolution, RSCC values, and ligand RMSD validation.",
+                                        "Apply quality filtering based on structure resolution (≤ 3 Å), RSCC values (≥ 0.8), and ligand RMSD validation (≤ 2 Å).",
                                         "Extract the surroundings of a selected sugar by identifying residues within 5 Å.",
                                         "Process and filter the extracted surroundings to ensure they contain at least 5 residues and remove other sugars (e.g., from larger glycans).",
                                         "Cluster similar surroundings based on structural similarity (RMSD) and select representative motifs.",
